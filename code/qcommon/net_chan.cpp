@@ -28,7 +28,7 @@ to the new value before sending out any replies.
 
 
 #define	MAX_PACKETLEN			(MAX_MSGLEN)	//(1400)		// max size of a network packet
-#define MAX_LOOPDATA            16 * 1024
+#define MAX_LOOPDATA            (MAX_MSGLEN)
 
 #if (MAX_PACKETLEN > MAX_MSGLEN)
 #error MAX_PACKETLEN must be <= MAX_MSGLEN
