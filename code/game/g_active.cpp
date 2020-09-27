@@ -4976,10 +4976,18 @@ extern cvar_t	*g_skippingcin;
 		// Transfer over our driver's commands to us (the vehicle).
 		if ( ent->owner && ent->client && ent->client->NPC_class == CLASS_VEHICLE )
 		{
-			memcpy( ucmd, &ent->owner->client->usercmd, sizeof( usercmd_t ) );
-			ucmd->buttons &= ~BUTTON_USE;//Vehicles NEVER try to use ANYTHING!!!
-			//ucmd->weapon = ent->client->ps.weapon;	// but keep our weapon.
-			ent->client->usercmd = *ucmd;
+			if (ent->owner->client)
+			{
+				memcpy( ucmd, &ent->owner->client->usercmd, sizeof( usercmd_t ) );
+				ucmd->buttons &= ~BUTTON_USE;//Vehicles NEVER try to use ANYTHING!!!
+				//ucmd->weapon = ent->client->ps.weapon;	// but keep our weapon.
+				ent->client->usercmd = *ucmd;
+			}
+			else
+			{
+				ent->owner = NULL;
+				pVeh->m_pPilot = NULL;
+			}
 		}
 
 		G_NPCMunroMatchPlayerWeapon( ent );
