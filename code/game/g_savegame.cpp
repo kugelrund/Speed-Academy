@@ -970,6 +970,14 @@ static void ReadGEntities(qboolean qbAutosave)
 			gclient_t tempGClient;			
 
 			EvaluateFields(savefields_gClient, (byte *)&tempGClient, (byte *)pEntOriginal->client, 'GCLI', sizeof(*pEnt->client),qtrue);//qfalse);
+			if (tempGClient.ps.saber[1].name == NULL) {
+				// savefields_gClient does not contain saber[1].model with the reason that
+				// "sabers are stomped over by specific code elsewhere". Unfortunately this
+				// does not seem to be 100% true, at least in the EFY4 mod we observed this
+				// going wrong. As it stands this should be a dangling pointer anyways so
+				// let's set it to NULL before anyone tries to use it.
+				tempGClient.ps.saber[1].model = NULL;
+			}
 
 			// can we pinch the original's client handle or do we have to alloc a new one?...
 			//
