@@ -632,7 +632,7 @@ void CL_DisconnectPacket( netadr_t from ) {
 
 	// if we have received packets within three seconds, ignore it
 	// (it might be a malicious spoof)
-	if ( cls.realtime - clc.lastPacketTime < 3000 ) {
+	if ( CL_GetExactServerTime() - clc.lastPacketTime < 3000 ) {
 		return;
 	}
 
@@ -740,7 +740,7 @@ A packet has arrived from the main event loop
 void CL_PacketEvent( netadr_t from, msg_t *msg ) {
 	int		headerBytes;
 
-	clc.lastPacketTime = cls.realtime;
+	clc.lastPacketTime = CL_GetExactServerTime();
 
 	if ( msg->cursize >= 4 && *(int *)msg->data == -1 ) {
 		CL_ConnectionlessPacket( from, msg );
@@ -773,7 +773,7 @@ void CL_PacketEvent( netadr_t from, msg_t *msg ) {
 	// the header is different lengths for reliable and unreliable messages
 	headerBytes = msg->readcount;
 
-	clc.lastPacketTime = cls.realtime;
+	clc.lastPacketTime = CL_GetExactServerTime();
 	CL_ParseServerMessage( msg );
 }
 
@@ -790,7 +790,7 @@ void CL_CheckTimeout( void ) {
 	if ( ( !cl_paused->integer || !sv_paused->integer ) 
 //		&& cls.state >= CA_CONNECTED && cls.state != CA_CINEMATIC
 		&& cls.state >= CA_CONNECTED && (cls.state != CA_CINEMATIC && !CL_IsRunningInGameCinematic())
-		&& cls.realtime - clc.lastPacketTime > cl_timeout->value*1000) {
+		&& CL_GetExactServerTime() - clc.lastPacketTime > cl_timeout->value*1000) {
 		if (++cl.timeoutcount > 5) {	// timeoutcount saves debugger
 			Com_Printf ("\nServer connection timed out.\n");
 			CL_Disconnect ();

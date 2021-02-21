@@ -268,7 +268,7 @@ void CL_ParseSnapshot( msg_t *msg ) {
 	for ( i = 0 ; i < PACKET_BACKUP ; i++ ) {
 		packetNum = ( clc.netchan.outgoingSequence - 1 - i ) & PACKET_MASK;
 		if ( cl.frame.cmdNum == cl.packetCmdNumber[ packetNum ] ) {
-			cl.frame.ping = cls.realtime - cl.packetTime[ packetNum ];
+			cl.frame.ping = CL_GetExactServerTime() - cl.packetTime[ packetNum ];
 			break;
 		}
 	}

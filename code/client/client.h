@@ -449,6 +449,7 @@ void CL_InitCGame( void );
 void CL_ShutdownCGame( void );
 qboolean CL_GameCommand( void );
 void CL_CGameRendering( stereoFrame_t stereo );
+int CL_GetExactServerTime( void );
 void CL_SetCGameTime( void );
 void CL_FirstSnapshot( void );
 

@@ -1196,7 +1196,7 @@ void CL_AdjustTimeDelta( void ) {
 		resetTime = RESET_TIME;
 	}
 
-	newDelta = cl.frame.serverTime - cls.realtime;
+	newDelta = cl.frame.serverTime - CL_GetExactServerTime();
 	deltaDelta = abs( newDelta - cl.serverTimeDelta );
 
 	if ( deltaDelta > RESET_TIME ) {
@@ -1247,7 +1247,7 @@ void CL_FirstSnapshot( void ) {
 	cls.state = CA_ACTIVE;
 
 	// set the timedelta so we are exactly on this first frame
-	cl.serverTimeDelta = cl.frame.serverTime - cls.realtime;
+	cl.serverTimeDelta = cl.frame.serverTime - CL_GetExactServerTime() - (1000 / sv_fps->integer);
 	cl.oldServerTime = cl.frame.serverTime;
 
 	// if this is the first frame of active play,
@@ -1265,6 +1265,15 @@ void CL_FirstSnapshot( void ) {
 	// turn vsync back on - tearing is ugly
 	qglEnable(GL_VSYNC);
 #endif
+}
+
+/*
+==================
+CL_GetExactServerTime
+==================
+*/
+int CL_GetExactServerTime( void ) {
+	return sv.time + sv.timeResidual;
 }
 
 /*
@@ -1311,7 +1320,7 @@ void CL_SetCGameTime( void ) {
 	// cl_timeNudge is a user adjustable cvar that allows more
 	// or less latency to be added in the interest of better 
 	// smoothness or better responsiveness.
-	cl.serverTime = cls.realtime + cl.serverTimeDelta - cl_timeNudge->integer;
+	cl.serverTime = CL_GetExactServerTime() + cl.serverTimeDelta - cl_timeNudge->integer;
 
 	// guarantee that time will never flow backwards, even if
 	// serverTimeDelta made an adjustment or cl_timeNudge was changed
@@ -1322,7 +1331,7 @@ void CL_SetCGameTime( void ) {
 
 	// note if we are almost past the latest frame (without timeNudge),
 	// so we will try and adjust back a bit when the next snapshot arrives
-	if ( cls.realtime + cl.serverTimeDelta >= cl.frame.serverTime - 5 ) {
+	if ( CL_GetExactServerTime() + cl.serverTimeDelta >= cl.frame.serverTime - 5 ) {
 		cl.extrapolatedSnapshot = qtrue;
 	}
 

@@ -869,7 +869,7 @@ qboolean CL_ReadyToSendPacket( void ) {
 	// if we don't have a valid gamestate yet, only send
 	// one packet a second
 	if ( cls.state != CA_ACTIVE && cls.state != CA_PRIMED
-		&& cls.realtime - clc.lastPacketSentTime < 1000 ) {
+		&& CL_GetExactServerTime() - clc.lastPacketSentTime < 1000 ) {
 		return qfalse;
 	}
 
@@ -950,7 +950,7 @@ void CL_WritePacket( void ) {
 		MSG_WriteLong (&buf, cl.serverId);
 
 		// write the current time
-		MSG_WriteLong (&buf, cls.realtime);
+		MSG_WriteLong (&buf, CL_GetExactServerTime());
 
 		// let the server know what the last messagenum we
 		// got was, so the next message can be delta compressed
@@ -984,9 +984,9 @@ void CL_WritePacket( void ) {
 	// deliver the message
 	//
 	packetNum = clc.netchan.outgoingSequence & PACKET_MASK;
-	cl.packetTime[ packetNum ] = cls.realtime;
+	cl.packetTime[ packetNum ] = CL_GetExactServerTime();
 	cl.packetCmdNumber[ packetNum ] = cl.cmdNumber;
-	clc.lastPacketSentTime = cls.realtime;
+	clc.lastPacketSentTime = CL_GetExactServerTime();
 	Netchan_Transmit (&clc.netchan, buf.cursize, buf.data);	
 }
 
