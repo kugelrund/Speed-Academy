@@ -72,7 +72,7 @@ BEGIN
         BEGIN
             VALUE "Comments", "Originally: Raven Software"
             VALUE "CompanyName", "Originally: Activision Inc"
-            VALUE "FileDescription", "Speed Academy Game DLL"
+            VALUE "FileDescription", "Speed Academy Game DLL (segmented)"
             VALUE "FileVersion", VERSION_STRING
             VALUE "InternalName", "ja game.dll"
             VALUE "LegalCopyright", "Originally: Raven Software, Activision Inc"
