@@ -335,6 +335,7 @@ vmCvar_t	cg_strafeHelperScale;
 vmCvar_t	cg_strafeHelperSpeedScale;
 vmCvar_t	cg_strafeHelperSpeedY;
 vmCvar_t	cg_strafeHelperY;
+vmCvar_t	cg_showWeaponsOnSpawn;
 
 typedef struct {
 	vmCvar_t	*vmCvar;
@@ -458,6 +459,7 @@ static cvarTable_t cvarTable[] = {
 	{ &cg_strafeHelperSpeedScale, "cg_strafeHelperSpeedScale", "0.9", CVAR_ARCHIVE },
 	{ &cg_strafeHelperSpeedY, "cg_strafeHelperSpeedY", "0", CVAR_ARCHIVE },
 	{ &cg_strafeHelperY, "cg_strafeHelperY", "50", CVAR_ARCHIVE },
+	{ &cg_showWeaponsOnSpawn, "cg_showWeaponsOnSpawn", "1", CVAR_ARCHIVE },
 };
 
 static int cvarTableSize = sizeof( cvarTable ) / sizeof( cvarTable[0] );

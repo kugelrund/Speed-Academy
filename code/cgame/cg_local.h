@@ -645,6 +645,7 @@ extern	vmCvar_t		cg_strafeHelperScale;
 extern	vmCvar_t		cg_strafeHelperSpeedScale;
 extern	vmCvar_t		cg_strafeHelperSpeedY;
 extern	vmCvar_t		cg_strafeHelperY;
+extern	vmCvar_t		cg_showWeaponsOnSpawn;
 
 void CG_NewClientinfo( int clientNum );
 //
