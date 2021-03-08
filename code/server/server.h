@@ -170,6 +170,14 @@ extern  cvar_t	*sv_compress_saved_games;
 
 // Additions for Speed Academy
 extern	cvar_t	*sv_speedrunModeIL;
+extern	cvar_t	*sv_speedrunModeCheckpoint;
+extern	cvar_t	*sv_speedrunModeCheckpointSave;
+extern	cvar_t	*sv_timedCheckpointMinX;
+extern	cvar_t	*sv_timedCheckpointMinY;
+extern	cvar_t	*sv_timedCheckpointMinZ;
+extern	cvar_t	*sv_timedCheckpointMaxX;
+extern	cvar_t	*sv_timedCheckpointMaxY;
+extern	cvar_t	*sv_timedCheckpointMaxZ;
 
 //===========================================================
 

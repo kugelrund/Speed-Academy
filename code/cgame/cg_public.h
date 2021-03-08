@@ -213,6 +213,8 @@ Ghoul2 Insert End
 	CG_SPEEDRUN_GET_TOTAL_TIME_MILLISECONDS,
 	CG_SPEEDRUN_GET_LEVEL_TIME_MILLISECONDS,
 
+	CG_R_SET_PLAYER_JUMP_START_Z_WORLD,
+
 } cgameImport_t;
 
 //----------------------------------------------

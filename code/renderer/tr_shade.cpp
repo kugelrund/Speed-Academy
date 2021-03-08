@@ -27,6 +27,7 @@ bool		styleUpdated[MAX_LIGHT_STYLES];
 
 extern bool g_bRenderGlowingObjects;
 
+
 /*
 ================
 R_ArrayElementDiscrete
@@ -2114,6 +2115,9 @@ static void ComputeTexCoords( shaderStage_t *pStage ) {
 			break;
 		case TCGEN_FOG:
 			RB_CalcFogTexCoords( ( float * ) tess.svars.texcoords[b] );
+			break;
+		case TCGEN_ELEVATION:
+			RB_CalcElevationTexCoords( ( float * ) tess.svars.texcoords[b] );
 			break;
 		case TCGEN_ENVIRONMENT_MAPPED:
 #ifdef _XBOX

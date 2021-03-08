@@ -2811,7 +2811,7 @@ UI_LoadMenus
 */
 void UI_LoadMenus(const char *menuFile, qboolean reset) 
 {
-	bool const was_paused = SpeedrunPauseTimer();
+	SpeedrunPauseTimer(2);
 
 //	pc_token_t token;
 //	int handle;
@@ -2882,10 +2882,7 @@ void UI_LoadMenus(const char *menuFile, qboolean reset)
 
 	ui.FS_FreeFile( buffer );	//let go of the buffer
 
-	if (!was_paused)
-	{
-		SpeedrunUnpauseTimer();
-	}
+	SpeedrunUnpauseTimer(2);
 }
 
 /*

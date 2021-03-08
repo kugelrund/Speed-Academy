@@ -322,6 +322,7 @@ vmCvar_t	fx_expensivePhysics;
 vmCvar_t	cg_debugHealthBars;
 
 // New additions for Speed-Academy
+vmCvar_t	cg_drawSecrets;
 vmCvar_t	cg_drawSpeedrunTotalTimer;
 vmCvar_t	cg_drawSpeedrunLevelTimer;
 vmCvar_t	cg_drawMovementRestriction;
@@ -444,6 +445,7 @@ static cvarTable_t cvarTable[] = {
 	{ &cg_debugHealthBars,	"cg_debugHealthBars",	"0", CVAR_CHEAT },
 
 	// Additions for Speed Academy
+	{ &cg_drawSecrets, "cg_drawSecrets", "0", CVAR_ARCHIVE },
 	{ &cg_drawSpeedrunTotalTimer, "cg_drawSpeedrunTotalTimer", "0", CVAR_ARCHIVE  },
 	{ &cg_drawSpeedrunLevelTimer, "cg_drawSpeedrunLevelTimer", "0", CVAR_ARCHIVE  },
 	{ &cg_drawMovementRestriction, "cg_drawMovementRestriction", "1", CVAR_ARCHIVE },

@@ -1231,4 +1231,16 @@ void SP_target_secret( gentity_t *self )
 	{
 		gi.cvar_set("newTotalSecrets", va("%i",self->count));
 	}
+
+	if (!strcmp(level.mapname, "t1_sour") ||
+	    !strcmp(level.mapname, "t1_surprise") ||
+	    !strcmp(level.mapname, "t2_rogue") ||
+	    !strcmp(level.mapname, "t3_byss"))
+	{
+		// Hack: fix total number of secrets for some maps. Seems like the
+		// secrets on these maps were somehow forgotten. We fix this by
+		// explicitly setting the total secrets for such maps to the correct
+		// value, which is by chance 1 for all of them.
+		gi.cvar_set("newTotalSecrets", "1");
+	}
 }

@@ -2680,6 +2680,49 @@ static void R_CreateDefaultImage( void ) {
 
 /*
 ==================
+R_CreateElevationImage
+
+Image for coloring in the elevation boosts.
+==================
+*/
+static void R_CreateElevationImage( void ) {
+	// We dont need a width for this but only height. We create the image like
+	// this
+	//        ---
+	//        +++
+	//        +++
+	//        ---
+	//
+	// where "-" is fully transparent and "+" is semitransparent. That way,
+	// UV coordinates can be set into the "+" area if the height is eligible
+	// for an elevation boost and outside of it otherwise. By using GL_CLAMP
+	// mode for the texture, any values outside of the texture will be fully
+	// transparent (the "-"). To not have smoothing on the edges of the
+	// elevation boost area, we set filter mode to GL_NEAREST.
+	const int elevationImageHeight = 4;
+	const byte elevationColoringAlpha = 64;
+	byte data[elevationImageHeight][4];
+	memset(data, 255, sizeof(data));
+	for (int y=0; y < elevationImageHeight; ++y) {
+		data[y][3] = elevationColoringAlpha;
+		data[y][3] = elevationColoringAlpha;
+	}
+	data[0][0] = 0;
+	data[0][1] = 0;
+	data[0][2] = 0;
+	data[0][3] = 0;
+	data[elevationImageHeight-1][0] = 0;
+	data[elevationImageHeight-1][1] = 0;
+	data[elevationImageHeight-1][2] = 0;
+	data[elevationImageHeight-1][3] = 0;
+	tr.elevationImage = R_CreateImage("*elevation", (byte *)data, 1, elevationImageHeight, GL_RGBA, qfalse, qfalse, qtrue, GL_CLAMP);
+	GL_Bind(tr.elevationImage);
+	qglTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	qglTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+}
+
+/*
+==================
 R_CreateBuiltinImages
 ==================
 */
@@ -2707,6 +2750,8 @@ void R_CreateBuiltinImages( void ) {
 
 	tr.screenImage = R_CreateImage("*screen", (byte *)data, 8, 8, GL_RGBA, qfalse, qfalse, qfalse, GL_REPEAT );
 #endif
+
+	R_CreateElevationImage();
 
 
 #ifndef _XBOX	// GLOWXXX

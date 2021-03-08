@@ -4005,6 +4005,27 @@ static void CreateInternalShaders( void ) {
 	tr.distortionShader = FinishShader();
 	shader.defaultShader = true;
 
+	// Addition for Speed-Academy to color in area of elevation boosts
+	memset( &shader, 0, sizeof( shader ) );
+	memset( &stages, 0, sizeof( stages ) );
+	Q_strncpyz( shader.name, "<elevation>", sizeof( shader.name ) );
+	memcpy(shader.lightmapIndex, lightmapsNone, sizeof(shader.lightmapIndex));
+	memcpy(shader.styles, stylesDefault, sizeof(shader.styles));
+	for ( int i = 0 ; i < MAX_SHADER_STAGES ; i++ ) {
+		stages[i].bundle[0].texMods = texMods[i];
+	}
+	stages[0].active = true;
+	stages[0].bundle[0].tcGen = TCGEN_ELEVATION;
+	stages[0].bundle[0].image = tr.elevationImage;
+	// lets use a single, fixed custom color
+	stages[0].constantColor[0] = 0;
+	stages[0].constantColor[1] = 255;
+	stages[0].constantColor[2] = 0;
+	stages[0].constantColor[3] = 255;
+	stages[0].rgbGen = CGEN_CONST;
+	// alpha settings so that we only overlay the range with a semitransparent color
+	stages[0].stateBits = GLS_SRCBLEND_SRC_ALPHA | GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA;
+	tr.elevationShader = FinishShader();
 
 #ifndef _XBOX	// GLOWXXX
 	#define GL_PROGRAM_ERROR_STRING_ARB						0x8874

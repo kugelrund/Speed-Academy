@@ -431,6 +431,41 @@ static void SV_DumpUser_f( void ) {
 	Info_Print( cl->userinfo );
 }
 
+
+/*
+=================
+SV_SetTimedCheckpoint_f
+=================
+*/
+static void SV_SetTimedCheckpoint_f( void ) {
+	if ( Cmd_Argc() == 4 ) {
+		const float x = atof( Cmd_Argv(1) );
+		const float y = atof( Cmd_Argv(2) );
+		const float z = atof( Cmd_Argv(3) );
+		sv_timedCheckpointMinX->value = x - 50.0f;
+		sv_timedCheckpointMinY->value = y - 50.0f;
+		sv_timedCheckpointMinZ->value = z - 100.0f;
+		sv_timedCheckpointMaxX->value = x + 50.0f;
+		sv_timedCheckpointMaxY->value = y + 50.0f;
+		sv_timedCheckpointMaxZ->value = z + 100.0f;
+	} else if ( Cmd_Argc() == 7 ) {
+		const float x1 = atof( Cmd_Argv(1) );
+		const float y1 = atof( Cmd_Argv(2) );
+		const float z1 = atof( Cmd_Argv(3) );
+		const float x2 = atof( Cmd_Argv(4) );
+		const float y2 = atof( Cmd_Argv(5) );
+		const float z2 = atof( Cmd_Argv(6) );
+		sv_timedCheckpointMinX->value = min(x1, x2);
+		sv_timedCheckpointMinY->value = min(y1, y2);
+		sv_timedCheckpointMinZ->value = min(z1, z2);
+		sv_timedCheckpointMaxX->value = max(x1, x2);
+		sv_timedCheckpointMaxY->value = max(y1, y2);
+		sv_timedCheckpointMaxZ->value = max(z1, z2);
+	} else {
+		Com_Printf ("Usage: setTimedCheckpoint x y z  or  setTimedCheckpoint x1 y1 z1 x2 y2 z2\n");
+	}
+}
+
 //===========================================================
 
 /*
@@ -462,6 +497,7 @@ void SV_AddOperatorCommands( void ) {
 	Cmd_AddCommand ("loadtransition", SV_LoadTransition_f);
 	Cmd_AddCommand ("save", SV_SaveGame_f);
 	Cmd_AddCommand ("wipe", SV_WipeGame_f);
+	Cmd_AddCommand ("settimedcheckpoint", SV_SetTimedCheckpoint_f);
 
 //#ifdef _DEBUG
 //	extern void UI_Dump_f(void);

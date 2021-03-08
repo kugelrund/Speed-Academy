@@ -1969,7 +1969,7 @@ void G_ChangeMap (const char *mapname, const char *spawntarget, qboolean hub)
 		gi.SendConsoleCommand( va("uimenu %s\n", mapname+1) );
 		if ( g_skippingcin->integer )
 		{
-			cgi_SpeedrunUnpauseTimer();
+			cgi_SpeedrunUnpauseTimer(1);
 		}
 		gi.cvar_set("skippingCinematic", "0");
 		gi.cvar_set("timescale", "1");

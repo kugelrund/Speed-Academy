@@ -8,6 +8,7 @@
 
 
 #include "server.h"
+#include "../speedrun/speedrun_timer_q3/timer.h"
 
 /*
 ==================
@@ -407,6 +408,25 @@ void SV_ClientThink (client_t *cl, usercmd_t *cmd) {
 	}
 
 	ge->ClientThink( cl - svs.clients, cmd );
+	if (sv_speedrunModeCheckpoint->integer &&
+	    cl->gentity->currentOrigin[0] >= sv_timedCheckpointMinX->value &&
+	    cl->gentity->currentOrigin[0] <= sv_timedCheckpointMaxX->value &&
+	    cl->gentity->currentOrigin[1] >= sv_timedCheckpointMinY->value &&
+	    cl->gentity->currentOrigin[1] <= sv_timedCheckpointMaxY->value &&
+	    cl->gentity->currentOrigin[2] >= sv_timedCheckpointMinZ->value &&
+	    cl->gentity->currentOrigin[2] <= sv_timedCheckpointMaxZ->value)
+	{
+		if (sv_speedrunModeCheckpointSave->integer && !SpeedrunIsRunFinished()) {
+			static int save_counter = 0;
+			char save_command[] = "save timed_checkpoint0\n";
+			save_command[21] = '0' + save_counter;
+			Cbuf_AddText(save_command);
+			save_counter = (save_counter + 1) % 10;
+		}
+		// only print to console, not in notification area, so that it can be
+		// used for segmented runs.
+		SpeedrunRunFinished(false);
+	}
 }
 
 /*

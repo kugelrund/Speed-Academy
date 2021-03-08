@@ -509,6 +509,14 @@ void SV_Init (void) {
 
 	// Additions for Speed Academy
 	sv_speedrunModeIL = Cvar_Get ("sv_speedrunModeIL", "0", CVAR_ARCHIVE);
+	sv_speedrunModeCheckpoint = Cvar_Get ("sv_speedrunModeCheckpoint", "0", CVAR_ARCHIVE);
+	sv_speedrunModeCheckpointSave = Cvar_Get ("sv_speedrunModeCheckpointSave", "0", CVAR_ARCHIVE);
+	sv_timedCheckpointMinX = Cvar_Get ("sv_timedCheckpointMinX", "0", CVAR_ARCHIVE);
+	sv_timedCheckpointMinY = Cvar_Get ("sv_timedCheckpointMinY", "0", CVAR_ARCHIVE);
+	sv_timedCheckpointMinZ = Cvar_Get ("sv_timedCheckpointMinZ", "0", CVAR_ARCHIVE);
+	sv_timedCheckpointMaxX = Cvar_Get ("sv_timedCheckpointMaxX", "0", CVAR_ARCHIVE);
+	sv_timedCheckpointMaxY = Cvar_Get ("sv_timedCheckpointMaxY", "0", CVAR_ARCHIVE);
+	sv_timedCheckpointMaxZ = Cvar_Get ("sv_timedCheckpointMaxZ", "0", CVAR_ARCHIVE);
 
 	// Only allocated once, no point in moving it around and fragmenting
 	// create a heap for Ghoul2 to use for game side model vertex transforms used in collision detection

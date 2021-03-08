@@ -189,6 +189,9 @@ cvar_t	*broadsword_dircap=0;
 Ghoul2 Insert End
 */
 
+// Additions for Speed-Academy
+cvar_t	*r_showElevationBoosts;
+
 
 void ( APIENTRY * qglMultiTexCoord2fARB )( GLenum texture, GLfloat s, GLfloat t );
 void ( APIENTRY * qglActiveTextureARB )( GLenum texture );
@@ -1274,6 +1277,9 @@ extern qboolean Sys_LowPhysicalMemory();
 		Cvar_Set("r_modelpoolmegs", "0");
 	}
 
+	// Additions for Speed-Academy
+	r_showElevationBoosts = Cvar_Get( "r_showElevationBoosts", "0", CVAR_ARCHIVE );
+
 	// make sure all the commands added here are also
 	// removed in R_Shutdown
 	Cmd_AddCommand( "imagelist", R_ImageList_f );
@@ -1642,6 +1648,8 @@ refexport_t *GetRefAPI ( int apiVersion ) {
 	re.Language_IsAsian = Language_IsAsian;
 	re.Language_UsesSpaces = Language_UsesSpaces;
 	re.AnyLanguage_ReadCharFromString = AnyLanguage_ReadCharFromString;
+
+	re.SetPlayerJumpStartWorldZ = RE_SetPlayerJumpStartWorldZ;
 
 	return &re;
 }

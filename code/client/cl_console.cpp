@@ -251,13 +251,13 @@ void Con_Init (void) {
 Con_Linefeed
 ===============
 */
-void Con_Linefeed (void)
+static void Con_Linefeed (int time)
 {
 	int		i;
 
 	// mark time for transparent overlay
 	if (con.current >= 0)
-		con.times[con.current % NUM_CON_TIMES] = cls.realtime;
+		con.times[con.current % NUM_CON_TIMES] = time;
 
 	con.x = 0;
 	if (con.display == con.current)
@@ -268,15 +268,14 @@ void Con_Linefeed (void)
 }
 
 /*
-================
-CL_ConsolePrint
+===============
+Con_ConsolePrint_Impl
 
-Handles cursor positioning, line wrapping, etc
-All console printing must go through this in order to be logged to disk
-If no console is visible, the text will appear at the top of the game window
-================
+Actual implementation to be called from CL_ConsolePrint and the new
+CL_ConsolePrintNoNotify.
+===============
 */
-void CL_ConsolePrint( char *txt ) {
+static void Con_ConsolePrint_Impl( char *txt, int time ) {
 	int		y;
 	int		c, l;
 	int		color;
@@ -315,7 +314,7 @@ void CL_ConsolePrint( char *txt ) {
 
 		// word wrap
 		if (l != con.linewidth && (con.x + l >= con.linewidth) ) {
-			Con_Linefeed();
+			Con_Linefeed(time);
 
 		}
 
@@ -324,7 +323,7 @@ void CL_ConsolePrint( char *txt ) {
 		switch (c)
 		{
 		case '\n':
-			Con_Linefeed ();
+			Con_Linefeed (time);
 			break;
 		case '\r':
 			con.x = 0;
@@ -335,7 +334,7 @@ void CL_ConsolePrint( char *txt ) {
 			con.x++;
 			if (con.x >= con.linewidth) {
 
-				Con_Linefeed();
+				Con_Linefeed(time);
 				con.x = 0;
 			}
 			break;
@@ -346,7 +345,36 @@ void CL_ConsolePrint( char *txt ) {
 	// mark time for transparent overlay
 
 	if (con.current >= 0)
-		con.times[con.current % NUM_CON_TIMES] = cls.realtime;
+		con.times[con.current % NUM_CON_TIMES] = time;
+}
+
+/*
+================
+CL_ConsolePrint
+
+Handles cursor positioning, line wrapping, etc
+All console printing must go through this in order to be logged to disk
+If no console is visible, the text will appear at the top of the game window
+================
+*/
+void CL_ConsolePrint( char *txt ) {
+	Con_ConsolePrint_Impl(txt, cls.realtime);
+}
+
+/*
+================
+CL_ConsolePrintNoNotify
+
+Same as CL_ConsolePrint but explicitly avoids to print to the notify section in
+the top left corner even if con_notifytime is not 0.
+================
+*/
+void CL_ConsolePrintNoNotify( char *txt ) {
+	// this is subtracted from cls.realtime, so if we make it too small we will
+	// overflow. Lets take half of INT_MIN, then it will only overflow if
+	// cls.realtime is larger than INT_MAX/2 which hopefully shouldnt happen.
+	const int fake_time_to_avoid_printing_notify = INT_MIN/2;
+	Con_ConsolePrint_Impl(txt, fake_time_to_avoid_printing_notify);
 }
 
 

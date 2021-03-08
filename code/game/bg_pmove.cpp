@@ -14889,6 +14889,17 @@ void Pmove( pmove_t *pmove )
 
 	pm = pmove;
 
+	// Communicate height of start of jump to renderer so that the feature of
+	// Speed-Academy that draws the band of heights that allows elevation boosts
+	// can work properly.
+	if ( pm->ps->clientNum == 0 ) {
+		if ( pm->ps->jumpZStart == 0.0 ) {
+			cgi_R_SetPlayerJumpStartWorldZ( pm->ps->origin[2] + pm->gent->mins[2] );
+		} else {
+			cgi_R_SetPlayerJumpStartWorldZ( pm->ps->jumpZStart + pm->gent->mins[2] );
+		}
+	}
+
 	// this counter lets us debug movement problems with a journal by setting a conditional breakpoint fot the previous frame
 	c_pmove++;
 

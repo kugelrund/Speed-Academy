@@ -255,7 +255,8 @@ typedef enum {
 	TCGEN_TEXTURE,
 	TCGEN_ENVIRONMENT_MAPPED,
 	TCGEN_FOG,
-	TCGEN_VECTOR			// S and T from world coordinates
+	TCGEN_VECTOR,			// S and T from world coordinates
+	TCGEN_ELEVATION
 } texCoordGen_t;
 
 typedef enum {
@@ -1159,6 +1160,9 @@ typedef struct {
 	image_t					*saveGameImage;
 #endif //_XBOX
 	
+	// Addition for Speed-Academy to color in area of elevation boosts
+	image_t					*elevationImage;
+
 #ifndef _XBOX	// GLOWXXX
 	// Handle to the Glow Effect Vertex Shader. - AReis
 	GLuint					glowVShader;
@@ -1182,6 +1186,9 @@ typedef struct {
 	shader_t				*projectionShadowShader;
 
 	shader_t				*sunShader;
+
+	// Addition for Speed-Academy to color in area of elevation boosts
+	shader_t				*elevationShader;
 
 	int						numLightmaps;
 	image_t					*lightmaps[MAX_LIGHTMAPS];
@@ -1405,6 +1412,9 @@ extern	cvar_t	*r_noGhoul2;
 /*
 Ghoul2 Insert End
 */
+
+// Additions for Speed-Academy
+extern	cvar_t	*r_showElevationBoosts;
 //====================================================================
 
 // Point sprite stuff.
@@ -1922,6 +1932,9 @@ void	RB_CalcEnvironmentTexCoords( float *dstTexCoords );
 void	RB_CalcFogTexCoords( float *dstTexCoords );
 void	RB_CalcTurbulentTexCoords( const waveForm_t *wf, float *dstTexCoords );
 
+// Addition for Speed-Academy
+void	RB_CalcElevationTexCoords( float *dstTexCoords );
+
 #ifdef _XBOX
 void	RB_CalcWaveColor( const waveForm_t *wf, DWORD *dstColors );
 void	RB_CalcColorFromEntity( DWORD *dstColors );
@@ -2167,5 +2180,8 @@ struct DDS_HEADER
     DWORD dwReserved2[3];
 };
 #endif
+
+
+void RE_SetPlayerJumpStartWorldZ(float value);
 
 #endif //TR_LOCAL_H

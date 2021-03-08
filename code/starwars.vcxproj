@@ -93,7 +93,6 @@
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>ff/ifc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;_JK2EXE;WIN32;_WINDOWS;_IMMERSION;_FF;_USE_32BIT_TIME_T;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MinimalRebuild>true</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -223,7 +222,6 @@
       <AdditionalIncludeDirectories>ff/ifc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;_JK2EXE;WIN32;_WINDOWS;_IMMERSION;_FF;_USE_32BIT_TIME_T;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
-      <MinimalRebuild>true</MinimalRebuild>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeader />
@@ -1961,15 +1959,19 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='SHDebug|Win32'">
       </PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="speedrun\speedrun_timer_includes.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='FinalBuild|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="speedrun\speedrun_timer_q3\timer.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\server\exe_headers.h</PrecompiledHeaderFile>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='FinalBuild|Win32'">Use</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='FinalBuild|Win32'">..\..\server\exe_headers.h</PrecompiledHeaderFile>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\server\exe_headers.h</PrecompiledHeaderFile>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='SHDebug|Win32'">Use</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='SHDebug|Win32'">..\..\server\exe_headers.h</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='FinalBuild|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='SHDebug|Win32'">
+      </PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="speedrun\speedrun_timer_q3\timer_helper.cpp" />
     <ClCompile Include="ui\ui_atoms.cpp">
@@ -2339,6 +2341,7 @@
     <ClInclude Include="smartheap\HEAPAGNT.H" />
     <ClInclude Include="smartheap\SMRTHEAP.H" />
     <ClInclude Include="smartheap\smrtheap.hpp" />
+    <ClInclude Include="speedrun\speedrun_timer_includes.h" />
     <ClInclude Include="speedrun\speedrun_timer_q3\timer.h" />
     <ClInclude Include="speedrun\speedrun_timer_q3\timer_helper.h" />
     <ClInclude Include="ui\gameinfo.h" />

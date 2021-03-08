@@ -645,14 +645,14 @@ int cgi_EndGame(void)
 	return syscall( CG_SENDCONSOLECOMMAND, "cam_disable; disconnect\n" );//; cinematic outcast
 }
 
-void cgi_SpeedrunPauseTimer(void)
+void cgi_SpeedrunPauseTimer(int priority)
 {
-	syscall(CG_SPEEDRUN_PAUSE_TIMER);
+	syscall(CG_SPEEDRUN_PAUSE_TIMER, priority);
 }
 
-void cgi_SpeedrunUnpauseTimer(void)
+void cgi_SpeedrunUnpauseTimer(int priority)
 {
-	syscall(CG_SPEEDRUN_UNPAUSE_TIMER);
+	syscall(CG_SPEEDRUN_UNPAUSE_TIMER, priority);
 }
 
 void cgi_SpeedrunLevelFinished(void)
@@ -671,4 +671,8 @@ int cgi_SpeedrunGetTotalTimeMilliseconds(void) {
 
 int cgi_SpeedrunGetLevelTimeMilliseconds(void) {
 	return syscall(CG_SPEEDRUN_GET_LEVEL_TIME_MILLISECONDS);
+}
+
+void cgi_R_SetPlayerJumpStartWorldZ( float value ) {
+	syscall(CG_R_SET_PLAYER_JUMP_START_Z_WORLD, PASSFLOAT(value));
 }

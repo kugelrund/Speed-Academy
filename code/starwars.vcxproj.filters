@@ -665,6 +665,9 @@
     <ClCompile Include="speedrun\speedrun_timer_q3\timer_helper.cpp">
       <Filter>speedrun\speedrun_timer_q3</Filter>
     </ClCompile>
+    <ClCompile Include="speedrun\speedrun_timer_includes.cpp">
+      <Filter>speedrun</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="client\eax\EaxMan.h">
@@ -1260,6 +1263,9 @@
     </ClInclude>
     <ClInclude Include="speedrun\speedrun_timer_q3\timer_helper.h">
       <Filter>speedrun\speedrun_timer_q3</Filter>
+    </ClInclude>
+    <ClInclude Include="speedrun\speedrun_timer_includes.h">
+      <Filter>speedrun</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

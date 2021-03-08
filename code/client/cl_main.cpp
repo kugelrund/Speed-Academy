@@ -328,7 +328,7 @@ void CL_Disconnect( void ) {
 
 	if ( cl_skippingcin->integer )
 	{
-		SpeedrunUnpauseTimer();
+		SpeedrunUnpauseTimer(1);
 	}
 	// allow cheats locally
 	Cvar_Set( "timescale", "1" );//jic we were skipping

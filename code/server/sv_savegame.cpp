@@ -1294,6 +1294,9 @@ qboolean SG_ReadSavegame(const char *psPathlessBaseName)
 
 	// Disk I/O is slow, so lets explicitly pause the timer here already
 	SpeedrunPauseTimer();
+	if (sv_speedrunModeCheckpoint->integer) {
+		SpeedrunResetTimer();
+	}
 
 	// this check isn't really necessary, but it reminds me that these two strings may actually be the same physical one.
 	//

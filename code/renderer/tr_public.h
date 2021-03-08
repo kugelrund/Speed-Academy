@@ -136,6 +136,9 @@ typedef struct {
 	qboolean (*Language_UsesSpaces) (void);
 	unsigned int (*AnyLanguage_ReadCharFromString)( const char *psText, int * piAdvanceCount, qboolean *pbIsTrailingPunctuation /* = NULL */);
 
+	// Additions for Speed-Academy
+	void	(*SetPlayerJumpStartWorldZ)(float value);
+
 } refexport_t;
 
 

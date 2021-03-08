@@ -146,7 +146,7 @@ void CGCam_Disable( void )
 	{//We're skipping the cinematic and it's over now
 		gi.cvar_set("timescale", "1");
 		gi.cvar_set("skippingCinematic", "0");
-		cgi_SpeedrunUnpauseTimer();
+		cgi_SpeedrunUnpauseTimer(1);
 	}
 
 	//we just came out of camera, so update cg.refdef.vieworg out of the camera's origin so the snapshot will know our new ori

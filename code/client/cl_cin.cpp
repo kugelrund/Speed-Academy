@@ -1666,7 +1666,7 @@ static void PlayCinematic(const char *arg, const char *s, qboolean qbInGame)
 	extern cvar_t *cl_skippingcin;
 	if ( cl_skippingcin->integer )
 	{
-		SpeedrunUnpauseTimer();
+		SpeedrunUnpauseTimer(1);
 	}
 	Cvar_Set( "timescale", "1" );			// jic we were skipping a scripted cinematic, return to normal after playing video
 	Cvar_Set( "skippingCinematic", "0" );	// "" 
