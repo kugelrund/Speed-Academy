@@ -369,6 +369,16 @@ void R_ImageList_f( void ) {
 //=======================================================================
 
 
+#ifndef NDEBUG
+static bool isColorConversionTableIdentity(const byte* table, int table_size) {
+	for (int i = 0; i < table_size; ++i)
+	{
+		if (table[i] != i) return false;
+	}
+	return true;
+}
+#endif
+
 /*
 ================
 R_LightScaleTexture
@@ -408,6 +418,15 @@ static void R_LightScaleTexture (unsigned *in, int inwidth, int inheight, qboole
 
 		if ( glConfig.deviceSupportsGamma )
 		{
+			if (r_intensity->value == 1.0)
+			{
+				assert(isColorConversionTableIdentity(s_intensitytable,
+					sizeof(s_intensitytable)/sizeof(s_intensitytable[0])));
+				// no changes will happen so we dont have to do this work
+				// (which does show up in a profile for heavy loading)
+				return;
+			}
+
 			for (i=0 ; i<c ; i++, p+=4)
 			{
 				p[0] = s_intensitytable[p[0]];
