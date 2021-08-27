@@ -1285,6 +1285,7 @@ extern cvar_t	*r_texturebits;			// number of desired texture bits
 										// 32 = use 32-bit textures
 										// all else = error
 extern cvar_t	*r_texturebitslm;		// number of desired lightmap texture bits
+extern cvar_t	*r_textureForceRGBA8;	// (Speed-Academy) reduce load times by forcing RBGA texture format
 
 extern cvar_t	*r_measureOverdraw;		// enables stencil buffer overdraw measurement
 

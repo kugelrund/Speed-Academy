@@ -99,6 +99,7 @@ cvar_t	*r_stereo;
 cvar_t	*r_primitives;
 cvar_t	*r_texturebits;
 cvar_t	*r_texturebitslm;
+cvar_t  *r_textureForceRGBA8;
 
 cvar_t	*r_lightmap;
 cvar_t	*r_vertexLight;
@@ -1120,6 +1121,7 @@ void R_Register( void )
 	r_detailTextures = Cvar_Get( "r_detailtextures", "1", CVAR_ARCHIVE | CVAR_LATCH );
 	r_texturebits = Cvar_Get( "r_texturebits", "0", CVAR_ARCHIVE | CVAR_LATCH );
 	r_texturebitslm = Cvar_Get( "r_texturebitslm", "0", CVAR_ARCHIVE | CVAR_LATCH );
+	r_textureForceRGBA8 = Cvar_Get( "r_textureForceRGBA8", "1", CVAR_ARCHIVE | CVAR_LATCH );
 	r_colorbits = Cvar_Get( "r_colorbits", "0", CVAR_ARCHIVE | CVAR_LATCH );
 	r_stereo = Cvar_Get( "r_stereo", "0", CVAR_ARCHIVE | CVAR_LATCH );
 #ifdef __linux__
