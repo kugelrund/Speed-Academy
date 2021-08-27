@@ -332,6 +332,10 @@ extern	void ( APIENTRY * qglPointParameterfvEXT)( GLenum, GLfloat *);
 extern	void ( APIENTRY * qglPointParameteriNV)( GLenum, GLint);
 extern	void ( APIENTRY * qglPointParameterivNV)( GLenum, const GLint *);
 
+// Additions for Speed-Academy loading time improvements
+extern	void ( APIENTRY * qglTexStorage2D )(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height);
+extern	void ( APIENTRY * qglGenerateMipmap )(GLenum target);
+
 //===========================================================================
 
 // non-windows systems will just redefine qgl* to gl*

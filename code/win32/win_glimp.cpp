@@ -1235,6 +1235,10 @@ static void GLW_InitExtensions( void )
 		VID_Printf( PRINT_ALL, "...GL_NV_point_sprite not found\n" );
 	}
 
+	// Additions for Speed-Academy loading time improvements
+	qglTexStorage2D = reinterpret_cast<decltype(qglTexStorage2D)>(qwglGetProcAddress("glTexStorage2D"));
+	qglGenerateMipmap = reinterpret_cast<decltype(qglGenerateMipmap)>(qwglGetProcAddress("glGenerateMipmap"));
+
 	bool bNVRegisterCombiners = false;
 	// Register Combiners.
 	if ( strstr( glConfig.extensions_string, "GL_NV_register_combiners" ) )

@@ -208,6 +208,10 @@ void ( APIENTRY * qglPointParameterfvEXT)( GLenum, GLfloat *);
 void ( APIENTRY * qglPointParameteriNV)( GLenum, GLint);
 void ( APIENTRY * qglPointParameterivNV)( GLenum, const GLint *);
 
+// Additions for Speed-Academy loading time improvements
+void ( APIENTRY * qglTexStorage2D )(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height);
+void ( APIENTRY * qglGenerateMipmap )(GLenum target);
+
 #ifndef _XBOX	// GLOWXXX
 // Declare Register Combiners function pointers.
 PFNGLCOMBINERPARAMETERFVNV				qglCombinerParameterfvNV = NULL;

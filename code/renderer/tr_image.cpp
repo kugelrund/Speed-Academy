@@ -897,31 +897,49 @@ static void Upload32( unsigned *data,
 
 		R_LightScaleTexture (data, width, height, !mipmap );
     
-	    qglTexImage2D (GL_TEXTURE_2D, 0, *pformat, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data );
-    
-	    if (mipmap)
-	    {
-		    int		miplevel;
-    
-		    miplevel = 0;
-		    while (width > 1 || height > 1)
-		    {
-			    R_MipMap( (byte *)data, width, height );
-			    width >>= 1;
-			    height >>= 1;
-			    if (width < 1)
-				    width = 1;
-			    if (height < 1)
-				    height = 1;
-			    miplevel++;
-    
-			    if ( r_colorMipLevels->integer ) 
-			    {
-				    R_BlendOverTexture( (byte *)data, width * height, mipBlendColors[miplevel] );
-			    }
-    
-			    qglTexImage2D (GL_TEXTURE_2D, miplevel, *pformat, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data );
-		    }
+		if (mipmap)
+		{
+			if (!qglGenerateMipmap || r_colorMipLevels->integer)
+			{
+				// old fallback method if we dont have glGenerateMipmap
+				// or want to give custom colors to the mipmaps
+
+				qglTexImage2D (GL_TEXTURE_2D, 0, *pformat, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data );
+
+				int		miplevel;
+
+				miplevel = 0;
+				while (width > 1 || height > 1)
+				{
+					R_MipMap( (byte *)data, width, height );
+					width >>= 1;
+					height >>= 1;
+					if (width < 1)
+						width = 1;
+					if (height < 1)
+						height = 1;
+					miplevel++;
+
+					if ( r_colorMipLevels->integer ) 
+					{
+						R_BlendOverTexture( (byte *)data, width * height, mipBlendColors[miplevel] );
+					}
+
+					qglTexImage2D (GL_TEXTURE_2D, miplevel, *pformat, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data );
+				}
+			}
+			else if (!qglTexStorage2D)
+			{
+				qglTexImage2D (GL_TEXTURE_2D, 0, *pformat, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data );
+				qglGenerateMipmap(GL_TEXTURE_2D);  //Generate num_mipmaps number of mipmaps here.
+			}
+			else
+			{
+				const int num_mipmaps = max(Q_log2(width), Q_log2(height));
+				qglTexStorage2D(GL_TEXTURE_2D, num_mipmaps, GL_RGBA8, width, height);
+				qglTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
+				qglGenerateMipmap(GL_TEXTURE_2D);
+			}
 	    }
 	}
 	else

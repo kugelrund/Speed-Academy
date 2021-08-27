@@ -3540,6 +3540,10 @@ qboolean QGL_Init( const char *dllname )
 	qglPointParameteriNV	= NULL;
 	qglPointParameterivNV	= NULL;
 
+	// Additions for Speed-Academy loading time improvements
+	qglTexStorage2D = NULL;
+	qglGenerateMipmap = NULL;
+
 	// check logging
 	QGL_EnableLogging( r_logFile->integer );
 
