@@ -7,3 +7,6 @@
 [submodule "code/speedrun/speedrun_timer_q3"]
 	path = code/speedrun/speedrun_timer_q3
 	url = https://github.com/kugelrund/speedrun_timer_q3.git
+[submodule "code/jpeg/libjpeg-turbo"]
+	path = code/jpeg/libjpeg-turbo
+	url = https://github.com/libjpeg-turbo/libjpeg-turbo.git

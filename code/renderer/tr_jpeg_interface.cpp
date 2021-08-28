@@ -19,16 +19,13 @@
  */
 
 #define JPEG_INTERNALS
-#include "../jpeg-6/jpeglib.h"
+#include "../jpeg/libjpeg-turbo/jpeglib.h"
 
 // JPG decompression now subroutinised so I can call it from the savegame stuff...
 //
-// (note, the param "byte* pJPGData" should be a malloc of 4K more than the JPG data because the decompressor will read 
-//	up to 4K beyond what's actually presented during decompression).
-//	
 // This will Z_Malloc the output data buffer that gets fed back into "pic", so Z_Free it yourself later.
 //
-void Decompress_JPG( const char *filename, byte *pJPGData, unsigned char **pic, int *width, int *height ) 
+void Decompress_JPG( const char *filename, byte *pJPGData, unsigned long jpg_input_size, unsigned char **pic, int *width, int *height ) 
 {
 	/* This struct contains the JPEG decompression parameters and pointers to
 	* working space (which is allocated as needed by the JPEG library).
@@ -67,7 +64,7 @@ void Decompress_JPG( const char *filename, byte *pJPGData, unsigned char **pic, 
 	
 	/* Step 2: specify data source (eg, a file) */
 	
-	jpeg_stdio_src(&cinfo, pJPGData);
+	jpeg_mem_src(&cinfo, pJPGData, jpg_input_size);
 	
 	/* Step 3: read file parameters with jpeg_read_header() */
 	
@@ -79,10 +76,8 @@ void Decompress_JPG( const char *filename, byte *pJPGData, unsigned char **pic, 
 	   */
 	
 	/* Step 4: set parameters for decompression */
-	
-	/* In this example, we don't need to change any of the defaults set by
-	   * jpeg_read_header(), so we do nothing here.
-	   */
+
+	cinfo.out_color_space = JCS_EXT_RGBA;
 	
 	/* Step 5: Start decompressor */
 	
@@ -100,7 +95,7 @@ void Decompress_JPG( const char *filename, byte *pJPGData, unsigned char **pic, 
 	/* JSAMPLEs per row in output buffer */
 	row_stride = cinfo.output_width * cinfo.output_components;
 	
-	if (cinfo.output_components!=4 && cinfo.output_components!=1 ) {
+	if (cinfo.output_components!=4) {
 		VID_Printf(PRINT_WARNING, "JPG %s is unsupported color depth (%d)\n", filename, cinfo.output_components);
 	}
 	out = (byte *)Z_Malloc(cinfo.output_width*cinfo.output_height*4, TAG_TEMP_JPG, qfalse );
@@ -123,37 +118,6 @@ void Decompress_JPG( const char *filename, byte *pJPGData, unsigned char **pic, 
 		bbuf = ((out+(row_stride*cinfo.output_scanline)));
 		buffer = &bbuf;
 		(void) jpeg_read_scanlines(&cinfo, buffer, 1);
-	}
-	
-	// if we've just loaded a greyscale, then adjust it from 8-bit to 32bit by stretch-copying it over itself...
-	//  (this also does the alpha stuff as well)
-	//
-	if (cinfo.output_components == 1)
-	{
-		byte *pbDest = (*pic + (cinfo.output_width * cinfo.output_height * 4))-1;
-		byte *pbSrc  = (*pic + (cinfo.output_width * cinfo.output_height    ))-1;
-		int  iPixels = cinfo.output_width * cinfo.output_height;
-		
-		for (int i=0; i<iPixels; i++)
-		{
-			byte b = *pbSrc--;
-			*pbDest-- = 255;
-			*pbDest-- = b;
-			*pbDest-- = b;
-			*pbDest-- = b;
-		}
-	}
-	else	  
-	{// clear all the alphas to 255
-		int	i, j;
-		byte	*buf;
-		
-		buf = *pic;
-		
-		j = cinfo.output_width * cinfo.output_height * 4;
-		for ( i = 3 ; i < j ; i+=4 ) {
-			buf[i] = 255;
-		}
 	}
 	
 	/* Step 7: Finish decompression */
@@ -191,12 +155,11 @@ int LoadJPG( const char *filename, unsigned char **pic, int *width, int *height 
 	{
 		return 0;
 	}
-	//JPEG system reads 4K past input buffer so we tack on an additional 4k.
-	byte *pJPGData = (byte *)Z_Malloc(len + 4096, TAG_TEMP_JPG, qfalse);
+	byte *pJPGData = (byte *)Z_Malloc(len, TAG_TEMP_JPG, qfalse);
 	FS_Read(pJPGData, len, h);
 	FS_FCloseFile( h );
 
-	Decompress_JPG( filename, pJPGData, pic, width, height );
+	Decompress_JPG( filename, pJPGData, len, pic, width, height );
 
 	Z_Free (pJPGData);
 	return len;
@@ -257,97 +220,6 @@ boolean empty_output_buffer (j_compress_ptr cinfo)
   return TRUE;
 }
 
-
-/*
- * Compression initialization.
- * Before calling this, all parameters and a data destination must be set up.
- *
- * We require a write_all_tables parameter as a failsafe check when writing
- * multiple datastreams from the same compression object.  Since prior runs
- * will have left all the tables marked sent_table=TRUE, a subsequent run
- * would emit an abbreviated stream (no tables) by default.  This may be what
- * is wanted, but for safety's sake it should not be the default behavior:
- * programmers should have to make a deliberate choice to emit abbreviated
- * images.  Therefore the documentation and examples should encourage people
- * to pass write_all_tables=TRUE; then it will take active thought to do the
- * wrong thing.
- */
-
-GLOBAL void
-jpeg_start_compress (j_compress_ptr cinfo, boolean write_all_tables)
-{
-  if (cinfo->global_state != CSTATE_START)
-    ERREXIT1(cinfo, JERR_BAD_STATE, cinfo->global_state);
-
-  if (write_all_tables)
-    jpeg_suppress_tables(cinfo, FALSE);	/* mark all tables to be written */
-
-  /* (Re)initialize error mgr and destination modules */
-  (*cinfo->err->reset_error_mgr) ((j_common_ptr) cinfo);
-  (*cinfo->dest->init_destination) (cinfo);
-  /* Perform master selection of active modules */
-  jinit_compress_master(cinfo);
-  /* Set up for the first pass */
-  (*cinfo->master->prepare_for_pass) (cinfo);
-  /* Ready for application to drive first pass through jpeg_write_scanlines
-   * or jpeg_write_raw_data.
-   */
-  cinfo->next_scanline = 0;
-  cinfo->global_state = (cinfo->raw_data_in ? CSTATE_RAW_OK : CSTATE_SCANNING);
-}
-
-
-/*
- * Write some scanlines of data to the JPEG compressor.
- *
- * The return value will be the number of lines actually written.
- * This should be less than the supplied num_lines only in case that
- * the data destination module has requested suspension of the compressor,
- * or if more than image_height scanlines are passed in.
- *
- * Note: we warn about excess calls to jpeg_write_scanlines() since
- * this likely signals an application programmer error.  However,
- * excess scanlines passed in the last valid call are *silently* ignored,
- * so that the application need not adjust num_lines for end-of-image
- * when using a multiple-scanline buffer.
- */
-
-GLOBAL JDIMENSION
-jpeg_write_scanlines (j_compress_ptr cinfo, JSAMPARRAY scanlines,
-		      JDIMENSION num_lines)
-{
-  JDIMENSION row_ctr, rows_left;
-
-  if (cinfo->global_state != CSTATE_SCANNING)
-    ERREXIT1(cinfo, JERR_BAD_STATE, cinfo->global_state);
-  if (cinfo->next_scanline >= cinfo->image_height)
-    WARNMS(cinfo, JWRN_TOO_MUCH_DATA);
-
-  /* Call progress monitor hook if present */
-  if (cinfo->progress != NULL) {
-    cinfo->progress->pass_counter = (long) cinfo->next_scanline;
-    cinfo->progress->pass_limit = (long) cinfo->image_height;
-    (*cinfo->progress->progress_monitor) ((j_common_ptr) cinfo);
-  }
-
-  /* Give master control module another chance if this is first call to
-   * jpeg_write_scanlines.  This lets output of the frame/scan headers be
-   * delayed so that application can write COM, etc, markers between
-   * jpeg_start_compress and jpeg_write_scanlines.
-   */
-  if (cinfo->master->call_pass_startup)
-    (*cinfo->master->pass_startup) (cinfo);
-
-  /* Ignore any extra scanlines at bottom of image. */
-  rows_left = cinfo->image_height - cinfo->next_scanline;
-  if (num_lines > rows_left)
-    num_lines = rows_left;
-
-  row_ctr = 0;
-  (*cinfo->main->process_data) (cinfo, scanlines, &row_ctr, num_lines);
-  cinfo->next_scanline += row_ctr;
-  return row_ctr;
-}
 
 /*
  * Terminate destination --- called by jpeg_finish_compress
@@ -454,7 +326,7 @@ byte *Compress_JPG(int *pOutputSize, int quality, int image_width, int image_hei
   cinfo.image_width = image_width; 	/* image width and height, in pixels */
   cinfo.image_height = image_height;
   cinfo.input_components = 4;		/* # of color components per pixel */
-  cinfo.in_color_space = JCS_RGB; 	/* colorspace of input image */
+  cinfo.in_color_space = JCS_EXT_RGBA; 	/* colorspace of input image */
   /* Now use the library's routine to set default compression parameters.
    * (You must set at least cinfo.in_color_space before calling this,
    * since the defaults depend on the source color space.)
