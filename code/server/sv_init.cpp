@@ -67,19 +67,15 @@ SV_GetConfigstring
 
 ===============
 */
-void SV_GetConfigstring( int index, char *buffer, int bufferSize ) {
-	if ( bufferSize < 1 ) {
-		Com_Error( ERR_DROP, "SV_GetConfigstring: bufferSize == %i", bufferSize );
-	}
+const char* SV_GetConfigstring( int index ) {
 	if ( index < 0 || index >= MAX_CONFIGSTRINGS ) {
 		Com_Error (ERR_DROP, "SV_GetConfigstring: bad index %i\n", index);
 	}
 	if ( !sv.configstrings[index] ) {
-		buffer[0] = 0;
-		return;
+		return "";
 	}
 
-	Q_strncpyz( buffer, sv.configstrings[index], bufferSize );
+	return sv.configstrings[index];
 }
 
 

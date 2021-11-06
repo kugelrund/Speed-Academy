@@ -35,14 +35,13 @@ G_FindConfigstringIndex
 extern void ForceTelepathy( gentity_t *self );
 int G_FindConfigstringIndex( const char *name, int start, int max, qboolean create ) {
 	int		i;
-	char	s[MAX_STRING_CHARS];
 
 	if ( !name || !name[0] ) {
 		return 0;
 	}
 
 	for ( i=1 ; i<max ; i++ ) {
-		gi.GetConfigstring( start + i, s, sizeof( s ) );
+		const char* s = gi.GetConfigstring( start + i );
 		if ( !s[0] ) {
 			break;
 		}

@@ -238,7 +238,7 @@ typedef struct {
 	// they connect, and changes are sent to all connected clients.
 	// All confgstrings are cleared at each level start.
 	void	(*SetConfigstring)( int num, const char *string );
-	void	(*GetConfigstring)( int num, char *buffer, int bufferSize );
+	const char* (*GetConfigstring)( int num );
 
 	// userinfo strings are maintained by the server system, so they
 	// are persistant across level loads, while all other game visible

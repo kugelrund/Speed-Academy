@@ -102,15 +102,9 @@ static void misc_lightstyle_set ( gentity_t *ent)
 	{	//turn off
 		if (mLightOffStyle)	//i have a light style i'd like to use when off
 		{
-			char lightstyle[32];
-			gi.GetConfigstring(CS_LIGHT_STYLES + (mLightOffStyle*3)+0, lightstyle, 32);
-			gi.SetConfigstring(CS_LIGHT_STYLES + (mLightStyle*3)+0, lightstyle);
-
-			gi.GetConfigstring(CS_LIGHT_STYLES + (mLightOffStyle*3)+1, lightstyle, 32);
-			gi.SetConfigstring(CS_LIGHT_STYLES + (mLightStyle*3)+1, lightstyle);
-
-			gi.GetConfigstring(CS_LIGHT_STYLES + (mLightOffStyle*3)+2, lightstyle, 32);
-			gi.SetConfigstring(CS_LIGHT_STYLES + (mLightStyle*3)+2, lightstyle);
+			gi.SetConfigstring(CS_LIGHT_STYLES + (mLightStyle*3)+0, gi.GetConfigstring(CS_LIGHT_STYLES + (mLightOffStyle*3)+0));
+			gi.SetConfigstring(CS_LIGHT_STYLES + (mLightStyle*3)+1, gi.GetConfigstring(CS_LIGHT_STYLES + (mLightOffStyle*3)+1));
+			gi.SetConfigstring(CS_LIGHT_STYLES + (mLightStyle*3)+2, gi.GetConfigstring(CS_LIGHT_STYLES + (mLightOffStyle*3)+2));
 		}else
 		{
 			gi.SetConfigstring(CS_LIGHT_STYLES + (mLightStyle*3)+0, "a");
@@ -122,15 +116,9 @@ static void misc_lightstyle_set ( gentity_t *ent)
 	{	//Turn myself on now
 		if (mLightSwitchStyle)	//i have a light style i'd like to use when on
 		{
-			char lightstyle[32];
-			gi.GetConfigstring(CS_LIGHT_STYLES + (mLightSwitchStyle*3)+0, lightstyle, 32);
-			gi.SetConfigstring(CS_LIGHT_STYLES + (mLightStyle*3)+0, lightstyle);
-
-			gi.GetConfigstring(CS_LIGHT_STYLES + (mLightSwitchStyle*3)+1, lightstyle, 32);
-			gi.SetConfigstring(CS_LIGHT_STYLES + (mLightStyle*3)+1, lightstyle);
-
-			gi.GetConfigstring(CS_LIGHT_STYLES + (mLightSwitchStyle*3)+2, lightstyle, 32);
-			gi.SetConfigstring(CS_LIGHT_STYLES + (mLightStyle*3)+2, lightstyle);
+			gi.SetConfigstring(CS_LIGHT_STYLES + (mLightStyle*3)+0, gi.GetConfigstring(CS_LIGHT_STYLES + (mLightSwitchStyle*3)+0));
+			gi.SetConfigstring(CS_LIGHT_STYLES + (mLightStyle*3)+1, gi.GetConfigstring(CS_LIGHT_STYLES + (mLightSwitchStyle*3)+1));
+			gi.SetConfigstring(CS_LIGHT_STYLES + (mLightStyle*3)+2, gi.GetConfigstring(CS_LIGHT_STYLES + (mLightSwitchStyle*3)+2));
 		}
 		else
 		{

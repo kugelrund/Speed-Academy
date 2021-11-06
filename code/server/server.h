@@ -196,7 +196,7 @@ void SV_RemoveOperatorCommands (void);
 // sv_init.c
 //
 void SV_SetConfigstring( int index, const char *val );
-void SV_GetConfigstring( int index, char *buffer, int bufferSize );
+const char* SV_GetConfigstring( int index );
 
 void SV_SetUserinfo( int index, const char *val );
 void SV_GetUserinfo( int index, char *buffer, int bufferSize );
