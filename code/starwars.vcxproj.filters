@@ -72,7 +72,7 @@
     <Filter Include="PNG">
       <UniqueIdentifier>{3a5cb09f-3b94-411d-b53c-99c8ab598cb1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="zlib32">
+    <Filter Include="zlib">
       <UniqueIdentifier>{24d35d68-bbd2-4e89-9fe7-3a64494ce126}</UniqueIdentifier>
     </Filter>
     <Filter Include="Ghoul2">
@@ -671,14 +671,29 @@
     <ClCompile Include="png\png.cpp">
       <Filter>PNG</Filter>
     </ClCompile>
-    <ClCompile Include="zlib32\deflate.cpp">
-      <Filter>zlib32</Filter>
+    <ClCompile Include="zlib\adler32.c">
+      <Filter>zlib</Filter>
     </ClCompile>
-    <ClCompile Include="zlib32\inflate.cpp">
-      <Filter>zlib32</Filter>
+    <ClCompile Include="zlib\crc32.c">
+      <Filter>zlib</Filter>
     </ClCompile>
-    <ClCompile Include="zlib32\zipcommon.cpp">
-      <Filter>zlib32</Filter>
+    <ClCompile Include="zlib\deflate.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\inffast.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\inflate.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\inftrees.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\trees.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\zutil.c">
+      <Filter>zlib</Filter>
     </ClCompile>
     <ClCompile Include="ghoul2\G2_API.cpp">
       <Filter>Ghoul2</Filter>
@@ -1234,14 +1249,14 @@
     <ClInclude Include="png\png.h">
       <Filter>PNG</Filter>
     </ClInclude>
-    <ClInclude Include="zlib32\deflate.h">
-      <Filter>zlib32</Filter>
+    <ClInclude Include="zlib\deflate.h">
+      <Filter>zlib</Filter>
     </ClInclude>
-    <ClInclude Include="zlib32\inflate.h">
-      <Filter>zlib32</Filter>
+    <ClInclude Include="zlib\inflate.h">
+      <Filter>zlib</Filter>
     </ClInclude>
-    <ClInclude Include="zlib32\zip.h">
-      <Filter>zlib32</Filter>
+    <ClInclude Include="zlib\zip.h">
+      <Filter>zlib</Filter>
     </ClInclude>
     <ClInclude Include="ghoul2\G2.h">
       <Filter>Ghoul2</Filter>

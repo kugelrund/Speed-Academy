@@ -10,3 +10,6 @@
 [submodule "code/jpeg/libjpeg-turbo"]
 	path = code/jpeg/libjpeg-turbo
 	url = https://github.com/libjpeg-turbo/libjpeg-turbo.git
+[submodule "code/zlib"]
+	path = code/zlib
+	url = https://github.com/madler/zlib.git

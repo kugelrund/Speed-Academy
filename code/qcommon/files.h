@@ -14,7 +14,7 @@
 
 typedef int wfhandle_t;
 #else
-#include "../zlib32/zip.h"
+#include "../zlib/zlib.h"
 #include "unzip.h"
 #endif
 

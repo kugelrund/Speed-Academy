@@ -40,8 +40,8 @@
 	TAGDEF(SHADERTEXT),					// used by cm_shader stuff
 	TAGDEF(CM_TERRAIN),					// terrain
 	TAGDEF(R_TERRAIN),					// renderer side of terrain
-	TAGDEF(INFLATE),				// Temp memory used by zlib32
-	TAGDEF(DEFLATE),				// Temp memory used by zlib32
+	TAGDEF(INFLATE),				// Temp memory used by zlib
+	TAGDEF(DEFLATE),				// Temp memory used by zlib
 	TAGDEF(POINTCACHE),					// weather effects
 	TAGDEF(NEWDEL),
 #ifdef _XBOX
