@@ -9,7 +9,17 @@
 #include "png.h"
 //#include "../qcommon/memory.h"
 
-// Error returns
+#define WUFFS_CONFIG__MODULES
+#define WUFFS_CONFIG__MODULE__ADLER32
+#define WUFFS_CONFIG__MODULE__BASE
+#define WUFFS_CONFIG__MODULE__CRC32
+#define WUFFS_CONFIG__MODULE__DEFLATE
+#define WUFFS_CONFIG__MODULE__PNG
+#define WUFFS_CONFIG__MODULE__ZLIB
+#include "../wuffs-mirror-release-c/release/c/wuffs-v0.3.c"
+
+// Error returns, some of these (mostly those for loading) are not required anymore
+// with the introduction of WUFFS.
 
 #define PNG_ERROR_OK			0
 #define PNG_ERROR_DECOMP		1
@@ -27,6 +37,7 @@
 #define PNG_ERROR_NOT_PALETTE	13
 #define PNG_ERROR_NOT8BIT		14
 #define PNG_ERROR_TOO_LARGE		15
+#define PNG_ERROR_WUFFS         16
 
 static int png_error = PNG_ERROR_OK;
 
@@ -50,6 +61,7 @@ static const char *png_errors[] =
 	"Image is not indexed colour.",
 	"Image does not have 8 bits per sample.",
 	"Image is too large",
+	"",  // to be filled with wuffs message
 };
 
 // Gets the error string for a failed PNG operation
@@ -78,85 +90,6 @@ void PNG_CreateHeader(png_ihdr_t *header, int width, int height, int bytedepth)
 	header->compression = 0;
 	header->filter = 0;
 	header->interlace = 0;
-}
-
-// Processes the header chunk and checks to see if all the data is valid
-
-bool PNG_HandleIHDR(const byte *data, png_image_t *image)
-{
-	png_ihdr_t *ihdr = (png_ihdr_t *)data;
-
-	image->width = BigLong(ihdr->width);
-	image->height = BigLong(ihdr->height);
-
-	// Make sure image is a reasonable size
-	if((image->width < 2) || (image->height < 2))
-	{
-		png_error = PNG_ERROR_TOO_SMALL;
-		return(false);
-	}
-	if(image->width > MAX_PNG_WIDTH)
-	{
-		png_error = PNG_ERROR_TOO_LARGE;
-		return(false);
-	}
-	if(ihdr->bitdepth != 8)
-	{
-		png_error = PNG_ERROR_NOT8BIT;
-		return(false);
-	}
-	// Check for non power of two size (but not for data files)
-	if(image->isimage)
-	{
-		if(image->width & (image->width - 1))
-		{
-			png_error = PNG_ERROR_WNP2;
-			return(false);
-		}
-		if(image->height & (image->height - 1))
-		{
-			png_error = PNG_ERROR_HNP2;
-			return(false);
-		}
-	}
-	// Make sure we have a 24 or 32 bit image (for images)
-	if(image->isimage)
-	{
-		if((ihdr->colortype != 2) && (ihdr->colortype != 6))
-		{
-			png_error = PNG_ERROR_NOT_TC;
-			return(false);
-		}
-	}
-	// Make sure we have an 8 bit grayscale image for data files
-	if(!image->isimage)
-	{
-		if(ihdr->colortype && (ihdr->colortype != 3))
-		{
-			png_error = PNG_ERROR_NOT_PALETTE;
-			return(false);
-		}
-	}
-	// Make sure we aren't using any wacky compression or filter algos
-	if(ihdr->compression || ihdr->filter)
-	{
-		png_error = PNG_ERROR_INV_FIL;
-		return(false);
-	}
-	// Extract the data we need
-	if(!ihdr->colortype || (ihdr->colortype == 3))
-	{
-		image->bytedepth = 1;
-	}
-	if(ihdr->colortype == 2)
-	{
-		image->bytedepth = 3;
-	}
-	if(ihdr->colortype == 6)
-	{
-		image->bytedepth = 4;
-	}
-	return(true);
 }
 
 // Filter a row of data
@@ -260,95 +193,6 @@ void PNG_Filter(byte *out, byte filter, const byte *in, const byte *lastline, ul
 	}
 }
 
-// Unfilters a row of data
-
-void PNG_Unfilter(byte *out, byte filter, const byte *lastline, ulong rowbytes, ulong bpp)
-{
-	ulong	i;
-
-	switch(filter)
-	{
-	case PNG_FILTER_VALUE_NONE:
-		break;
-	case PNG_FILTER_VALUE_SUB:
-		out += bpp;
-		for(i = bpp; i < rowbytes; i++)
-		{
-			*out += *(out - bpp);
-			out++;
-		}
-		break;
-	case PNG_FILTER_VALUE_UP:   
-		for(i = 0; i < rowbytes; i++)
-		{
-			if(lastline)
-			{
-				*out += *lastline++;
-			}
-			out++;
-		}
-		break;
-	case PNG_FILTER_VALUE_AVG:  
-		for(i = 0; i < bpp; i++)
-		{
-			if(lastline)
-			{
-				*out += *lastline++ >> 1;
-			}
-			out++;
-		}
-		for(i = bpp; i < rowbytes; i++)
-		{
-			if(lastline)
-			{
-				*out += (*lastline++ + *(out - bpp)) >> 1;
-			}
-			else
-			{
-				*out += *(out - bpp) >> 1;
-			}
-			out++;
-		}
-		break;
-	case PNG_FILTER_VALUE_PAETH:
-		int			a, b, c;
-		int			pa, pb, pc, p;
-
-		for(i = 0; i < bpp; i++)
-		{
-			if(lastline)
-			{
-				*out += *lastline++;
-			}
-			out++;
-		}
-		for(i = bpp; i < rowbytes; i++)
-		{
-			a = *(out - bpp);
-			c = 0;
-			b = 0;
-			if(lastline)
-			{
-				c = *(lastline - bpp);
-				b = *lastline++;
-			}
-			p = b - c;
-			pc = a - c;
-
-			pa = p < 0 ? -p : p;
-			pb = pc < 0 ? -pc : pc;
-			pc = (p + pc) < 0 ? -(p + pc) : p + pc;
-
-			p = (pa <= pb && pa <= pc) ? a : (pb <= pc) ? b : c;
-
-			*out++ += p;
-		}
-		break;
-	default:
-		break;
-	}
-}
-
 // Pack up the image data line by line
 
 bool PNG_Pack(byte *out, ulong *size, ulong maxsize, byte *data, int width, int height, int bytedepth)
@@ -403,147 +247,65 @@ bool PNG_Pack(byte *out, ulong *size, ulong maxsize, byte *data, int width, int 
 	return(true);
 }
 
-// Unpack the image data, line by line
-
-bool PNG_Unpack(const byte *data, const ulong datasize, png_image_t *image)
+static bool PNG_error_Wuffs(const wuffs_base__status& status)
 {
-	ulong		rowbytes, zerror, y;
-	byte		filter;
-	z_stream	zdata;
-	byte		*lastline, *out;
-
-//	MD_PushTag(TAG_ZIP_TEMP);
-
-	memset(&zdata, 0, sizeof(z_stream));
-	if(inflateInit(&zdata) != Z_OK)
-	{
-		png_error = PNG_ERROR_DECOMP;
-//		MD_PopTag();
-		return(false);
-	}
-	zdata.next_in = (byte *)data;
-	zdata.avail_in = datasize;
-
-	rowbytes = image->width * image->bytedepth;
-
-	lastline = NULL;
-	out = image->data;
-	for(y = 0; y < image->height; y++)
-	{
-		// Inflate a row of data
-		zdata.next_out = &filter;
-		zdata.avail_out = 1;
-		if(inflate(&zdata, Z_SYNC_FLUSH) != Z_OK)
-		{
-			inflateEnd(&zdata);
-			png_error = PNG_ERROR_DECOMP;
-//			MD_PopTag();
-			return(false);
-		}
-		zdata.next_out = out;
-		zdata.avail_out = rowbytes;
-		zerror = inflate(&zdata, Z_SYNC_FLUSH);
-		if((zerror != Z_OK) && (zerror != Z_STREAM_END))
-		{
-			inflateEnd(&zdata);
-			png_error = PNG_ERROR_DECOMP;
-//			MD_PopTag();
-			return(false);
-		}
-
-		// Unfilter a row of data
-		PNG_Unfilter(out, filter, lastline, rowbytes, image->bytedepth);
-
-		lastline = out;
-		out += rowbytes;
-	}
-	inflateEnd(&zdata);
-//	MD_PopTag();
-	return(true);
+	png_error = PNG_ERROR_WUFFS;
+	png_errors[PNG_ERROR_WUFFS] = status.message();
+	return false;
 }
 
-// Scan through all chunks and process each one
-
-bool PNG_Load(const byte *data, ulong datasize, png_image_t *image)
+bool PNG_Load(const byte *data, ulong datasize, png_image_t *image, uint32_t wuffs_pixfmt_repr)
 {
-	bool			moredata;
-	const byte		*next;
-	byte			*workspace, *work;
-	ulong			length, type, crc, totallength;
-
 	png_error = PNG_ERROR_OK;
 
-	if(memcmp(data, png_signature, sizeof(png_signature)))
-	{
-		png_error = PNG_ERROR_NOSIG;
-		return(false);
+	const auto src_slice = wuffs_base__make_slice_u8((uint8_t*)data, datasize);
+	const auto src_io_buffer_meta = wuffs_base__make_io_buffer_meta(datasize, 0, 0, false);
+	auto src_io_buffer = wuffs_base__make_io_buffer(src_slice, src_io_buffer_meta);
+
+	const auto decoder = (wuffs_png__decoder*)Z_Malloc(sizeof__wuffs_png__decoder(), TAG_TEMP_PNG, qfalse);
+	wuffs_base__status status = decoder->initialize(
+		sizeof__wuffs_png__decoder(), WUFFS_VERSION, WUFFS_INITIALIZE__DEFAULT_OPTIONS);
+	if (!status.is_ok()) {
+		Z_Free(decoder);
+		return PNG_error_Wuffs(status);
 	}
-	data += sizeof(png_signature);
 
-	workspace = (byte *)Z_Malloc(datasize, TAG_TEMP_PNG, qfalse);
-	work = workspace;
-	totallength = 0;
-
-	moredata = true;
-	while(moredata)
-	{
-		length = BigLong(*(ulong *)data);
-		data += sizeof(ulong);
-
-		type = BigLong(*(ulong *)data);
-		const byte *crcbase = data;
-		data += sizeof(ulong);
-
-		// CRC checksum location
-		next = data + length + sizeof(ulong);
-
-		// CRC checksum includes header field
-		crc = crc32(0, crcbase, length + sizeof(ulong));
-		if(crc != (ulong)BigLong(*(ulong *)(next - 4)))
-		{
-			if(image->data)
-			{
-				Z_Free(image->data);
-				image->data = NULL;
-			}
-			Z_Free(workspace);
-			png_error = PNG_ERROR_FAILED_CRC;
-			return(false);		
-		}
-		switch(type)
-		{
-		case PNG_IHDR:
-			if(!PNG_HandleIHDR(data, image))
-			{
-				Z_Free(workspace);
-				return(false);
-			}
-			image->data = (byte *)Z_Malloc(image->width * image->height * image->bytedepth, TAG_TEMP_PNG, qfalse);
-			break;
-		case PNG_IDAT:
-			// Need to copy all the various IDAT chunks into one big one
-			// Everything but 3dsmax has one IDAT chunk
-			memcpy(work, data, length);
-			work += length;
-			totallength += length;
-			break;
-		case PNG_IEND:
-			if(!PNG_Unpack(workspace, totallength, image))
-			{
-				Z_Free(workspace);
-				Z_Free(image->data);
-				image->data = NULL;
-				return(false);
-			}
-			moredata = false;
-			break;
-		default:
-			break;
-		}
-		data = next;
+	auto image_config = wuffs_base__null_image_config();
+	status = decoder->decode_image_config(&image_config, &src_io_buffer);
+	if (!status.is_ok()) {
+		Z_Free(decoder);
+		return PNG_error_Wuffs(status);
 	}
-	Z_Free(workspace);
-	return(true);
+
+	auto frame_config = wuffs_base__null_frame_config();
+	status = decoder->decode_frame_config(&frame_config, &src_io_buffer);
+	if (!status.is_ok()) {
+		Z_Free(decoder);
+		return PNG_error_Wuffs(status);
+	}
+
+	auto pixel_config = wuffs_base__null_pixel_config();
+	pixel_config.set(wuffs_pixfmt_repr, WUFFS_BASE__PIXEL_SUBSAMPLING__NONE, frame_config.width(), frame_config.height());
+
+	image->width = pixel_config.width();
+	image->height = pixel_config.height();
+	image->bytedepth = pixel_config.pixel_format().bits_per_pixel() / 8;
+	image->data = (byte*)Z_Malloc(image->width * image->height * image->bytedepth, TAG_TEMP_PNG, qfalse);
+
+	const auto pixel_buffer_memory_slice = wuffs_base__make_slice_u8(image->data, image->width * image->height * image->bytedepth);
+	auto pixel_buffer = wuffs_base__null_pixel_buffer();
+	pixel_buffer.set_from_slice(&pixel_config, pixel_buffer_memory_slice);
+	wuffs_base__pixel_blend pixel_blend = WUFFS_BASE__PIXEL_BLEND__SRC;
+	auto work_buffer = (uint8_t*)Z_Malloc(decoder->workbuf_len().max_incl, TAG_TEMP_PNG, qfalse);
+	wuffs_base__slice_u8 work_buffer_slice = wuffs_base__make_slice_u8(work_buffer, decoder->workbuf_len().max_incl);
+	status = decoder->decode_frame(&pixel_buffer, &src_io_buffer, pixel_blend, work_buffer_slice, nullptr);
+	Z_Free(work_buffer);
+	Z_Free(decoder);
+
+	if (!status.is_ok()) {
+		return PNG_error_Wuffs(status);
+	}
+	return true;
 }
 
 // Outputs a crc'd chunk of PNG data
@@ -648,34 +410,6 @@ bool PNG_Save(const char *name, byte *data, int width, int height, int bytedepth
 
 /*
 =============
-PNG_ConvertTo32
-=============
-*/
-
-void PNG_ConvertTo32(png_image_t *image)
-{
-	byte	*temp;
-	byte	*old, *old2;
-	ulong	i;
-
-	temp = (byte *)Z_Malloc(image->width * image->height * 4, TAG_TEMP_PNG, qtrue);
-	old = image->data;
-	old2 = old;
-	image->data = temp;
-	image->bytedepth = 4;
-
-	for(i = 0; i < image->width * image->height; i++)
-	{
-		*temp++ = *old++;
-		*temp++ = *old++;
-		*temp++ = *old++;
-		*temp++ = 0xff;
-	}
-	Z_Free(old2);
-}
-
-/*
-=============
 LoadPNG32
 =============
 */
@@ -705,14 +439,10 @@ bool LoadPNG32 (char *name, byte **pixels, int *width, int *height, int *bytedep
 	}
 	*pixels = NULL;
 	png_image.isimage = true;
-	if(!PNG_Load(buffer, nLen, &png_image))
+	if(!PNG_Load(buffer, nLen, &png_image, WUFFS_BASE__PIXEL_FORMAT__RGBA_NONPREMUL))
 	{
 		Com_Printf ("Error parsing %s: %s\n", name, PNG_GetError());
 		return(false);
-	}
-	if(png_image.bytedepth != 4)
-	{
-		PNG_ConvertTo32(&png_image);
 	}
 	*pixels = png_image.data;
 	if(width)
@@ -762,7 +492,7 @@ bool LoadPNG8 (char *name, byte **pixels, int *width, int *height)
 	}
 	*pixels = NULL;
 	png_image.isimage = false;
-	if(!PNG_Load(buffer, nLen, &png_image))
+	if(!PNG_Load(buffer, nLen, &png_image, WUFFS_BASE__PIXEL_FORMAT__A))
 	{
 		Com_Printf ("Error parsing %s: %s\n", name, PNG_GetError());
 		return(false);

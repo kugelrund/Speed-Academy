@@ -84,6 +84,9 @@
     <Filter Include="speedrun\speedrun_timer_q3">
       <UniqueIdentifier>{adebd98a-1fc3-4810-bc0b-5f95d7ead0d0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="wuffs">
+      <UniqueIdentifier>{a6d223ce-cabf-408d-9b93-39a50354ea6a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="client\cl_cgame.cpp">
@@ -1284,6 +1287,9 @@
     </ClInclude>
     <ClInclude Include="speedrun\speedrun_timer_includes.h">
       <Filter>speedrun</Filter>
+    </ClInclude>
+    <ClInclude Include="wuffs-mirror-release-c\release\c\wuffs-v0.3.c">
+      <Filter>wuffs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

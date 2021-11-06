@@ -22,6 +22,11 @@
 #include "../zlib/zlib.h"
 #include "unzip.h"
 
+#define WUFFS_CONFIG__MODULES
+#define WUFFS_CONFIG__MODULE__BASE
+#define WUFFS_CONFIG__MODULE__CRC32
+#include "../wuffs-mirror-release-c/release/c/wuffs-v0.3.c"
+
 /* unzip.h -- IO for uncompress .zip files using zlib 
    Version 0.15 beta, Mar 19th, 1998,
 
@@ -1085,6 +1090,14 @@ extern int unzReadCurrentFile  (unzFile file, void *buf, unsigned len)
 		pfile_in_zip_read_info->stream.avail_out = 
 		  (uInt)pfile_in_zip_read_info->rest_read_uncompressed;
 
+	auto crc32_hasher = (wuffs_crc32__ieee_hasher*)ALLOC(sizeof__wuffs_crc32__ieee_hasher());
+	const wuffs_base__status status = crc32_hasher->initialize(
+		sizeof__wuffs_crc32__ieee_hasher(), WUFFS_VERSION, WUFFS_INITIALIZE__DEFAULT_OPTIONS);
+	if (!status.is_ok()) {
+		TRYFREE(crc32_hasher);
+		return UNZ_INTERNALERROR;
+	}
+
 	while (pfile_in_zip_read_info->stream.avail_out>0)
 	{
 		if ((pfile_in_zip_read_info->stream.avail_in==0) &&
@@ -1093,16 +1106,23 @@ extern int unzReadCurrentFile  (unzFile file, void *buf, unsigned len)
 			uInt uReadThis = UNZ_BUFSIZE;
 			if (pfile_in_zip_read_info->rest_read_compressed<uReadThis)
 				uReadThis = (uInt)pfile_in_zip_read_info->rest_read_compressed;
-			if (uReadThis == 0)
+			if (uReadThis == 0) {
+				TRYFREE(crc32_hasher);
 				return UNZ_EOF;
-			if (s->cur_file_info.compressed_size == pfile_in_zip_read_info->rest_read_compressed)
+			}
+			if (s->cur_file_info.compressed_size == pfile_in_zip_read_info->rest_read_compressed) {
 				if (ZIP_fseek(pfile_in_zip_read_info->file,
 						  pfile_in_zip_read_info->pos_in_zipfile + 
-							 pfile_in_zip_read_info->byte_before_the_zipfile,SEEK_SET)!=0)
+						  pfile_in_zip_read_info->byte_before_the_zipfile,SEEK_SET)!=0) {
+					TRYFREE(crc32_hasher);
 					return UNZ_ERRNO;
+				}
+			}
 			if (ZIP_fread(pfile_in_zip_read_info->read_buffer,uReadThis,1,
-                         pfile_in_zip_read_info->file)!=1)
+			              pfile_in_zip_read_info->file)!=1) {
+				TRYFREE(crc32_hasher);
 				return UNZ_ERRNO;
+			}
 			pfile_in_zip_read_info->pos_in_zipfile += uReadThis;
 
 			pfile_in_zip_read_info->rest_read_compressed-=uReadThis;
@@ -1125,9 +1145,8 @@ extern int unzReadCurrentFile  (unzFile file, void *buf, unsigned len)
 				*(pfile_in_zip_read_info->stream.next_out+i) =
                         *(pfile_in_zip_read_info->stream.next_in+i);
 					
-			pfile_in_zip_read_info->crc32 = crc32(pfile_in_zip_read_info->crc32,
-								pfile_in_zip_read_info->stream.next_out,
-								uDoCopy);
+			pfile_in_zip_read_info->crc32 = crc32_hasher->update_u32(
+				wuffs_base__make_slice_u8((uint8_t*)pfile_in_zip_read_info->stream.next_out, uDoCopy));
 			pfile_in_zip_read_info->rest_read_uncompressed-=uDoCopy;
 			pfile_in_zip_read_info->stream.avail_in -= uDoCopy;
 			pfile_in_zip_read_info->stream.avail_out -= uDoCopy;
@@ -1156,22 +1175,24 @@ extern int unzReadCurrentFile  (unzFile file, void *buf, unsigned len)
 			uTotalOutAfter = pfile_in_zip_read_info->stream.total_out;
 			uOutThis = uTotalOutAfter-uTotalOutBefore;
 			
-			pfile_in_zip_read_info->crc32 = 
-                crc32(pfile_in_zip_read_info->crc32,bufBefore,
-                        (uInt)(uOutThis));
+			pfile_in_zip_read_info->crc32 = crc32_hasher->update_u32(
+				wuffs_base__make_slice_u8((uint8_t*)bufBefore, uOutThis));
 
 			pfile_in_zip_read_info->rest_read_uncompressed -=
                 uOutThis;
 
 			iRead += (uInt)(uTotalOutAfter - uTotalOutBefore);
             
-			if (err==Z_STREAM_END)
+			if (err==Z_STREAM_END) {
+				TRYFREE(crc32_hasher);
 				return (iRead==0) ? UNZ_EOF : iRead;
+			}
 			if (err!=Z_OK) 
 				break;
 		}
 	}
 
+	TRYFREE(crc32_hasher);
 	if (err==Z_OK)
 		return iRead;
 	return err;

@@ -13,3 +13,6 @@
 [submodule "code/zlib"]
 	path = code/zlib
 	url = https://github.com/madler/zlib.git
+[submodule "code/wuffs-mirror-release-c"]
+	path = code/wuffs-mirror-release-c
+	url = https://github.com/google/wuffs-mirror-release-c.git
