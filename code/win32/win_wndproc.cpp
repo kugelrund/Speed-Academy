@@ -327,7 +327,27 @@ LONG WINAPI MainWndProc (
 
 	switch (uMsg)
 	{
+	case WM_INPUT:
+		if (IN_IsUsingRawInput())
+		{
+			RAWINPUT buf;
+			UINT bufsize = sizeof(buf);
+
+			UINT size = GetRawInputData((HRAWINPUT)lParam, RID_INPUT, &buf, &bufsize, sizeof(RAWINPUTHEADER));
+
+			if (size <= sizeof(buf))
+			{
+				if (buf.header.dwType == RIM_TYPEMOUSE)
+				{
+					IN_RawMouse(&buf.data.mouse);
+				}
+			}
+		}
+		break;
+
 	case WM_MOUSEWHEEL:
+		if (IN_IsUsingRawInput())
+			break;
 		//
 		//
 		// this chunk of code theoretically only works under NT4 and Win98
@@ -348,6 +368,10 @@ LONG WINAPI MainWndProc (
 	case WM_CREATE:
 
 		g_wv.hWnd = hWnd;
+		// raw mouse input needs the window handle, so let's restart input so
+		// that it is initialized with the proper hWnd if user wants raw input.
+		IN_Shutdown();
+		IN_Init();
 
 		vid_xpos = Cvar_Get ("vid_xpos", "3", CVAR_ARCHIVE);
 		vid_ypos = Cvar_Get ("vid_ypos", "22", CVAR_ARCHIVE);
@@ -445,6 +469,7 @@ LONG WINAPI MainWndProc (
 	case WM_MOUSEMOVE:
 	case WM_BUTTON4DOWN:
 	case WM_BUTTON4UP:
+		if (!IN_IsUsingRawInput())
 		{
 			int	temp;
 

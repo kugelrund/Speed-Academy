@@ -8,6 +8,13 @@ Based on the original source code released by Raven, see README.txt.
 
 ## New Console Variables
 
+### Input
+
+#### `in_mouse_raw` (0 or 1)
+
+Use raw mouse input. Only applies after an `in_restart` (or after restarting the game).
+Default: `1`.
+
 ### HUD
 
 #### `cg_drawMovementRestriction` (0 or 1)

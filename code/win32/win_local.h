@@ -18,6 +18,8 @@
 #endif
 
 void	IN_MouseEvent (int mstate);
+void	IN_RawMouse (RAWMOUSE* state);
+qboolean	IN_IsUsingRawInput (void);
 
 void Sys_QueEvent( int time, sysEventType_t type, int value, int value2, int ptrLength, void *ptr );
 

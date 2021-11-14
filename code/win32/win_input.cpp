@@ -67,6 +67,7 @@ cvar_t	*in_midichannel;
 cvar_t	*in_mididevice;
 
 cvar_t	*in_mouse;
+cvar_t	*in_mouse_raw;
 cvar_t	*in_joystick;
 cvar_t	*in_joyBallScale;
 cvar_t	*in_debugJoystick;
@@ -76,6 +77,7 @@ cvar_t	*joy_xbutton;
 cvar_t	*joy_ybutton;
 
 qboolean	in_appactive;
+qboolean	in_using_rawinput;
 
 // forward-referenced functions
 void IN_StartupJoystick (void);
@@ -458,6 +460,102 @@ void IN_DIMouse( int *mx, int *my ) {
 	*my = state.lY;
 }
 
+
+/*
+============================================================
+
+RAW INPUT MOUSE CONTROL
+
+============================================================
+*/
+
+static HWND rawinput_device_registered_for = NULL;
+
+qboolean IN_InitRawMouse( void )
+{
+	if (g_wv.hWnd == NULL)
+		return false;
+
+	if (g_wv.hWnd == rawinput_device_registered_for)
+		return true;
+
+	RAWINPUTDEVICE rawdevices[1];
+	memset(rawdevices, 0, sizeof(rawdevices));
+
+	RAWINPUTDEVICE* mouse = &rawdevices[0];
+	mouse->hwndTarget = g_wv.hWnd;
+	mouse->usUsagePage = 1;
+	mouse->usUsage = 2;  // 2 for mouse, 6 for keyboard
+
+	// Can't use RIDEV_NOLEGACY here as it won't create any messages.
+	// They are needed for things like moving the window or activating it.
+	mouse->dwFlags = 0;
+
+	const BOOL res = RegisterRawInputDevices(rawdevices, 1, sizeof(RAWINPUTDEVICE));
+	if (!res)
+		return false;
+
+	rawinput_device_registered_for = g_wv.hWnd;
+	return true;
+}
+
+void IN_ShutdownRawMouse( void )
+{
+	// nothing: there does not seem to be a way to unregister raw input devices
+}
+
+void IN_RawMouse( RAWMOUSE* state )
+{
+	if (!s_wmv.mouseActive)
+		return;
+
+	Sys_QueEvent( 0, SE_MOUSE, state->lLastX, state->lLastY, 0, NULL );
+
+	USHORT buttonflags = state->usButtonFlags;
+
+	if (buttonflags & RI_MOUSE_WHEEL)
+	{
+		short delta = (short)state->usButtonData;
+
+		if (delta < 0)
+		{
+			Sys_QueEvent( g_wv.sysMsgTime, SE_KEY, A_MWHEELDOWN, qtrue, 0, NULL );
+			Sys_QueEvent( g_wv.sysMsgTime, SE_KEY, A_MWHEELDOWN, qfalse, 0, NULL );
+		}
+
+		else
+		{
+			Sys_QueEvent( g_wv.sysMsgTime, SE_KEY, A_MWHEELUP, qtrue, 0, NULL );
+			Sys_QueEvent( g_wv.sysMsgTime, SE_KEY, A_MWHEELUP, qfalse, 0, NULL );
+		}
+	}
+
+	if (buttonflags & RI_MOUSE_BUTTON_1_DOWN) Sys_QueEvent( g_wv.sysMsgTime, SE_KEY, A_MOUSE1, qtrue, 0, NULL );
+	if (buttonflags & RI_MOUSE_BUTTON_1_UP) Sys_QueEvent( g_wv.sysMsgTime, SE_KEY, A_MOUSE1, qfalse, 0, NULL );
+
+	if (buttonflags & RI_MOUSE_BUTTON_2_DOWN) Sys_QueEvent( g_wv.sysMsgTime, SE_KEY, A_MOUSE2, qtrue, 0, NULL );
+	if (buttonflags & RI_MOUSE_BUTTON_2_UP) Sys_QueEvent( g_wv.sysMsgTime, SE_KEY, A_MOUSE2, qfalse, 0, NULL );
+
+	if (buttonflags & RI_MOUSE_BUTTON_3_DOWN) Sys_QueEvent( g_wv.sysMsgTime, SE_KEY, A_MOUSE3, qtrue, 0, NULL );
+	if (buttonflags & RI_MOUSE_BUTTON_3_UP) Sys_QueEvent( g_wv.sysMsgTime, SE_KEY, A_MOUSE3, qfalse, 0, NULL );
+
+	if (buttonflags & RI_MOUSE_BUTTON_4_DOWN) Sys_QueEvent( g_wv.sysMsgTime, SE_KEY, A_MOUSE4, qtrue, 0, NULL );
+	if (buttonflags & RI_MOUSE_BUTTON_4_UP) Sys_QueEvent( g_wv.sysMsgTime, SE_KEY, A_MOUSE4, qfalse, 0, NULL );
+
+	if (buttonflags & RI_MOUSE_BUTTON_5_DOWN) Sys_QueEvent( g_wv.sysMsgTime, SE_KEY, A_MOUSE5, qtrue, 0, NULL );
+	if (buttonflags & RI_MOUSE_BUTTON_5_UP) Sys_QueEvent( g_wv.sysMsgTime, SE_KEY, A_MOUSE5, qtrue, 0, NULL );
+
+	// to mirror same behaviour as win32 mouse input, set cursor to middle. Avoids cursor from
+	// moving out of window if there is an overlapping window like the taskbar or something.
+	SetCursorPos (window_center_x, window_center_y);
+}
+
+qboolean IN_IsUsingRawInput( void )
+{
+	return in_using_rawinput;
+}
+
+
 /*
 ============================================================
 
@@ -531,6 +629,17 @@ void IN_StartupMouse( void )
 	if ( in_mouse->integer == 0 ) {
 		Com_Printf ("Mouse control not active.\n");
 		return;
+	}
+
+	in_using_rawinput = false;
+	if ( in_mouse_raw->integer )
+	{
+		in_using_rawinput = IN_InitRawMouse();
+		if (in_using_rawinput) {
+			s_wmv.mouseInitialized = qtrue;
+			Com_Printf("Raw mouse input initialized\n");
+			return;
+		}
 	}
 
 	// nt4.0 direct input is screwed up
@@ -647,6 +756,7 @@ IN_Shutdown
 */
 void IN_Shutdown( void ) {
 	IN_DeactivateMouse();
+	IN_ShutdownRawMouse();
 	IN_ShutdownDIMouse();
 	IN_ShutdownMIDI();
 	Cmd_RemoveCommand("midiinfo" );
@@ -672,6 +782,7 @@ void IN_Init( void ) {
 
 	// mouse variables
     in_mouse				= Cvar_Get ("in_mouse",					"-1",		CVAR_ARCHIVE|CVAR_LATCH);
+	in_mouse_raw			= Cvar_Get ("in_mouse_raw",				"1",		CVAR_ARCHIVE|CVAR_LATCH);
 
 	// joystick variables
 	in_joystick				= Cvar_Get ("in_joystick",				"0",		CVAR_ARCHIVE|CVAR_LATCH);
@@ -741,6 +852,12 @@ void IN_Frame (void) {
 	}
 
 	IN_ActivateMouse();
+
+	if ( in_using_rawinput ) {
+		// raw mouse input works via the main window proc which calls IN_RawMouse
+		// directly, so no need to call IN_MouseMove here from the game loop
+		return;
+	}
 
 	// post events to the system que
 	IN_MouseMove();
