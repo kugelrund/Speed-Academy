@@ -543,7 +543,7 @@ void IN_RawMouse( RAWMOUSE* state )
 	if (buttonflags & RI_MOUSE_BUTTON_4_UP) Sys_QueEvent( g_wv.sysMsgTime, SE_KEY, A_MOUSE4, qfalse, 0, NULL );
 
 	if (buttonflags & RI_MOUSE_BUTTON_5_DOWN) Sys_QueEvent( g_wv.sysMsgTime, SE_KEY, A_MOUSE5, qtrue, 0, NULL );
-	if (buttonflags & RI_MOUSE_BUTTON_5_UP) Sys_QueEvent( g_wv.sysMsgTime, SE_KEY, A_MOUSE5, qtrue, 0, NULL );
+	if (buttonflags & RI_MOUSE_BUTTON_5_UP) Sys_QueEvent( g_wv.sysMsgTime, SE_KEY, A_MOUSE5, qfalse, 0, NULL );
 
 	// to mirror same behaviour as win32 mouse input, set cursor to middle. Avoids cursor from
 	// moving out of window if there is an overlapping window like the taskbar or something.
