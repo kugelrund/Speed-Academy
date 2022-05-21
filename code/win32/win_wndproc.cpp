@@ -310,7 +310,7 @@ LONG WINAPI MainWndProc (
 {
 	byte	code;
 
-	if ( uMsg == MSH_MOUSEWHEEL )
+	if ( uMsg == MSH_MOUSEWHEEL && !IN_IsUsingRawInput() )
 	{
 		if ( ( ( int ) wParam ) > 0 )
 		{

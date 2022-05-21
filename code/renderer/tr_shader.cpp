@@ -4018,9 +4018,9 @@ static void CreateInternalShaders( void ) {
 	stages[0].bundle[0].tcGen = TCGEN_ELEVATION;
 	stages[0].bundle[0].image = tr.elevationImage;
 	// lets use a single, fixed custom color
-	stages[0].constantColor[0] = 0;
-	stages[0].constantColor[1] = 255;
-	stages[0].constantColor[2] = 0;
+	stages[0].constantColor[0] = r_showElevationBoostsColorR->integer;
+	stages[0].constantColor[1] = r_showElevationBoostsColorG->integer;
+	stages[0].constantColor[2] = r_showElevationBoostsColorB->integer;
 	stages[0].constantColor[3] = 255;
 	stages[0].rgbGen = CGEN_CONST;
 	// alpha settings so that we only overlay the range with a semitransparent color

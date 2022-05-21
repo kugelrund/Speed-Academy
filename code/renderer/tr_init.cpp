@@ -191,6 +191,9 @@ Ghoul2 Insert End
 
 // Additions for Speed-Academy
 cvar_t	*r_showElevationBoosts;
+cvar_t	*r_showElevationBoostsColorR;
+cvar_t	*r_showElevationBoostsColorG;
+cvar_t	*r_showElevationBoostsColorB;
 
 
 void ( APIENTRY * qglMultiTexCoord2fARB )( GLenum texture, GLfloat s, GLfloat t );
@@ -1082,6 +1085,21 @@ void R_FogColor_f(void)
 			                          atof(Cmd_Argv(3)) * tr.identityLight, 1.0 );
 }
 
+void R_SetShowElevationBoostsColor_f ( void )
+{
+	if (Cmd_Argc() != 4) {
+		Com_Printf("Usage: showElevationBoostsColor <red 0-255> <green 0-255> <blue 0-255>\n" );
+		Com_Printf("Current color is: %d %d %d\n",
+		           r_showElevationBoostsColorR->integer,
+		           r_showElevationBoostsColorG->integer,
+		           r_showElevationBoostsColorB->integer);
+		return;
+	}
+	Cvar_Set("r_showElevationBoostsColorR", Cmd_Argv(1));
+	Cvar_Set("r_showElevationBoostsColorG", Cmd_Argv(2));
+	Cvar_Set("r_showElevationBoostsColorB", Cmd_Argv(3));
+}
+
 /*
 ===============
 R_Register
@@ -1279,6 +1297,9 @@ extern qboolean Sys_LowPhysicalMemory();
 
 	// Additions for Speed-Academy
 	r_showElevationBoosts = Cvar_Get( "r_showElevationBoosts", "0", CVAR_ARCHIVE );
+	r_showElevationBoostsColorR = Cvar_Get( "r_showElevationBoostsColorR", "0", CVAR_ARCHIVE );
+	r_showElevationBoostsColorG = Cvar_Get( "r_showElevationBoostsColorG", "255", CVAR_ARCHIVE );
+	r_showElevationBoostsColorB = Cvar_Get( "r_showElevationBoostsColorB", "0", CVAR_ARCHIVE );
 
 	// make sure all the commands added here are also
 	// removed in R_Shutdown
@@ -1301,6 +1322,8 @@ extern void R_WorldEffect_f(void);	//TR_WORLDEFFECTS.CPP
 	Cmd_AddCommand( "r_we", R_WorldEffect_f );
 extern void R_ReloadFonts_f(void);
 	Cmd_AddCommand( "r_reloadfonts", R_ReloadFonts_f );
+
+	Cmd_AddCommand( "showElevationBoostsColor", R_SetShowElevationBoostsColor_f );
 	// make sure all the commands added above are also
 	// removed in R_Shutdown
 }
@@ -1451,6 +1474,8 @@ void RE_Shutdown( qboolean destroyWindow ) {
 	Cmd_RemoveCommand ("imagecacheinfo");
 	Cmd_RemoveCommand ("r_we");
 	Cmd_RemoveCommand ("r_reloadfonts");
+
+	Cmd_RemoveCommand ( "showElevationBoostsColor");
 
 	R_ShutdownWorldEffects();
 #ifndef _XBOX

@@ -207,6 +207,71 @@ static void CG_InfoUp_f( void )
 //	cg.showInformation = qfalse;
 }
 
+static void CG_SetStrafeHelperColorAccelerating_f( void ) {
+	if (cgi_Argc() != 5) {
+		Com_Printf("Usage: strafeHelperColorAccelerating <red 0-1> <green 0-1> <blue 0-1> <alpha 0-1>\n" );
+		Com_Printf("Current color is: %f %f %f %f\n",
+		           cg_strafeHelperColorAcceleratingR.value,
+		           cg_strafeHelperColorAcceleratingG.value,
+		           cg_strafeHelperColorAcceleratingB.value,
+		           cg_strafeHelperColorAcceleratingA.value);
+		return;
+	}
+	cgi_Cvar_Set("cg_strafeHelperColorAcceleratingR", CG_Argv(1));
+	cgi_Cvar_Set("cg_strafeHelperColorAcceleratingG", CG_Argv(2));
+	cgi_Cvar_Set("cg_strafeHelperColorAcceleratingB", CG_Argv(3));
+	cgi_Cvar_Set("cg_strafeHelperColorAcceleratingA", CG_Argv(4));
+}
+
+static void CG_SetStrafeHelperColorOptimal_f( void ) {
+	if (cgi_Argc() != 5) {
+		Com_Printf("Usage: strafeHelperColorOptimal <red 0-1> <green 0-1> <blue 0-1> <alpha 0-1>\n" );
+		Com_Printf("Current color is: %f %f %f %f\n",
+		           cg_strafeHelperColorOptimalR.value,
+		           cg_strafeHelperColorOptimalG.value,
+		           cg_strafeHelperColorOptimalB.value,
+		           cg_strafeHelperColorOptimalA.value);
+		return;
+	}
+	cgi_Cvar_Set("cg_strafeHelperColorOptimalR", CG_Argv(1));
+	cgi_Cvar_Set("cg_strafeHelperColorOptimalG", CG_Argv(2));
+	cgi_Cvar_Set("cg_strafeHelperColorOptimalB", CG_Argv(3));
+	cgi_Cvar_Set("cg_strafeHelperColorOptimalA", CG_Argv(4));
+}
+
+static void CG_SetStrafeHelperColorCenterMarker_f( void ) {
+	if (cgi_Argc() != 5) {
+		Com_Printf("Usage: strafeHelperColorCenterMarker <red 0-1> <green 0-1> <blue 0-1> <alpha 0-1>\n" );
+		Com_Printf("Current color is: %f %f %f %f\n",
+		           cg_strafeHelperColorCenterMarkerR.value,
+		           cg_strafeHelperColorCenterMarkerG.value,
+		           cg_strafeHelperColorCenterMarkerB.value,
+		           cg_strafeHelperColorCenterMarkerA.value);
+		return;
+	}
+	cgi_Cvar_Set("cg_strafeHelperColorCenterMarkerR", CG_Argv(1));
+	cgi_Cvar_Set("cg_strafeHelperColorCenterMarkerG", CG_Argv(2));
+	cgi_Cvar_Set("cg_strafeHelperColorCenterMarkerB", CG_Argv(3));
+	cgi_Cvar_Set("cg_strafeHelperColorCenterMarkerA", CG_Argv(4));
+}
+
+static void CG_SetStrafeHelperColorSpeed_f( void ) {
+	if (cgi_Argc() != 5) {
+		Com_Printf("Usage: strafeHelperColorSpeed <red 0-1> <green 0-1> <blue 0-1> <alpha 0-1>\n" );
+		Com_Printf("Current color is: %f %f %f %f\n",
+		           cg_strafeHelperColorSpeedR.value,
+		           cg_strafeHelperColorSpeedG.value,
+		           cg_strafeHelperColorSpeedB.value,
+		           cg_strafeHelperColorSpeedA.value);
+		return;
+	}
+	cgi_Cvar_Set("cg_strafeHelperColorSpeedR", CG_Argv(1));
+	cgi_Cvar_Set("cg_strafeHelperColorSpeedG", CG_Argv(2));
+	cgi_Cvar_Set("cg_strafeHelperColorSpeedB", CG_Argv(3));
+	cgi_Cvar_Set("cg_strafeHelperColorSpeedA", CG_Argv(4));
+}
+
+
 typedef struct {
 	char	*cmd;
 	void	(*function)(void);
@@ -257,6 +322,11 @@ Ghoul2 Insert End
 	{ "dpforcenext", CG_DPNextForcePower_f },
 	{ "dpforceprev", CG_DPPrevForcePower_f },
 //	{ "color", CG_SetColor_f },
+
+	{ "strafeHelperColorAccelerating", CG_SetStrafeHelperColorAccelerating_f },
+	{ "strafeHelperColorOptimal", CG_SetStrafeHelperColorOptimal_f },
+	{ "strafeHelperColorCenterMarker", CG_SetStrafeHelperColorCenterMarker_f },
+	{ "strafeHelperColorSpeed", CG_SetStrafeHelperColorSpeed_f },
 };
 
 

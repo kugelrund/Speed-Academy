@@ -1415,6 +1415,9 @@ Ghoul2 Insert End
 
 // Additions for Speed-Academy
 extern	cvar_t	*r_showElevationBoosts;
+extern	cvar_t	*r_showElevationBoostsColorR;
+extern	cvar_t	*r_showElevationBoostsColorG;
+extern	cvar_t	*r_showElevationBoostsColorB;
 //====================================================================
 
 // Point sprite stuff.

@@ -504,12 +504,15 @@ void IN_ShutdownRawMouse( void )
 	// nothing: there does not seem to be a way to unregister raw input devices
 }
 
+static int raw_mouse_accumulated_x = 0;
+static int raw_mouse_accumulated_y = 0;
 void IN_RawMouse( RAWMOUSE* state )
 {
 	if (!s_wmv.mouseActive)
 		return;
 
-	Sys_QueEvent( 0, SE_MOUSE, state->lLastX, state->lLastY, 0, NULL );
+	raw_mouse_accumulated_x += state->lLastX;
+	raw_mouse_accumulated_y += state->lLastY;
 
 	USHORT buttonflags = state->usButtonFlags;
 
@@ -713,11 +716,17 @@ IN_MouseMove
 void IN_MouseMove ( void ) {
 	int		mx, my;
 
-	if ( g_pMouse ) {
+	if ( in_using_rawinput ) {
+		mx = raw_mouse_accumulated_x;
+		my = raw_mouse_accumulated_y;
+	} else if ( g_pMouse ) {
 		IN_DIMouse( &mx, &my );
 	} else {
 		IN_Win32Mouse( &mx, &my );
 	}
+
+	raw_mouse_accumulated_x = 0;
+	raw_mouse_accumulated_y = 0;
 
 	if ( !mx && !my ) {
 		return;
@@ -852,12 +861,6 @@ void IN_Frame (void) {
 	}
 
 	IN_ActivateMouse();
-
-	if ( in_using_rawinput ) {
-		// raw mouse input works via the main window proc which calls IN_RawMouse
-		// directly, so no need to call IN_MouseMove here from the game loop
-		return;
-	}
 
 	// post events to the system que
 	IN_MouseMove();

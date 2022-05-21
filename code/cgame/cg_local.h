@@ -643,8 +643,25 @@ extern	vmCvar_t		cg_strafeHelperCenterMarker;
 extern	vmCvar_t		cg_strafeHelperHeight;
 extern	vmCvar_t		cg_strafeHelperScale;
 extern	vmCvar_t		cg_strafeHelperSpeedScale;
+extern	vmCvar_t		cg_strafeHelperSpeedX;
 extern	vmCvar_t		cg_strafeHelperSpeedY;
 extern	vmCvar_t		cg_strafeHelperY;
+extern	vmCvar_t		cg_strafeHelperColorAcceleratingR;
+extern	vmCvar_t		cg_strafeHelperColorAcceleratingG;
+extern	vmCvar_t		cg_strafeHelperColorAcceleratingB;
+extern	vmCvar_t		cg_strafeHelperColorAcceleratingA;
+extern	vmCvar_t		cg_strafeHelperColorOptimalR;
+extern	vmCvar_t		cg_strafeHelperColorOptimalG;
+extern	vmCvar_t		cg_strafeHelperColorOptimalB;
+extern	vmCvar_t		cg_strafeHelperColorOptimalA;
+extern	vmCvar_t		cg_strafeHelperColorCenterMarkerR;
+extern	vmCvar_t		cg_strafeHelperColorCenterMarkerG;
+extern	vmCvar_t		cg_strafeHelperColorCenterMarkerB;
+extern	vmCvar_t		cg_strafeHelperColorCenterMarkerA;
+extern	vmCvar_t		cg_strafeHelperColorSpeedR;
+extern	vmCvar_t		cg_strafeHelperColorSpeedG;
+extern	vmCvar_t		cg_strafeHelperColorSpeedB;
+extern	vmCvar_t		cg_strafeHelperColorSpeedA;
 
 void CG_NewClientinfo( int clientNum );
 //

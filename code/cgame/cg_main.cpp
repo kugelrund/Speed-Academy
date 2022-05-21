@@ -333,8 +333,25 @@ vmCvar_t	cg_strafeHelperCenterMarker;
 vmCvar_t	cg_strafeHelperHeight;
 vmCvar_t	cg_strafeHelperScale;
 vmCvar_t	cg_strafeHelperSpeedScale;
+vmCvar_t	cg_strafeHelperSpeedX;
 vmCvar_t	cg_strafeHelperSpeedY;
 vmCvar_t	cg_strafeHelperY;
+vmCvar_t	cg_strafeHelperColorAcceleratingR;
+vmCvar_t	cg_strafeHelperColorAcceleratingG;
+vmCvar_t	cg_strafeHelperColorAcceleratingB;
+vmCvar_t	cg_strafeHelperColorAcceleratingA;
+vmCvar_t	cg_strafeHelperColorOptimalR;
+vmCvar_t	cg_strafeHelperColorOptimalG;
+vmCvar_t	cg_strafeHelperColorOptimalB;
+vmCvar_t	cg_strafeHelperColorOptimalA;
+vmCvar_t	cg_strafeHelperColorCenterMarkerR;
+vmCvar_t	cg_strafeHelperColorCenterMarkerG;
+vmCvar_t	cg_strafeHelperColorCenterMarkerB;
+vmCvar_t	cg_strafeHelperColorCenterMarkerA;
+vmCvar_t	cg_strafeHelperColorSpeedR;
+vmCvar_t	cg_strafeHelperColorSpeedG;
+vmCvar_t	cg_strafeHelperColorSpeedB;
+vmCvar_t	cg_strafeHelperColorSpeedA;
 
 typedef struct {
 	vmCvar_t	*vmCvar;
@@ -456,8 +473,25 @@ static cvarTable_t cvarTable[] = {
 	{ &cg_strafeHelperHeight, "cg_strafeHelperHeight", "20", CVAR_ARCHIVE },
 	{ &cg_strafeHelperScale, "cg_strafeHelperScale", "4", CVAR_ARCHIVE },
 	{ &cg_strafeHelperSpeedScale, "cg_strafeHelperSpeedScale", "0.9", CVAR_ARCHIVE },
+	{ &cg_strafeHelperSpeedX, "cg_strafeHelperSpeedX", "0", CVAR_ARCHIVE },
 	{ &cg_strafeHelperSpeedY, "cg_strafeHelperSpeedY", "0", CVAR_ARCHIVE },
 	{ &cg_strafeHelperY, "cg_strafeHelperY", "50", CVAR_ARCHIVE },
+	{ &cg_strafeHelperColorAcceleratingR, "cg_strafeHelperColorAcceleratingR", "0.0", CVAR_ARCHIVE },
+	{ &cg_strafeHelperColorAcceleratingG, "cg_strafeHelperColorAcceleratingG", "0.5", CVAR_ARCHIVE },
+	{ &cg_strafeHelperColorAcceleratingB, "cg_strafeHelperColorAcceleratingB", "0.125", CVAR_ARCHIVE },
+	{ &cg_strafeHelperColorAcceleratingA, "cg_strafeHelperColorAcceleratingA", "0.375", CVAR_ARCHIVE },
+	{ &cg_strafeHelperColorOptimalR, "cg_strafeHelperColorOptimalR", "0.0", CVAR_ARCHIVE },
+	{ &cg_strafeHelperColorOptimalG, "cg_strafeHelperColorOptimalG", "1.0", CVAR_ARCHIVE },
+	{ &cg_strafeHelperColorOptimalB, "cg_strafeHelperColorOptimalB", "0.25", CVAR_ARCHIVE },
+	{ &cg_strafeHelperColorOptimalA, "cg_strafeHelperColorOptimalA", "0.75", CVAR_ARCHIVE },
+	{ &cg_strafeHelperColorCenterMarkerR, "cg_strafeHelperColorCenterMarkerR", "1.0", CVAR_ARCHIVE },
+	{ &cg_strafeHelperColorCenterMarkerG, "cg_strafeHelperColorCenterMarkerG", "1.0", CVAR_ARCHIVE },
+	{ &cg_strafeHelperColorCenterMarkerB, "cg_strafeHelperColorCenterMarkerB", "1.0", CVAR_ARCHIVE },
+	{ &cg_strafeHelperColorCenterMarkerA, "cg_strafeHelperColorCenterMarkerA", "0.75", CVAR_ARCHIVE },
+	{ &cg_strafeHelperColorSpeedR, "cg_strafeHelperColorSpeedR", "1.0", CVAR_ARCHIVE },
+	{ &cg_strafeHelperColorSpeedG, "cg_strafeHelperColorSpeedG", "1.0", CVAR_ARCHIVE },
+	{ &cg_strafeHelperColorSpeedB, "cg_strafeHelperColorSpeedB", "1.0", CVAR_ARCHIVE },
+	{ &cg_strafeHelperColorSpeedA, "cg_strafeHelperColorSpeedA", "0.9", CVAR_ARCHIVE },
 };
 
 static int cvarTableSize = sizeof( cvarTable ) / sizeof( cvarTable[0] );
