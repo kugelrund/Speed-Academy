@@ -131,6 +131,10 @@ Allows to disable "crouch boosting".
 When set to `0`, VRGI can not be bypassed by crouching anymore.
 Default: `1`.
 
+#### `g_reverseBoosts` (0 or 1)
+
+Flip elevation logic for VRGI.
+
 #### `g_randomBoosts` (0 or 1)
 
 Allows to disable "random" boosts.

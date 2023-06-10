@@ -3953,6 +3953,7 @@ static void PM_CrashLand( void )
 		return;
 	}
 
+	const float signEB = (g_reverseBoosts->integer ? -1.0f : 1.0f);
 	if ( (pm->ps->pm_flags&PMF_TRIGGER_PUSHED) )
 	{
 		delta = 21;//?
@@ -3989,8 +3990,8 @@ static void PM_CrashLand( void )
 		}
 		else if ( pm->ps->jumpZStart && (pm->ps->forcePowerLevel[FP_LEVITATION] >= FORCE_LEVEL_1||(pm->ps->clientNum < MAX_CLIENTS||PM_ControlledByPlayer())) )
 		{//we were force-jumping
-			const float tolerance = (g_randomBoosts->integer ? 0.0f : 0.25f);
-			if ( pm->ps->origin[2] + tolerance >= pm->ps->jumpZStart )
+			const float tolerance = signEB * (g_randomBoosts->integer ? 0.0f : 0.25f);
+			if ( signEB * (pm->ps->origin[2] + tolerance) >= signEB * pm->ps->jumpZStart )
 			{//we landed at same height or higher than we landed
 				if ( pm->ps->forceJumpZStart )
 				{//we were force-jumping
@@ -4006,15 +4007,15 @@ static void PM_CrashLand( void )
 				{//always allow a drop from 128, at least
 					dropAllow = 128;
 				}
-				if ( delta > forceJumpHeight[FORCE_LEVEL_1] )
+				if ( signEB * delta > forceJumpHeight[FORCE_LEVEL_1] )
 				{//will have to use force jump ability to absorb some of it
 					forceLanding = qtrue;//absorbed some - just to force the correct animation to play below
 				}
-				delta = (delta - dropAllow)/2;
+				delta = (delta - signEB * dropAllow)/2;
 			}
-			if ( delta < 1 )
+			if ( signEB * delta < 1 )
 			{
-				delta = 1;
+				delta = signEB * 1;
 			}
 		}
 
@@ -4043,7 +4044,7 @@ static void PM_CrashLand( void )
 		delta *= 0.4f;
 	}
 	
-	if ( delta < 1 ) 
+	if ( signEB * delta < 1 ) 
 	{
 		AddSoundEvent( pm->gent, pm->ps->origin, 32, AEL_MINOR, qfalse, qtrue );
 		return;
@@ -4084,7 +4085,7 @@ static void PM_CrashLand( void )
 		}
 		else if ( (pm->cmd.upmove >= 0 || !g_crouchBoosts->integer) && !PM_InKnockDown( pm->ps ) && !PM_InRoll( pm->ps ))
 		{//not crouching
-			if ( delta > 10 
+			if ( signEB * delta > 10 
 				|| pm->ps->pm_flags & PMF_BACKWARDS_JUMP 
 				|| (pm->ps->forcePowersActive&(1<<FP_LEVITATION))
 				|| forceLanding ) //EV_FALL_SHORT or jumping back or force-land
