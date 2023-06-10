@@ -1178,7 +1178,7 @@ qboolean	ConsoleCommand( void ) {
 		Svcmd_ForceSetLevel_f( FP_ABSORB );
 		return qtrue;
 	}
-	if ( Q_stricmp( cmd, "setForceSight" ) == 0 )	
+	if ( Q_stricmp( cmd, "setForceSight" ) == 0 || Q_stricmp( cmd, "setForceSense" ) == 0 )	
 	{
 		Svcmd_ForceSetLevel_f( FP_SEE );
 		return qtrue;
