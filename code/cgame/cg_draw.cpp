@@ -3832,6 +3832,28 @@ static float CG_DrawSecrets( float y ) {
 }
 
 /*
+===============
+CG_DrawSpeed
+===============
+*/
+static void CG_DrawSpeed( void ) {
+	vec3_t velocity;
+	VectorCopy(cg.snap->ps.velocity, velocity);
+	velocity[2] = 0.0f;  // ignore vertical component
+	char speed_string[8];  // 7 digits should be more than enough for speed
+	snprintf(speed_string, sizeof(speed_string), "%.0f", VectorLength(velocity));
+
+	const auto x = SCREEN_WIDTH / 2.0f + cg_speedX.value;
+	const auto y = SCREEN_HEIGHT / 2.0f + cg_speedY.value;
+	const vec4_t color = {cg_speedColorR.value, cg_speedColorG.value,
+	                      cg_speedColorB.value, cg_speedColorA.value};
+	const float w = cgi_R_Font_StrLenPixels(speed_string,
+		cgs.media.qhFontMedium, cg_speedScale.value);
+	cgi_R_Font_DrawString(x - w/2, y, speed_string, color,
+		cgs.media.qhFontMedium, -1, cg_speedScale.value);
+}
+
+/*
 ====================
 CG_DrawStrafeHelper
 ====================
@@ -3940,6 +3962,11 @@ static void CG_Draw2D( void )
 		if ( cg_drawStrafeHelper.integer )
 		{
 			CG_DrawStrafeHelper();
+		}
+
+		if ( cg_drawSpeed.integer )
+		{
+			CG_DrawSpeed();
 		}
 
 		if ( !(cent->gent && cent->gent->s.eFlags & (EF_LOCKED_TO_WEAPON )))//|EF_IN_ATST

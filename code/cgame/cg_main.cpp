@@ -327,6 +327,14 @@ vmCvar_t	cg_drawSpeedrunTotalTimer;
 vmCvar_t	cg_drawSpeedrunLevelTimer;
 vmCvar_t	cg_drawMovementRestriction;
 vmCvar_t	cg_drawOverbounceInfo;
+vmCvar_t	cg_drawSpeed;
+vmCvar_t	cg_speedScale;
+vmCvar_t	cg_speedX;
+vmCvar_t	cg_speedY;
+vmCvar_t	cg_speedColorR;
+vmCvar_t	cg_speedColorG;
+vmCvar_t	cg_speedColorB;
+vmCvar_t	cg_speedColorA;
 vmCvar_t	cg_drawStrafeHelper;
 vmCvar_t	cg_strafeHelperCenter;
 vmCvar_t	cg_strafeHelperCenterMarker;
@@ -467,6 +475,14 @@ static cvarTable_t cvarTable[] = {
 	{ &cg_drawSpeedrunLevelTimer, "cg_drawSpeedrunLevelTimer", "0", CVAR_ARCHIVE  },
 	{ &cg_drawMovementRestriction, "cg_drawMovementRestriction", "1", CVAR_ARCHIVE },
 	{ &cg_drawOverbounceInfo, "cg_drawOverbounceInfo", "0", CVAR_ARCHIVE },
+	{ &cg_drawSpeed, "cg_drawSpeed", "0", CVAR_ARCHIVE },
+	{ &cg_speedScale, "cg_speedScale", "0.9", CVAR_ARCHIVE },
+	{ &cg_speedX, "cg_speedX", "0", CVAR_ARCHIVE },
+	{ &cg_speedY, "cg_speedY", "75", CVAR_ARCHIVE },
+	{ &cg_speedColorR, "cg_speedColorR", "1.0", CVAR_ARCHIVE },
+	{ &cg_speedColorG, "cg_speedColorG", "1.0", CVAR_ARCHIVE },
+	{ &cg_speedColorB, "cg_speedColorB", "1.0", CVAR_ARCHIVE },
+	{ &cg_speedColorA, "cg_speedColorA", "0.9", CVAR_ARCHIVE },
 	{ &cg_drawStrafeHelper, "cg_drawStrafeHelper", "0", CVAR_ARCHIVE },
 	{ &cg_strafeHelperCenter, "cg_strafeHelperCenter", "1", CVAR_ARCHIVE },
 	{ &cg_strafeHelperCenterMarker, "cg_strafeHelperCenterMarker", "1", CVAR_ARCHIVE },
