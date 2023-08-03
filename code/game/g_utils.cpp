@@ -1962,10 +1962,9 @@ void G_ChangeMap (const char *mapname, const char *spawntarget, qboolean hub)
 		return;
 	}
 
-	cgi_SpeedrunLevelFinished();
-
 	if (mapname[0] == '+')	//fire up the menu instead
 	{
+		cgi_SpeedrunLevelFinished();
 		gi.SendConsoleCommand( va("uimenu %s\n", mapname+1) );
 		if ( g_skippingcin->integer )
 		{
@@ -1975,6 +1974,8 @@ void G_ChangeMap (const char *mapname, const char *spawntarget, qboolean hub)
 		gi.cvar_set("timescale", "1");
 		return;
 	}
+	// in these other cases, SpeedrunLevelFinished will be called from
+	// SV_MapTransition, as not all ways to there pass through here
 
 	if ( spawntarget == NULL ) {
 		spawntarget = "";	//prevent it from becoming "(null)"
