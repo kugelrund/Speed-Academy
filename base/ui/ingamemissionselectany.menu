@@ -1,0 +1,654 @@
+//------------------------------------------------------------------------------------------------
+// Mission Select Any
+//
+//	Shows a menu for starting any mission.
+//
+//------------------------------------------------------------------------------------------------
+{
+
+	menuDef 
+	{
+		name					"ingameMissionSelectAny"
+		fullScreen				1							// MENU_TRUR
+		rect					0 0 640 480						// Size and position of the menu
+		visible					1							// Visible on open
+		focusColor				1 1 1 1						// Focus color for text and items
+		descX					320
+		descY					444
+		descScale				1
+		descColor				1 .682 0 .8
+		descAlignment				ITEM_ALIGN_CENTER
+
+//----------------------------------------------------------------------------------------------
+//	MENU BACKGROUND
+//----------------------------------------------------------------------------------------------
+		itemDef 
+		{
+			name				background
+			group				none
+			rect				0 0 640 480
+			style				WINDOW_STYLE_SHADER
+			background			"gfx/menus/datapad"	
+			forecolor			1 1 1 1
+			visible				1
+			decoration
+		}
+
+
+//----------------------------------------------------------------------------------------------
+//	MISSION TEXT
+//----------------------------------------------------------------------------------------------
+
+		itemDef
+		{
+			name				screen_title
+			type				ITEM_TYPE_TEXT
+			rect				170 3 300 26
+			text				"Mission Selection"
+			font				3
+			forecolor			.549 .854 1 1
+			textscale			1.2
+			textalign			ITEM_ALIGN_CENTER
+			textalignx			150
+			visible			1
+			decoration
+		}
+
+		itemDef
+		{
+			name				button_yavin
+			type				ITEM_TYPE_BUTTON
+			rect				50 60 150 20
+			text				"Yavin Story Mission"
+			desctext			"Start Yavin story mission (yavin1b)."
+			font				2
+			forecolor			1 .682 0 1
+			textscale			.7
+			textalign			ITEM_ALIGN_LEFT
+			textalignx			8
+			textaligny			-1
+			visible				1
+
+			mouseEnter 
+			{
+				show			button_glow
+				setitemrect		button_glow	25 60 200 22
+			}
+			mouseExit 
+			{
+				hide			button_glow
+			}
+			action
+			{
+				uiScript 		"updatesabercvars"
+				uiScript 		"updatefightingstyle"
+				uiScript		startgame
+			}
+		}
+
+		itemDef
+		{
+			name				button_yavin2
+			type				ITEM_TYPE_BUTTON
+			rect				200 60 50 20
+			text				"Part 2"
+			desctext			"Start Yavin story mission part 2 (yavin2)."
+			font				2
+			forecolor			1 .682 0 1
+			textscale			.7
+			textalign			ITEM_ALIGN_LEFT
+			textalignx			8
+			textaligny			-1
+			visible				1
+
+			mouseEnter 
+			{
+				show			button_glow
+				setitemrect		button_glow	190 60 70 22
+			}
+			mouseExit 
+			{
+				hide			button_glow
+			}
+			action
+			{
+				exec			"map yavin2"
+			}
+		}
+
+		itemDef
+		{
+			name				button_t1
+			type				ITEM_TYPE_BUTTON
+			rect				50 80 150 20
+			text				"Tier 1 Missions"
+			desctext			"Open mission selection for tier 1."
+			font				2
+			forecolor			1 .682 0 1
+			textscale			.7
+			textalign			ITEM_ALIGN_LEFT
+			textalignx			8
+			textaligny			-1
+			visible				1
+
+			mouseEnter 
+			{
+				show			button_glow
+				setitemrect		button_glow	25 80 200 22
+			}
+			mouseExit 
+			{
+				hide			button_glow
+			}
+			action
+			{
+				close			all
+				exec			"missionselect t1"
+			}
+		}
+
+		itemDef
+		{
+			name				button_hoth
+			type				ITEM_TYPE_BUTTON
+			rect				50 100 150 20
+			text				"Hoth Story Mission"
+			desctext			"Start Hoth story mission (hoth2)."
+			font				2
+			forecolor			1 .682 0 1
+			textscale			.7
+			textalign			ITEM_ALIGN_LEFT
+			textalignx			8
+			textaligny			-1
+			visible				1
+
+			mouseEnter 
+			{
+				show			button_glow
+				setitemrect		button_glow	25 100 200 22
+			}
+			mouseExit 
+			{
+				hide			button_glow
+			}
+			action
+			{
+				close			all
+				exec			"missionselect hoth"
+			}
+		}
+
+		itemDef
+		{
+			name				button_hoth3
+			type				ITEM_TYPE_BUTTON
+			rect				200 100 50 20
+			text				"Part 2"
+			desctext			"Start Hoth story mission part 2 (hoth3)."
+			font				2
+			forecolor			1 .682 0 1
+			textscale			.7
+			textalign			ITEM_ALIGN_LEFT
+			textalignx			8
+			textaligny			-1
+			visible				1
+
+			mouseEnter 
+			{
+				show			button_glow
+				setitemrect		button_glow	190 100 70 22
+			}
+			mouseExit 
+			{
+				hide			button_glow
+			}
+			action
+			{
+				close			all
+				exec			"missionselect hoth3"
+			}
+		}
+
+		itemDef
+		{
+			name				button_t2
+			type				ITEM_TYPE_BUTTON
+			rect				50 120 150 20
+			text				"Tier 2 Missions"
+			desctext			"Open mission selection for tier 2."
+			font				2
+			forecolor			1 .682 0 1
+			textscale			.7
+			textalign			ITEM_ALIGN_LEFT
+			textalignx			8
+			textaligny			-1
+			visible				1
+
+			mouseEnter 
+			{
+				show			button_glow
+				setitemrect		button_glow	25 120 200 22
+			}
+			mouseExit 
+			{
+				hide			button_glow
+			}
+			action
+			{
+				close			all
+				exec			"missionselect t2"
+			}
+		}
+
+		itemDef
+		{
+			name				button_vjun
+			type				ITEM_TYPE_BUTTON
+			rect				50 140 150 20
+			text				"Vjun Story Mission"
+			desctext			"Start Vjun story mission (vjun1)."
+			font				2
+			forecolor			1 .682 0 1
+			textscale			.7
+			textalign			ITEM_ALIGN_LEFT
+			textalignx			8
+			textaligny			-1
+			visible				1
+
+			mouseEnter 
+			{
+				show			button_glow
+				setitemrect		button_glow	25 140 200 22
+			}
+			mouseExit 
+			{
+				hide			button_glow
+			}
+			action
+			{
+				close			all
+				exec			"missionselect vjun"
+			}
+		}
+
+		itemDef
+		{
+			name				button_vjun2
+			type				ITEM_TYPE_BUTTON
+			rect				200 140 50 20
+			text				"Part 2"
+			desctext			"Start Vjun story mission part 2 (vjun2)."
+			font				2
+			forecolor			1 .682 0 1
+			textscale			.7
+			textalign			ITEM_ALIGN_LEFT
+			textalignx			8
+			textaligny			-1
+			visible				1
+
+			mouseEnter 
+			{
+				show			button_glow
+				setitemrect		button_glow	190 140 70 22
+			}
+			mouseExit 
+			{
+				hide			button_glow
+			}
+			action
+			{
+				close			all
+				exec			"missionselect vjun2"
+			}
+		}
+
+		itemDef
+		{
+			name				button_vjun3
+			type				ITEM_TYPE_BUTTON
+			rect				250 140 50 20
+			text				"Part 3"
+			desctext			"Start Vjun story mission part 3 (vjun3)."
+			font				2
+			forecolor			1 .682 0 1
+			textscale			.7
+			textalign			ITEM_ALIGN_LEFT
+			textalignx			8
+			textaligny			-1
+			visible				1
+
+			mouseEnter 
+			{
+				show			button_glow
+				setitemrect		button_glow	240 140 70 22
+			}
+			mouseExit 
+			{
+				hide			button_glow
+			}
+			action
+			{
+				close			all
+				exec			"missionselect vjun3"
+			}
+		}
+
+		itemDef
+		{
+			name				button_t3
+			type				ITEM_TYPE_BUTTON
+			rect				50 160 150 20
+			text				"Tier 3 Missions"
+			desctext			"Open mission selection for tier 3."
+			font				2
+			forecolor			1 .682 0 1
+			textscale			.7
+			textalign			ITEM_ALIGN_LEFT
+			textalignx			8
+			textaligny			-1
+			visible				1
+
+			mouseEnter 
+			{
+				show			button_glow
+				setitemrect		button_glow	25 160 200 22
+			}
+			mouseExit 
+			{
+				hide			button_glow
+			}
+			action
+			{
+				close			all
+				exec			"missionselect t3"
+			}
+		}
+
+		itemDef
+		{
+			name				button_taspir
+			type				ITEM_TYPE_BUTTON
+			rect				50 180 150 20
+			text				"Taspir Story Mission"
+			desctext			"Start Taspir story mission (taspir1)."
+			font				2
+			forecolor			1 .682 0 1
+			textscale			.7
+			textalign			ITEM_ALIGN_LEFT
+			textalignx			8
+			textaligny			-1
+			visible				1
+
+			mouseEnter 
+			{
+				show			button_glow
+				setitemrect		button_glow	25 180 200 22
+			}
+			mouseExit 
+			{
+				hide			button_glow
+			}
+			action
+			{
+				close			all
+				exec			"missionselect taspir"
+			}
+		}
+
+		itemDef
+		{
+			name				button_taspir2
+			type				ITEM_TYPE_BUTTON
+			rect				200 180 50 20
+			text				"Part 2"
+			desctext			"Start Taspir story mission part 2 (taspir2)."
+			font				2
+			forecolor			1 .682 0 1
+			textscale			.7
+			textalign			ITEM_ALIGN_LEFT
+			textalignx			8
+			textaligny			-1
+			visible				1
+
+			mouseEnter 
+			{
+				show			button_glow
+				setitemrect		button_glow	190 180 70 22
+			}
+			mouseExit 
+			{
+				hide			button_glow
+			}
+			action
+			{
+				close			all
+				exec			"missionselect taspir2"
+			}
+		}
+
+		itemDef
+		{
+			name				button_kor1
+			type				ITEM_TYPE_BUTTON
+			rect				50 200 150 20
+			text				"Korriban Story Mission"
+			desctext			"Start Korriban story mission (kor1)."
+			font				2
+			forecolor			1 .682 0 1
+			textscale			.7
+			textalign			ITEM_ALIGN_LEFT
+			textalignx			8
+			textaligny			-1
+			visible				1
+
+			mouseEnter 
+			{
+				show			button_glow
+				setitemrect		button_glow	25 200 200 22
+			}
+			mouseExit 
+			{
+				hide			button_glow
+			}
+			action
+			{
+				close			all
+				exec			"missionselect kor1"
+			}
+		}
+
+		itemDef
+		{
+			name				button_kor2
+			type				ITEM_TYPE_BUTTON
+			rect				200 200 50 20
+			text				"Part 2"
+			desctext			"Start Korriban story mission part 2 (kor2)."
+			font				2
+			forecolor			1 .682 0 1
+			textscale			.7
+			textalign			ITEM_ALIGN_LEFT
+			textalignx			8
+			textaligny			-1
+			visible				1
+
+			mouseEnter 
+			{
+				show			button_glow
+				setitemrect		button_glow	190 200 70 22
+			}
+			mouseExit 
+			{
+				hide			button_glow
+			}
+			action
+			{
+				close			all
+				exec			"missionselect kor2"
+			}
+		}
+
+//----------------------------------------------------------------------------------------------
+//	SCANLINES OVER WHOLE MENU
+//----------------------------------------------------------------------------------------------
+		itemDef 
+		{
+			name				button_glow
+			group				none
+			style				WINDOW_STYLE_SHADER
+			rect				0 0 0 0
+			background			"gfx/menus/menu_buttonback"
+			forecolor			1 1 1 1
+			visible				0
+			decoration
+		}
+		
+		itemDef 
+		{
+			name				scan
+			group				none
+			style				WINDOW_STYLE_SHADER
+			rect				0 0 640 640
+			background			"gfx/menus/scanlines"
+			forecolor			1 1 1 1
+			visible				1
+			decoration
+		}
+
+//----------------------------------------------------------------------------------------------
+//	Options
+//----------------------------------------------------------------------------------------------
+		itemDef 
+		{	
+			name				button_setcoreforcepowers
+			group				none
+			type				ITEM_TYPE_MULTI
+			text				"Set Core Force Powers:"
+			cvar				"ui_missionSelectAnySetCoreForcePowers"
+			cvarFloatList			{  @MENUS_OFF 0 @MENUS_ON 1 }
+			rect				50 340 250 14
+			textalign			ITEM_ALIGN_RIGHT
+			textalignx			150
+			textaligny			0
+			font 				4
+			textscale 			1
+			forecolor			.615 .615 .956 1
+			visible				1
+			descText			"Set core force powers to the level that is appropriate for the chosen mission."
+			action
+			{
+				play			"sound/interface/button1.wav"
+			}
+			mouseenter 
+			{ 
+				show			button_glow
+				setitemrect		button_glow	25 340 300 22
+			}
+			mouseexit 
+			{ 
+				hide			button_glow
+			} 
+		}
+
+		itemDef 
+		{	
+			name				button_showforceselect
+			group				none
+			type				ITEM_TYPE_MULTI
+			text				"Show Force Selection:"
+			cvar				"ui_missionSelectAnyShowForceSelect"
+			cvarFloatList			{  @MENUS_OFF 0 @MENUS_ON 1 }
+			rect				50 354 250 14
+			textalign			ITEM_ALIGN_RIGHT
+			textalignx			150
+			textaligny			0
+			font 				4
+			textscale 			1
+			forecolor			.615 .615 .956 1
+			visible				1
+			descText			"Show screen for choosing force powers before starting the mission."
+			action
+			{
+				play			"sound/interface/button1.wav"
+			}
+			mouseenter 
+			{ 
+				show			button_glow
+				setitemrect		button_glow	25 354 300 22
+			}
+			mouseexit 
+			{ 
+				hide			button_glow
+			} 
+		}
+
+		itemDef 
+		{	
+			name				button_showsaberselect
+			group				none
+			type				ITEM_TYPE_MULTI
+			text				"Show Saber Selection:"
+			cvar				"ui_missionSelectAnyShowSaberSelect"
+			cvarFloatList			{  @MENUS_OFF 0 @MENUS_ON 1 }
+			rect				50 368 250 14
+			textalign			ITEM_ALIGN_RIGHT
+			textalignx			150
+			textaligny			0
+			font 				4
+			textscale 			1
+			forecolor			.615 .615 .956 1
+			visible				1
+			descText			"Show screen for choosing light saber before starting the mission."
+			action
+			{
+				play			"sound/interface/button1.wav"
+			}
+			mouseenter 
+			{ 
+				show			button_glow
+				setitemrect		button_glow	25 368 300 22
+			}
+			mouseexit 
+			{ 
+				hide			button_glow
+			} 
+		}
+
+
+//----------------------------------------------------------------------------------------------
+//	LOWER BUTTONS
+//----------------------------------------------------------------------------------------------
+		itemDef 
+		{
+			name				exit
+			group				none
+			style				WINDOW_STYLE_EMPTY
+			type				ITEM_TYPE_BUTTON
+			rect				500 420 120 25 
+			text				@MENUS_RESUME
+			descText			@MENUS_RETURN_TO_GAME
+			font				2
+			textscale			1
+			textalignx			60
+			textalign			ITEM_ALIGN_CENTER
+			forecolor			1 .682 0 1
+			visible			1
+
+			mouseEnter 
+			{ 
+				show			button_glow
+				setitemrect		button_glow	490 419 150 30
+			}
+			mouseExit 
+			{ 
+				hide			button_glow 
+			}
+			
+			action 
+			{ 
+				play			"sound/interface/button1.wav" ; 
+				close			all
+			}
+		}
+	}
+}

@@ -5365,6 +5365,24 @@ menuDef_t *Menus_ActivateByName(const char *p)
 			Menus_CloseAll();
 			Menus_OpenByName("ingameMissionSelect3");
 		}
+		else if (!Q_stricmp( p, "ingameMissionSelectAny1" ) )
+		{
+			UI_LoadMenus("ui/tier1any.txt",qfalse);
+			Menus_CloseAll();
+			Menus_OpenByName("ingameMissionSelectAny1");
+		}
+		else if (!Q_stricmp( p, "ingameMissionSelectAny2" ) )
+		{
+			UI_LoadMenus("ui/tier2any.txt",qfalse);
+			Menus_CloseAll();
+			Menus_OpenByName("ingameMissionSelectAny2");
+		}
+		else if (!Q_stricmp( p, "ingameMissionSelectAny3" ) )
+		{
+			UI_LoadMenus("ui/tier3any.txt",qfalse);
+			Menus_CloseAll();
+			Menus_OpenByName("ingameMissionSelectAny3");
+		}
 		else
 		{
 			Com_Printf(S_COLOR_YELLOW"WARNING: Menus_ActivateByName: Unable to find menu '%s'\n",p);

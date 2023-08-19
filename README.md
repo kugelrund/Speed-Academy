@@ -193,6 +193,26 @@ Default: `0`.
 
 ## New Commands
 
+### Menus
+
+#### `forceselect [non-core level] [core level]`
+
+Opens a menu to choose force power levels for any power without limitations.
+The optional first argument allows setting all non-core force powers to a common level before showing the menu.
+The optional second argument allows the same for core force powers.
+Levels must be between `0` and `3`.
+
+#### `missionselect [t1,t2,t3,hoth2,hoth3,vjun1,vjun2,vjun3,taspir1,taspir2,kor1,kor2]`
+
+Opens mission selection menu to start a mission.
+If no argument is given, shows an initial menu that allows choosing a mission category.
+If argument is a tier, shows mission selection for that tier.
+If argument is a story mission, shows the weapon selection for that story mission.
+
+#### `saberselect`
+
+Opens saber creation menu to choose any saber, including styles.
+
 ### HUD
 
 #### `speedColor <r> <g> <b> <a>` (components in range 0.0 to 1.0)

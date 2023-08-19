@@ -1,0 +1,5 @@
+// menu defs
+// 
+{
+	loadMenu { "ui/ingameMissionSelectAny2.menu"				}
+}
