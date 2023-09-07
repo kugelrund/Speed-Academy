@@ -3832,6 +3832,160 @@ static float CG_DrawSecrets( float y ) {
 	return y + BIGCHAR_HEIGHT + 10;
 }
 
+static float jumpHelperGetRangeExtendingLength(const int force_jump_level) {
+	// TODO: This actually depends on FPS (or rather frametime in pmove)...
+	extern float forceJumpHeight[];
+	const float earliest_height[4] = {forceJumpHeight[force_jump_level],
+		38.81498851676192, 135.05399823533764, 328.5810589503787};
+	return forceJumpHeight[force_jump_level] - earliest_height[force_jump_level];
+}
+
+static float jumpHelperGetOptimalZ(const int force_jump_level) {
+	// TODO: This actually depends on FPS (or rather frametime in pmove)...
+	const float optimal_z[4] = {
+		0.0, 62.056608766581896 ,159.57568909382806, 352.65407536117556};
+	return optimal_z[force_jump_level];
+}
+
+enum class JumpHelperDrawType {
+	Horizontal,
+	HorizontalMirrored,
+	Vertical,
+	VerticalMirrored
+};
+
+static void CG_DrawJumpHelper( void )
+{
+	const float bgcolor[4] = {
+		cg_jumpHelperColorBackgroundR.value, cg_jumpHelperColorBackgroundG.value,
+		cg_jumpHelperColorBackgroundB.value, cg_jumpHelperColorBackgroundA.value};
+	const float storedzcolor[4] = {
+		cg_jumpHelperColorCancelR.value, cg_jumpHelperColorCancelG.value,
+		cg_jumpHelperColorCancelB.value, cg_jumpHelperColorCancelA.value};
+	const float crouchzcolor[4] = {
+		cg_jumpHelperColorCrouchR.value, cg_jumpHelperColorCrouchG.value,
+		cg_jumpHelperColorCrouchB.value, cg_jumpHelperColorCrouchA.value};
+	const float bgcolorcrouch[4] = {
+		cg_jumpHelperColorCrouchExtendR.value, cg_jumpHelperColorCrouchExtendG.value,
+		cg_jumpHelperColorCrouchExtendB.value, cg_jumpHelperColorCrouchExtendA.value};
+	const float zcolor[4] = {
+		cg_jumpHelperColorCurrentR.value, cg_jumpHelperColorCurrentG.value,
+		cg_jumpHelperColorCurrentB.value, cg_jumpHelperColorCurrentA.value};
+	const float zcolorbg[4] = {
+		cg_jumpHelperColorCurrentR.value, cg_jumpHelperColorCurrentG.value,
+		cg_jumpHelperColorCurrentB.value, cg_jumpHelperColorCurrentA.value / 3 };
+	const float okcolor[4] = {
+		cg_jumpHelperColorExtendR.value, cg_jumpHelperColorExtendG.value,
+		cg_jumpHelperColorExtendB.value, cg_jumpHelperColorExtendA.value};
+	const float optcolor[4] = {
+		cg_jumpHelperColorOptimalR.value, cg_jumpHelperColorOptimalG.value,
+		cg_jumpHelperColorOptimalB.value, cg_jumpHelperColorOptimalA.value};
+
+	extern float forceJumpHeight[];
+	const auto& ps = g_entities[0].client->ps;
+	const int force_jump_level = ps.forcePowerLevel[FP_LEVITATION];
+	const float width = [&] {
+		if (cg_jumpHelperAutoScale.integer) {
+			return cg_jumpHelperWidth.value * forceJumpHeight[force_jump_level] / forceJumpHeight[3];
+		}
+		return cg_jumpHelperWidth.value;
+	}();
+	const float height = cg_jumpHelperHeight.value;
+	const float crouchheight = (cg_jumpHelperCrouch.integer ? 25.0f : 0.0f);
+
+	const float maxz = forceJumpHeight[force_jump_level] + crouchheight;
+	const float optz = jumpHelperGetOptimalZ(force_jump_level);
+	const float minmaxdiff = jumpHelperGetRangeExtendingLength(force_jump_level);
+
+	const auto z = ps.forceJumpZStart ? (ps.origin[2] - ps.forceJumpZStart) : 0.0;
+
+	static auto releasez = 0.0f;
+	bool draw_storedz = false;
+	if ((ps.pm_flags & PMF_JUMP_HELD) && ps.velocity[2] > 0) {
+		releasez = z;
+	} else if (ps.forceJumpZStart != 0) {
+		draw_storedz = true;
+	}
+
+	static auto storedz = 0.0;
+	storedz = std::max(storedz, z);
+	static auto crouchz = 0.0f;
+	static bool crouchzset = false;
+	bool draw_crouchz = false;
+	if (ps.pm_flags & PMF_DUCKED) {
+		crouchzset = true;
+	} else if (!crouchzset) {
+		crouchz = z;
+	}
+	if (ps.forceJumpZStart == 0) {
+		crouchzset = false;
+		storedz = 0;
+	} else if (crouchzset) {
+		draw_crouchz = true;
+	}
+
+	const auto FillRect = [] (const float x, const float y,
+	                          const float w, const float h,
+	                          const float* color, const JumpHelperDrawType type) {
+		switch (type) {
+			case JumpHelperDrawType::Horizontal:
+				CG_FillRect(x, y, w, h, color);
+				break;
+			case JumpHelperDrawType::HorizontalMirrored:
+				CG_FillRect(SCREEN_WIDTH - x - w, y, w, h, color);
+				break;
+			case JumpHelperDrawType::Vertical:
+				CG_FillRect(y, SCREEN_HEIGHT - x - w, h, w, color);
+				break;
+			case JumpHelperDrawType::VerticalMirrored:
+				CG_FillRect(y, x, h, w, color);
+				break;
+		}
+	};
+	const auto Draw = [&] (const float x, const float y, const JumpHelperDrawType type) {
+		const auto dx_low = (1.0 - (minmaxdiff + crouchheight)/maxz) * width;
+		const auto dx_good = minmaxdiff/maxz * width;
+		const auto dx_crouch = crouchheight/maxz * width;
+		FillRect(x, y, dx_low, height, bgcolor, type);
+		FillRect(x + dx_low, y, dx_good, height, okcolor, type);
+		FillRect(x + dx_low + dx_good, y, dx_crouch, height, bgcolorcrouch, type);
+		if (force_jump_level > 0) {
+			FillRect(x + optz/maxz * width, y, 1, height, optcolor, type);
+			if (draw_storedz) {
+				FillRect(x + releasez/maxz * width, y, 1, height, storedzcolor, type);
+			}
+		}
+		if (draw_crouchz) {
+			FillRect(x + crouchz/maxz * width, y, 1, height, crouchzcolor, type);
+		}
+		const auto currentz_height = std::abs(cg_jumpHelperCurrentScale.value) * height;
+		auto currentz_y = y;
+		if (cg_jumpHelperCurrentScale.value > 0) {
+			currentz_y += height - currentz_height;
+		}
+		FillRect(x, currentz_y, z / maxz * width, currentz_height, zcolorbg, type);
+		FillRect(x + storedz / maxz * width, currentz_y, 1, currentz_height, zcolor, type);
+	};
+
+	if (cg_jumpHelperHorizontal.integer != 0) {
+		const float x = SCREEN_WIDTH/2 - cg_jumpHelperX.value - width;
+		const float y = (SCREEN_HEIGHT - height)/2 + cg_jumpHelperY.value;
+		if (cg_jumpHelperHorizontal.integer < 0 || cg_jumpHelperMirror.integer) {
+			Draw(x, y, JumpHelperDrawType::HorizontalMirrored);
+		}
+		if (cg_jumpHelperHorizontal.integer > 0 || cg_jumpHelperMirror.integer) {
+			Draw(x, y, JumpHelperDrawType::Horizontal);
+		}
+	} else {
+		const float x = SCREEN_HEIGHT/2 + cg_jumpHelperX.value;
+		const float y = (SCREEN_WIDTH - height)/2 + cg_jumpHelperY.value;
+		Draw(x, y, JumpHelperDrawType::Vertical);
+		if (cg_jumpHelperMirror.integer) {
+			Draw(x, y, JumpHelperDrawType::VerticalMirrored);
+		}
+	}
+}
+
 /*
 ===============
 CG_DrawLandingInfo
@@ -3994,6 +4148,11 @@ static void CG_Draw2D( void )
 		if ( cg_drawStrafeHelper.integer )
 		{
 			CG_DrawStrafeHelper();
+		}
+
+		if ( cg_drawJumpHelper.integer )
+		{
+			CG_DrawJumpHelper();
 		}
 
 		if ( cg_drawLandingInfo.integer )

@@ -209,6 +209,118 @@ static void CG_InfoUp_f( void )
 //	cg.showInformation = qfalse;
 }
 
+static void CG_SetJumpHelperColorBackground_f( void ) {
+	if (cgi_Argc() != 5) {
+		Com_Printf("Usage: jumpHelperColorBackground <red 0-1> <green 0-1> <blue 0-1> <alpha 0-1>\n" );
+		Com_Printf("Current color is: %f %f %f %f\n",
+		           cg_jumpHelperColorBackgroundR.value,
+		           cg_jumpHelperColorBackgroundG.value,
+		           cg_jumpHelperColorBackgroundB.value,
+		           cg_jumpHelperColorBackgroundA.value);
+		return;
+	}
+	cgi_Cvar_Set("cg_jumpHelperColorBackgroundR", CG_Argv(1));
+	cgi_Cvar_Set("cg_jumpHelperColorBackgroundG", CG_Argv(2));
+	cgi_Cvar_Set("cg_jumpHelperColorBackgroundB", CG_Argv(3));
+	cgi_Cvar_Set("cg_jumpHelperColorBackgroundA", CG_Argv(4));
+}
+
+static void CG_SetJumpHelperColorCancel_f( void ) {
+	if (cgi_Argc() != 5) {
+		Com_Printf("Usage: jumpHelperColorCancel <red 0-1> <green 0-1> <blue 0-1> <alpha 0-1>\n" );
+		Com_Printf("Current color is: %f %f %f %f\n",
+		           cg_jumpHelperColorCancelR.value,
+		           cg_jumpHelperColorCancelG.value,
+		           cg_jumpHelperColorCancelB.value,
+		           cg_jumpHelperColorCancelA.value);
+		return;
+	}
+	cgi_Cvar_Set("cg_jumpHelperColorCancelR", CG_Argv(1));
+	cgi_Cvar_Set("cg_jumpHelperColorCancelG", CG_Argv(2));
+	cgi_Cvar_Set("cg_jumpHelperColorCancelB", CG_Argv(3));
+	cgi_Cvar_Set("cg_jumpHelperColorCancelA", CG_Argv(4));
+}
+
+static void CG_SetJumpHelperColorCrouch_f( void ) {
+	if (cgi_Argc() != 5) {
+		Com_Printf("Usage: jumpHelperColorCrouch <red 0-1> <green 0-1> <blue 0-1> <alpha 0-1>\n" );
+		Com_Printf("Current color is: %f %f %f %f\n",
+		           cg_jumpHelperColorCrouchR.value,
+		           cg_jumpHelperColorCrouchG.value,
+		           cg_jumpHelperColorCrouchB.value,
+		           cg_jumpHelperColorCrouchA.value);
+		return;
+	}
+	cgi_Cvar_Set("cg_jumpHelperColorCrouchR", CG_Argv(1));
+	cgi_Cvar_Set("cg_jumpHelperColorCrouchG", CG_Argv(2));
+	cgi_Cvar_Set("cg_jumpHelperColorCrouchB", CG_Argv(3));
+	cgi_Cvar_Set("cg_jumpHelperColorCrouchA", CG_Argv(4));
+}
+
+static void CG_SetJumpHelperColorCrouchExtend_f( void ) {
+	if (cgi_Argc() != 5) {
+		Com_Printf("Usage: jumpHelperColorCrouchExtend <red 0-1> <green 0-1> <blue 0-1> <alpha 0-1>\n" );
+		Com_Printf("Current color is: %f %f %f %f\n",
+		           cg_jumpHelperColorCrouchExtendR.value,
+		           cg_jumpHelperColorCrouchExtendG.value,
+		           cg_jumpHelperColorCrouchExtendB.value,
+		           cg_jumpHelperColorCrouchExtendA.value);
+		return;
+	}
+	cgi_Cvar_Set("cg_jumpHelperColorCrouchExtendR", CG_Argv(1));
+	cgi_Cvar_Set("cg_jumpHelperColorCrouchExtendG", CG_Argv(2));
+	cgi_Cvar_Set("cg_jumpHelperColorCrouchExtendB", CG_Argv(3));
+	cgi_Cvar_Set("cg_jumpHelperColorCrouchExtendA", CG_Argv(4));
+}
+
+static void CG_SetJumpHelperColorCurrent_f( void ) {
+	if (cgi_Argc() != 5) {
+		Com_Printf("Usage: jumpHelperColorCurrent <red 0-1> <green 0-1> <blue 0-1> <alpha 0-1>\n" );
+		Com_Printf("Current color is: %f %f %f %f\n",
+		           cg_jumpHelperColorCurrentR.value,
+		           cg_jumpHelperColorCurrentG.value,
+		           cg_jumpHelperColorCurrentB.value,
+		           cg_jumpHelperColorCurrentA.value);
+		return;
+	}
+	cgi_Cvar_Set("cg_jumpHelperColorCurrentR", CG_Argv(1));
+	cgi_Cvar_Set("cg_jumpHelperColorCurrentG", CG_Argv(2));
+	cgi_Cvar_Set("cg_jumpHelperColorCurrentB", CG_Argv(3));
+	cgi_Cvar_Set("cg_jumpHelperColorCurrentA", CG_Argv(4));
+}
+
+static void CG_SetJumpHelperColorExtend_f( void ) {
+	if (cgi_Argc() != 5) {
+		Com_Printf("Usage: jumpHelperColorExtend <red 0-1> <green 0-1> <blue 0-1> <alpha 0-1>\n" );
+		Com_Printf("Current color is: %f %f %f %f\n",
+		           cg_jumpHelperColorExtendR.value,
+		           cg_jumpHelperColorExtendG.value,
+		           cg_jumpHelperColorExtendB.value,
+		           cg_jumpHelperColorExtendA.value);
+		return;
+	}
+	cgi_Cvar_Set("cg_jumpHelperColorExtendR", CG_Argv(1));
+	cgi_Cvar_Set("cg_jumpHelperColorExtendG", CG_Argv(2));
+	cgi_Cvar_Set("cg_jumpHelperColorExtendB", CG_Argv(3));
+	cgi_Cvar_Set("cg_jumpHelperColorExtendA", CG_Argv(4));
+}
+
+static void CG_SetJumpHelperColorOptimal_f( void ) {
+	if (cgi_Argc() != 5) {
+		Com_Printf("Usage: jumpHelperColorOptimal <red 0-1> <green 0-1> <blue 0-1> <alpha 0-1>\n" );
+		Com_Printf("Current color is: %f %f %f %f\n",
+		           cg_jumpHelperColorOptimalR.value,
+		           cg_jumpHelperColorOptimalG.value,
+		           cg_jumpHelperColorOptimalB.value,
+		           cg_jumpHelperColorOptimalA.value);
+		return;
+	}
+	cgi_Cvar_Set("cg_jumpHelperColorOptimalR", CG_Argv(1));
+	cgi_Cvar_Set("cg_jumpHelperColorOptimalG", CG_Argv(2));
+	cgi_Cvar_Set("cg_jumpHelperColorOptimalB", CG_Argv(3));
+	cgi_Cvar_Set("cg_jumpHelperColorOptimalA", CG_Argv(4));
+}
+
 static void CG_SetLandingInfoColor_f( const speedrun::LandingType type ) {
 	using speedrun::LandingType;
 
@@ -405,6 +517,13 @@ Ghoul2 Insert End
 	{ "dpforceprev", CG_DPPrevForcePower_f },
 //	{ "color", CG_SetColor_f },
 
+	{ "jumpHelperColorBackground", CG_SetJumpHelperColorBackground_f },
+	{ "jumpHelperColorCancel", CG_SetJumpHelperColorCancel_f },
+	{ "jumpHelperColorCrouch", CG_SetJumpHelperColorCrouch_f },
+	{ "jumpHelperColorCrouchExtend", CG_SetJumpHelperColorCrouchExtend_f },
+	{ "jumpHelperColorCurrent", CG_SetJumpHelperColorCurrent_f },
+	{ "jumpHelperColorExtend", CG_SetJumpHelperColorExtend_f },
+	{ "jumpHelperColorOptimal", CG_SetJumpHelperColorOptimal_f },
 	{ "landingInfoColorCB", CG_SetLandingInfoColorCrouchBoost_f },
 	{ "landingInfoColorEB", CG_SetLandingInfoColorElevationBoost_f },
 	{ "landingInfoColorRB", CG_SetLandingInfoColorRandomBoost_f },
