@@ -10,6 +10,8 @@
 #include "../game/g_shared.h"
 #include "cg_camera.h"
 
+#include "../speedrun/landing_info.hpp"
+
 // The entire cgame module is unloaded and reloaded on each level change,
 // so there is NO persistant data between levels on the client side.
 // If you absolutely need something stored, it can either be kept
@@ -637,6 +639,15 @@ extern	vmCvar_t		cg_drawSpeedrunTotalTimer;
 extern	vmCvar_t		cg_drawSpeedrunLevelTimer;
 extern	vmCvar_t		cg_drawMovementRestriction;
 extern	vmCvar_t		cg_drawOverbounceInfo;
+extern	vmCvar_t		cg_drawLandingInfo;
+extern	vmCvar_t		cg_landingInfoDuration;
+extern	vmCvar_t		cg_landingInfoScale;
+extern	vmCvar_t		cg_landingInfoX;
+extern	vmCvar_t		cg_landingInfoY;
+extern	vmCvar_t		cg_landingInfoText[speedrun::numLandingTypes()];
+extern	vmCvar_t		cg_landingInfoColorR[speedrun::numLandingTypes()];
+extern	vmCvar_t		cg_landingInfoColorG[speedrun::numLandingTypes()];
+extern	vmCvar_t		cg_landingInfoColorB[speedrun::numLandingTypes()];
 extern	vmCvar_t		cg_drawSpeed;
 extern	vmCvar_t		cg_speedScale;
 extern	vmCvar_t		cg_speedX;

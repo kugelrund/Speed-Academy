@@ -7,6 +7,8 @@
 //#include "cg_local.h"
 #include "cg_media.h"	//just for cgs....
 
+#include "../speedrun/landing_info.hpp"
+
 void CG_TargetCommand_f( void );
 extern qboolean	player_locked;
 extern void CMD_CGCam_Disable( void );
@@ -207,6 +209,70 @@ static void CG_InfoUp_f( void )
 //	cg.showInformation = qfalse;
 }
 
+static void CG_SetLandingInfoColor_f( const speedrun::LandingType type ) {
+	using speedrun::LandingType;
+
+	const char* abbreviation = "";
+	switch (type) {
+		case LandingType::CrouchBoost:
+			abbreviation = "CB";
+			break;
+		case LandingType::ElevationBoost:
+			abbreviation = "EB";
+			break;
+		case LandingType::RandomBoost:
+			abbreviation = "RB";
+			break;
+		case LandingType::SpinGlitch:
+			abbreviation = "SG";
+			break;
+		case LandingType::VelocityBoost:
+			abbreviation = "VB";
+			break;
+		case LandingType::VRGI:
+			abbreviation = "VRGI";
+			break;
+		default:
+			return;
+	}
+
+	if (cgi_Argc() != 4) {
+		Com_Printf("Usage: landingInfoColor%s <red 0-1> <green 0-1> <blue 0-1>\n", abbreviation );
+		Com_Printf("Current color is: %f %f %f\n",
+		           cg_landingInfoColorR[toInt(type)].value,
+		           cg_landingInfoColorG[toInt(type)].value,
+		           cg_landingInfoColorB[toInt(type)].value);
+		return;
+	}
+	cgi_Cvar_Set(va("cg_landingInfoColor%s_R", abbreviation), CG_Argv(1));
+	cgi_Cvar_Set(va("cg_landingInfoColor%s_G", abbreviation), CG_Argv(2));
+	cgi_Cvar_Set(va("cg_landingInfoColor%s_B", abbreviation), CG_Argv(3));
+}
+
+static void CG_SetLandingInfoColorCrouchBoost_f(void) {
+	CG_SetLandingInfoColor_f(speedrun::LandingType::CrouchBoost);
+}
+
+static void CG_SetLandingInfoColorElevationBoost_f(void) {
+	CG_SetLandingInfoColor_f(speedrun::LandingType::ElevationBoost);
+}
+
+static void CG_SetLandingInfoColorRandomBoost_f(void) {
+	CG_SetLandingInfoColor_f(speedrun::LandingType::RandomBoost);
+}
+
+static void CG_SetLandingInfoColorSpinGlitch_f(void) {
+	CG_SetLandingInfoColor_f(speedrun::LandingType::SpinGlitch);
+}
+
+static void CG_SetLandingInfoColorVelocityBoost_f(void) {
+	CG_SetLandingInfoColor_f(speedrun::LandingType::VelocityBoost);
+}
+
+static void CG_SetLandingInfoColorVRGI_f(void) {
+	CG_SetLandingInfoColor_f(speedrun::LandingType::VRGI);
+}
+
 static void CG_SetSpeedColor_f( void ) {
 	if (cgi_Argc() != 5) {
 		Com_Printf("Usage: speedColor <red 0-1> <green 0-1> <blue 0-1> <alpha 0-1>\n" );
@@ -339,6 +405,12 @@ Ghoul2 Insert End
 	{ "dpforceprev", CG_DPPrevForcePower_f },
 //	{ "color", CG_SetColor_f },
 
+	{ "landingInfoColorCB", CG_SetLandingInfoColorCrouchBoost_f },
+	{ "landingInfoColorEB", CG_SetLandingInfoColorElevationBoost_f },
+	{ "landingInfoColorRB", CG_SetLandingInfoColorRandomBoost_f },
+	{ "landingInfoColorSG", CG_SetLandingInfoColorSpinGlitch_f },
+	{ "landingInfoColorVB", CG_SetLandingInfoColorVelocityBoost_f },
+	{ "landingInfoColorVRGI", CG_SetLandingInfoColorVRGI_f },
 	{ "speedColor", CG_SetSpeedColor_f },
 	{ "strafeHelperColorAccelerating", CG_SetStrafeHelperColorAccelerating_f },
 	{ "strafeHelperColorOptimal", CG_SetStrafeHelperColorOptimal_f },

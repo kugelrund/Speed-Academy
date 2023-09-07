@@ -13,6 +13,7 @@
 #include "../ff/ff.h"
 #endif // _IMMERSION
 #include "../qcommon/sstring.h"
+#include "../speedrun/landing_info.hpp"
 #include "../speedrun/PlayerOverbouncePrediction.hpp"
 //NOTENOTE: Be sure to change the mirrored code in g_shared.h
 typedef	map< sstring_t, unsigned char, less<sstring_t>, allocator< unsigned char >  >	namePrecache_m;
@@ -327,6 +328,15 @@ vmCvar_t	cg_drawSpeedrunTotalTimer;
 vmCvar_t	cg_drawSpeedrunLevelTimer;
 vmCvar_t	cg_drawMovementRestriction;
 vmCvar_t	cg_drawOverbounceInfo;
+vmCvar_t	cg_drawLandingInfo;
+vmCvar_t	cg_landingInfoDuration;
+vmCvar_t	cg_landingInfoScale;
+vmCvar_t	cg_landingInfoX;
+vmCvar_t	cg_landingInfoY;
+vmCvar_t	cg_landingInfoText[speedrun::numLandingTypes()];
+vmCvar_t	cg_landingInfoColorR[speedrun::numLandingTypes()];
+vmCvar_t	cg_landingInfoColorG[speedrun::numLandingTypes()];
+vmCvar_t	cg_landingInfoColorB[speedrun::numLandingTypes()];
 vmCvar_t	cg_drawSpeed;
 vmCvar_t	cg_speedScale;
 vmCvar_t	cg_speedX;
@@ -475,6 +485,35 @@ static cvarTable_t cvarTable[] = {
 	{ &cg_drawSpeedrunLevelTimer, "cg_drawSpeedrunLevelTimer", "0", CVAR_ARCHIVE  },
 	{ &cg_drawMovementRestriction, "cg_drawMovementRestriction", "1", CVAR_ARCHIVE },
 	{ &cg_drawOverbounceInfo, "cg_drawOverbounceInfo", "0", CVAR_ARCHIVE },
+	{ &cg_drawLandingInfo, "cg_drawLandingInfo", "0", CVAR_ARCHIVE },
+	{ &cg_landingInfoDuration, "cg_landingInfoDuration", "500", CVAR_ARCHIVE },
+	{ &cg_landingInfoScale, "cg_landingInfoScale", "0.9", CVAR_ARCHIVE },
+	{ &cg_landingInfoX, "cg_landingInfoX", "0.0", CVAR_ARCHIVE },
+	{ &cg_landingInfoY, "cg_landingInfoY", "90.0", CVAR_ARCHIVE },
+	{ &cg_landingInfoText[toInt(speedrun::LandingType::CrouchBoost)], "cg_landingInfoCB", "CB", CVAR_ARCHIVE },
+	{ &cg_landingInfoText[toInt(speedrun::LandingType::ElevationBoost)], "cg_landingInfoEB", "EB", CVAR_ARCHIVE },
+	{ &cg_landingInfoText[toInt(speedrun::LandingType::RandomBoost)], "cg_landingInfoRB", "RB", CVAR_ARCHIVE },
+	{ &cg_landingInfoText[toInt(speedrun::LandingType::SpinGlitch)], "cg_landingInfoSG", "SG", CVAR_ARCHIVE },
+	{ &cg_landingInfoText[toInt(speedrun::LandingType::VelocityBoost)], "cg_landingInfoVB", "VB", CVAR_ARCHIVE },
+	{ &cg_landingInfoText[toInt(speedrun::LandingType::VRGI)], "cg_landingInfoVRGI", "VRGI", CVAR_ARCHIVE },
+	{ &cg_landingInfoColorR[toInt(speedrun::LandingType::CrouchBoost)], "cg_landingInfoColorCB_R", "1.0", CVAR_ARCHIVE },
+	{ &cg_landingInfoColorG[toInt(speedrun::LandingType::CrouchBoost)], "cg_landingInfoColorCB_G", "1.0", CVAR_ARCHIVE },
+	{ &cg_landingInfoColorB[toInt(speedrun::LandingType::CrouchBoost)], "cg_landingInfoColorCB_B", "1.0", CVAR_ARCHIVE },
+	{ &cg_landingInfoColorR[toInt(speedrun::LandingType::ElevationBoost)], "cg_landingInfoColorEB_R", "1.0", CVAR_ARCHIVE },
+	{ &cg_landingInfoColorG[toInt(speedrun::LandingType::ElevationBoost)], "cg_landingInfoColorEB_G", "1.0", CVAR_ARCHIVE },
+	{ &cg_landingInfoColorB[toInt(speedrun::LandingType::ElevationBoost)], "cg_landingInfoColorEB_B", "1.0", CVAR_ARCHIVE },
+	{ &cg_landingInfoColorR[toInt(speedrun::LandingType::RandomBoost)], "cg_landingInfoColorRB_R", "1.0", CVAR_ARCHIVE },
+	{ &cg_landingInfoColorG[toInt(speedrun::LandingType::RandomBoost)], "cg_landingInfoColorRB_G", "1.0", CVAR_ARCHIVE },
+	{ &cg_landingInfoColorB[toInt(speedrun::LandingType::RandomBoost)], "cg_landingInfoColorRB_B", "1.0", CVAR_ARCHIVE },
+	{ &cg_landingInfoColorR[toInt(speedrun::LandingType::SpinGlitch)], "cg_landingInfoColorSG_R", "1.0", CVAR_ARCHIVE },
+	{ &cg_landingInfoColorG[toInt(speedrun::LandingType::SpinGlitch)], "cg_landingInfoColorSG_G", "1.0", CVAR_ARCHIVE },
+	{ &cg_landingInfoColorB[toInt(speedrun::LandingType::SpinGlitch)], "cg_landingInfoColorSG_B", "1.0", CVAR_ARCHIVE },
+	{ &cg_landingInfoColorR[toInt(speedrun::LandingType::VelocityBoost)], "cg_landingInfoColorVB_R", "1.0", CVAR_ARCHIVE },
+	{ &cg_landingInfoColorG[toInt(speedrun::LandingType::VelocityBoost)], "cg_landingInfoColorVB_G", "1.0", CVAR_ARCHIVE },
+	{ &cg_landingInfoColorB[toInt(speedrun::LandingType::VelocityBoost)], "cg_landingInfoColorVB_B", "1.0", CVAR_ARCHIVE },
+	{ &cg_landingInfoColorR[toInt(speedrun::LandingType::VRGI)], "cg_landingInfoColorVRGI_R", "0.75", CVAR_ARCHIVE },
+	{ &cg_landingInfoColorG[toInt(speedrun::LandingType::VRGI)], "cg_landingInfoColorVRGI_G", "0.0", CVAR_ARCHIVE },
+	{ &cg_landingInfoColorB[toInt(speedrun::LandingType::VRGI)], "cg_landingInfoColorVRGI_B", "0.0", CVAR_ARCHIVE },
 	{ &cg_drawSpeed, "cg_drawSpeed", "0", CVAR_ARCHIVE },
 	{ &cg_speedScale, "cg_speedScale", "0.9", CVAR_ARCHIVE },
 	{ &cg_speedX, "cg_speedX", "0", CVAR_ARCHIVE },

@@ -47,6 +47,36 @@ Higher values show more decimals.
 Note that this is currently not the timing that is used on the leaderboards.
 Default: `0`.
 
+#### `cg_drawLandingInfo` (0 or 1)
+
+Draw info about what kind of boost happened on landing.
+
+#### `cg_landingInfoDuration` (#)
+
+Duration for showing landing info in milliseconds.
+Default: `500` (half a second).
+
+#### `cg_landingInfoScale` (#)
+
+Scale of the text for landing info display.
+Default: `0.9`.
+
+#### `cg_landingInfoX` (#)
+
+Horizontal offset for drawing landing info text, relative to the center of the screen.
+Default: `0.0` (center of the screen).
+
+#### `cg_landingInfoY` (#)
+
+Vertical offset for drawing landing info text, relative to the center of the screen.
+Default: `90.0` (Slightly below center of the screen).
+
+#### `cg_landingInfoText[...]` (text)
+
+Set the text to display for each type of landing.
+Types of landings are `CB`, `EB`, `RB`, `SG`, `VB`, `VRGI`.
+Defaults are those abbreviations.
+
 #### `cg_drawSpeed` (0 or 1)
 
 Draw the current player speed.
@@ -214,6 +244,11 @@ If argument is a story mission, shows the weapon selection for that story missio
 Opens saber creation menu to choose any saber, including styles.
 
 ### HUD
+
+#### `landingInfoColor[...] <r> <g> <b>` (components in range 0.0 to 1.0)
+
+Sets the color for the landing info text of either landing type to the given red, green, blue and alpha values.
+Types of landings are `CB`, `EB`, `RB`, `SG`, `VB`, `VRGI`.
 
 #### `speedColor <r> <g> <b> <a>` (components in range 0.0 to 1.0)
 

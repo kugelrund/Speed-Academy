@@ -22,6 +22,7 @@
 
 #include "wp_saber.h"
 #include "g_vehicles.h"
+#include "../speedrun/landing_info.hpp"
 #include "../speedrun/overbounce_prediction/OverbouncePrediction.hpp"
 #include "../speedrun/strafe_helper/strafe_helper.h"
 #include <float.h>
@@ -3580,6 +3581,10 @@ void PM_StickLanding( void )
 		//stick landings some
 		pm->ps->velocity[0] *= 0.5f;
 		pm->ps->velocity[1] *= 0.5f;
+		if ( pm->ps->clientNum == 0 )
+		{
+			speedrun::SetLastLandingInfo({speedrun::LandingType::VRGI, level.time});
+		}
 	}
 }
 
@@ -3621,6 +3626,8 @@ int PM_GetLandingAnim( void )
 	{
 		if ( !g_spinGlitch->integer ) {
 			PM_StickLanding();
+		} else if ( pm->ps->clientNum == 0 ) {
+			speedrun::SetLastLandingInfo({speedrun::LandingType::SpinGlitch, level.time});
 		}
 		return -1;
 	}
@@ -4141,7 +4148,17 @@ static void PM_CrashLand( void )
 						}
 					}
 				}
+			} else if ( signEB * delta <= 10 && pm->ps->clientNum == 0 ) {
+				if (!pm->ps->jumpZStart) {
+					speedrun::SetLastLandingInfo({speedrun::LandingType::VelocityBoost, level.time});
+				} else if ( signEB * (pm->ps->origin[2] + 0.25f) >= signEB * pm->ps->jumpZStart ) {
+					speedrun::SetLastLandingInfo({speedrun::LandingType::RandomBoost, level.time});
+				} else {
+					speedrun::SetLastLandingInfo({speedrun::LandingType::ElevationBoost, level.time});
+				}
 			}
+		} else if ( pm->cmd.upmove < 0 && g_crouchBoosts->integer && pm->ps->clientNum == 0 ) {
+			speedrun::SetLastLandingInfo({speedrun::LandingType::CrouchBoost, level.time});
 		}
 	}
 	else

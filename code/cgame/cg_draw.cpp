@@ -8,6 +8,7 @@
 #include "cg_media.h"
 #include "..\game\objectives.h"
 #include "..\game\g_vehicles.h"
+#include "..\speedrun\landing_info.hpp"
 #include "..\speedrun\PlayerOverbouncePrediction.hpp"
 #include "..\speedrun\strafe_helper\strafe_helper.h"
 #include "..\speedrun\speedrun_timer_q3\timer_helper.h"
@@ -3833,6 +3834,37 @@ static float CG_DrawSecrets( float y ) {
 
 /*
 ===============
+CG_DrawLandingInfo
+===============
+*/
+static void CG_DrawLandingInfo( void ) {
+	const auto lastLandingInfo = speedrun::GetLastLandingInfo();
+	if (lastLandingInfo.type == speedrun::LandingType::None) {
+		return;
+	}
+
+	const auto timeSinceLanding = level.time - lastLandingInfo.time;
+	if (timeSinceLanding > cg_landingInfoDuration.value) {
+		return;
+	}
+
+	const auto type_id = toInt(lastLandingInfo.type);
+
+	const auto x = SCREEN_WIDTH / 2.0f + cg_landingInfoX.value;
+	const auto y = SCREEN_HEIGHT / 2.0f + cg_landingInfoY.value;
+	const float w = cgi_R_Font_StrLenPixels( cg_landingInfoText[type_id].string,
+		cgs.media.qhFontMedium, cg_landingInfoScale.value );
+	const auto val = timeSinceLanding / cg_landingInfoDuration.value;
+	const vec4_t color = {cg_landingInfoColorR[type_id].value,
+	                      cg_landingInfoColorG[type_id].value,
+	                      cg_landingInfoColorB[type_id].value,
+	                      1.0 - val * val};
+	cgi_R_Font_DrawString( x - w/2, y, cg_landingInfoText[type_id].string, color,
+		cgs.media.qhFontMedium, -1, cg_landingInfoScale.value );
+}
+
+/*
+===============
 CG_DrawSpeed
 ===============
 */
@@ -3962,6 +3994,11 @@ static void CG_Draw2D( void )
 		if ( cg_drawStrafeHelper.integer )
 		{
 			CG_DrawStrafeHelper();
+		}
+
+		if ( cg_drawLandingInfo.integer )
+		{
+			CG_DrawLandingInfo();
 		}
 
 		if ( cg_drawSpeed.integer )
