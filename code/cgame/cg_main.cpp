@@ -13,6 +13,7 @@
 #include "../ff/ff.h"
 #endif // _IMMERSION
 #include "../qcommon/sstring.h"
+#include "../speedrun/landing_info.hpp"
 #include "../speedrun/PlayerOverbouncePrediction.hpp"
 //NOTENOTE: Be sure to change the mirrored code in g_shared.h
 typedef	map< sstring_t, unsigned char, less<sstring_t>, allocator< unsigned char >  >	namePrecache_m;
@@ -327,6 +328,61 @@ vmCvar_t	cg_drawSpeedrunTotalTimer;
 vmCvar_t	cg_drawSpeedrunLevelTimer;
 vmCvar_t	cg_drawMovementRestriction;
 vmCvar_t	cg_drawOverbounceInfo;
+vmCvar_t	cg_drawJumpHelper;
+vmCvar_t	cg_jumpHelperX;
+vmCvar_t	cg_jumpHelperY;
+vmCvar_t	cg_jumpHelperWidth;
+vmCvar_t	cg_jumpHelperHeight;
+vmCvar_t	cg_jumpHelperHorizontal;
+vmCvar_t	cg_jumpHelperMirror;
+vmCvar_t	cg_jumpHelperAutoScale;
+vmCvar_t	cg_jumpHelperCrouch;
+vmCvar_t	cg_jumpHelperCurrentScale;
+vmCvar_t	cg_jumpHelperColorBackgroundR;
+vmCvar_t	cg_jumpHelperColorBackgroundG;
+vmCvar_t	cg_jumpHelperColorBackgroundB;
+vmCvar_t	cg_jumpHelperColorBackgroundA;
+vmCvar_t	cg_jumpHelperColorCancelR;
+vmCvar_t	cg_jumpHelperColorCancelG;
+vmCvar_t	cg_jumpHelperColorCancelB;
+vmCvar_t	cg_jumpHelperColorCancelA;
+vmCvar_t	cg_jumpHelperColorCrouchR;
+vmCvar_t	cg_jumpHelperColorCrouchG;
+vmCvar_t	cg_jumpHelperColorCrouchB;
+vmCvar_t	cg_jumpHelperColorCrouchA;
+vmCvar_t	cg_jumpHelperColorCrouchExtendR;
+vmCvar_t	cg_jumpHelperColorCrouchExtendG;
+vmCvar_t	cg_jumpHelperColorCrouchExtendB;
+vmCvar_t	cg_jumpHelperColorCrouchExtendA;
+vmCvar_t	cg_jumpHelperColorCurrentR;
+vmCvar_t	cg_jumpHelperColorCurrentG;
+vmCvar_t	cg_jumpHelperColorCurrentB;
+vmCvar_t	cg_jumpHelperColorCurrentA;
+vmCvar_t	cg_jumpHelperColorExtendR;
+vmCvar_t	cg_jumpHelperColorExtendG;
+vmCvar_t	cg_jumpHelperColorExtendB;
+vmCvar_t	cg_jumpHelperColorExtendA;
+vmCvar_t	cg_jumpHelperColorOptimalR;
+vmCvar_t	cg_jumpHelperColorOptimalG;
+vmCvar_t	cg_jumpHelperColorOptimalB;
+vmCvar_t	cg_jumpHelperColorOptimalA;
+vmCvar_t	cg_drawLandingInfo;
+vmCvar_t	cg_landingInfoDuration;
+vmCvar_t	cg_landingInfoScale;
+vmCvar_t	cg_landingInfoX;
+vmCvar_t	cg_landingInfoY;
+vmCvar_t	cg_landingInfoText[speedrun::numLandingTypes()];
+vmCvar_t	cg_landingInfoColorR[speedrun::numLandingTypes()];
+vmCvar_t	cg_landingInfoColorG[speedrun::numLandingTypes()];
+vmCvar_t	cg_landingInfoColorB[speedrun::numLandingTypes()];
+vmCvar_t	cg_drawSpeed;
+vmCvar_t	cg_speedScale;
+vmCvar_t	cg_speedX;
+vmCvar_t	cg_speedY;
+vmCvar_t	cg_speedColorR;
+vmCvar_t	cg_speedColorG;
+vmCvar_t	cg_speedColorB;
+vmCvar_t	cg_speedColorA;
 vmCvar_t	cg_drawStrafeHelper;
 vmCvar_t	cg_strafeHelperCenter;
 vmCvar_t	cg_strafeHelperCenterMarker;
@@ -467,6 +523,81 @@ static cvarTable_t cvarTable[] = {
 	{ &cg_drawSpeedrunLevelTimer, "cg_drawSpeedrunLevelTimer", "0", CVAR_ARCHIVE  },
 	{ &cg_drawMovementRestriction, "cg_drawMovementRestriction", "1", CVAR_ARCHIVE },
 	{ &cg_drawOverbounceInfo, "cg_drawOverbounceInfo", "0", CVAR_ARCHIVE },
+	{ &cg_drawJumpHelper, "cg_drawJumpHelper", "0", CVAR_ARCHIVE },
+	{ &cg_jumpHelperX, "cg_jumpHelperX", "0", CVAR_ARCHIVE },
+	{ &cg_jumpHelperY, "cg_jumpHelperY", "0", CVAR_ARCHIVE },
+	{ &cg_jumpHelperWidth, "cg_jumpHelperWidth", "300", CVAR_ARCHIVE },
+	{ &cg_jumpHelperHeight, "cg_jumpHelperHeight", "20", CVAR_ARCHIVE },
+	{ &cg_jumpHelperHorizontal, "cg_jumpHelperHorizontal", "1", CVAR_ARCHIVE },
+	{ &cg_jumpHelperMirror, "cg_jumpHelperMirror", "1", CVAR_ARCHIVE },
+	{ &cg_jumpHelperAutoScale, "cg_jumpHelperAutoScale", "0", CVAR_ARCHIVE },
+	{ &cg_jumpHelperCrouch, "cg_jumpHelperCrouch", "1", CVAR_ARCHIVE },
+	{ &cg_jumpHelperCurrentScale, "cg_jumpHelperCurrentScale", "0.5", CVAR_ARCHIVE },
+	{ &cg_jumpHelperColorBackgroundR, "cg_jumpHelperColorBackgroundR", "0.0", CVAR_ARCHIVE },
+	{ &cg_jumpHelperColorBackgroundG, "cg_jumpHelperColorBackgroundG", "0.0", CVAR_ARCHIVE },
+	{ &cg_jumpHelperColorBackgroundB, "cg_jumpHelperColorBackgroundB", "0.0", CVAR_ARCHIVE },
+	{ &cg_jumpHelperColorBackgroundA, "cg_jumpHelperColorBackgroundA", "0.2", CVAR_ARCHIVE },
+	{ &cg_jumpHelperColorCancelR, "cg_jumpHelperColorCancelR", "0.8", CVAR_ARCHIVE },
+	{ &cg_jumpHelperColorCancelG, "cg_jumpHelperColorCancelG", "0.8", CVAR_ARCHIVE },
+	{ &cg_jumpHelperColorCancelB, "cg_jumpHelperColorCancelB", "0.8", CVAR_ARCHIVE },
+	{ &cg_jumpHelperColorCancelA, "cg_jumpHelperColorCancelA", "0.75", CVAR_ARCHIVE },
+	{ &cg_jumpHelperColorCrouchR, "cg_jumpHelperColorCrouchR", "0.0", CVAR_ARCHIVE },
+	{ &cg_jumpHelperColorCrouchG, "cg_jumpHelperColorCrouchG", "1.0", CVAR_ARCHIVE },
+	{ &cg_jumpHelperColorCrouchB, "cg_jumpHelperColorCrouchB", "1.0", CVAR_ARCHIVE },
+	{ &cg_jumpHelperColorCrouchA, "cg_jumpHelperColorCrouchA", "0.75", CVAR_ARCHIVE },
+	{ &cg_jumpHelperColorCrouchExtendR, "cg_jumpHelperColorCrouchExtendR", "0.0", CVAR_ARCHIVE },
+	{ &cg_jumpHelperColorCrouchExtendG, "cg_jumpHelperColorCrouchExtendG", "0.333", CVAR_ARCHIVE },
+	{ &cg_jumpHelperColorCrouchExtendB, "cg_jumpHelperColorCrouchExtendB", "0.333", CVAR_ARCHIVE },
+	{ &cg_jumpHelperColorCrouchExtendA, "cg_jumpHelperColorCrouchExtendA", "0.375", CVAR_ARCHIVE },
+	{ &cg_jumpHelperColorCurrentR, "cg_jumpHelperColorCurrentR", "1.0", CVAR_ARCHIVE },
+	{ &cg_jumpHelperColorCurrentG, "cg_jumpHelperColorCurrentG", "1.0", CVAR_ARCHIVE },
+	{ &cg_jumpHelperColorCurrentB, "cg_jumpHelperColorCurrentB", "1.0", CVAR_ARCHIVE },
+	{ &cg_jumpHelperColorCurrentA, "cg_jumpHelperColorCurrentA", "0.75", CVAR_ARCHIVE },
+	{ &cg_jumpHelperColorExtendR, "cg_jumpHelperColorExtendR", "0.0", CVAR_ARCHIVE },
+	{ &cg_jumpHelperColorExtendG, "cg_jumpHelperColorExtendG", "0.5", CVAR_ARCHIVE },
+	{ &cg_jumpHelperColorExtendB, "cg_jumpHelperColorExtendB", "0.125", CVAR_ARCHIVE },
+	{ &cg_jumpHelperColorExtendA, "cg_jumpHelperColorExtendA", "0.375", CVAR_ARCHIVE },
+	{ &cg_jumpHelperColorOptimalR, "cg_jumpHelperColorOptimalR", "0.0", CVAR_ARCHIVE },
+	{ &cg_jumpHelperColorOptimalG, "cg_jumpHelperColorOptimalG", "1.0", CVAR_ARCHIVE },
+	{ &cg_jumpHelperColorOptimalB, "cg_jumpHelperColorOptimalB", "0.25", CVAR_ARCHIVE },
+	{ &cg_jumpHelperColorOptimalA, "cg_jumpHelperColorOptimalA", "0.75", CVAR_ARCHIVE },
+	{ &cg_drawLandingInfo, "cg_drawLandingInfo", "0", CVAR_ARCHIVE },
+	{ &cg_landingInfoDuration, "cg_landingInfoDuration", "500", CVAR_ARCHIVE },
+	{ &cg_landingInfoScale, "cg_landingInfoScale", "0.9", CVAR_ARCHIVE },
+	{ &cg_landingInfoX, "cg_landingInfoX", "0.0", CVAR_ARCHIVE },
+	{ &cg_landingInfoY, "cg_landingInfoY", "90.0", CVAR_ARCHIVE },
+	{ &cg_landingInfoText[toInt(speedrun::LandingType::CrouchBoost)], "cg_landingInfoCB", "CB", CVAR_ARCHIVE },
+	{ &cg_landingInfoText[toInt(speedrun::LandingType::ElevationBoost)], "cg_landingInfoEB", "EB", CVAR_ARCHIVE },
+	{ &cg_landingInfoText[toInt(speedrun::LandingType::RandomBoost)], "cg_landingInfoRB", "RB", CVAR_ARCHIVE },
+	{ &cg_landingInfoText[toInt(speedrun::LandingType::SpinGlitch)], "cg_landingInfoSG", "SG", CVAR_ARCHIVE },
+	{ &cg_landingInfoText[toInt(speedrun::LandingType::VelocityBoost)], "cg_landingInfoVB", "VB", CVAR_ARCHIVE },
+	{ &cg_landingInfoText[toInt(speedrun::LandingType::VRGI)], "cg_landingInfoVRGI", "VRGI", CVAR_ARCHIVE },
+	{ &cg_landingInfoColorR[toInt(speedrun::LandingType::CrouchBoost)], "cg_landingInfoColorCB_R", "1.0", CVAR_ARCHIVE },
+	{ &cg_landingInfoColorG[toInt(speedrun::LandingType::CrouchBoost)], "cg_landingInfoColorCB_G", "1.0", CVAR_ARCHIVE },
+	{ &cg_landingInfoColorB[toInt(speedrun::LandingType::CrouchBoost)], "cg_landingInfoColorCB_B", "1.0", CVAR_ARCHIVE },
+	{ &cg_landingInfoColorR[toInt(speedrun::LandingType::ElevationBoost)], "cg_landingInfoColorEB_R", "1.0", CVAR_ARCHIVE },
+	{ &cg_landingInfoColorG[toInt(speedrun::LandingType::ElevationBoost)], "cg_landingInfoColorEB_G", "1.0", CVAR_ARCHIVE },
+	{ &cg_landingInfoColorB[toInt(speedrun::LandingType::ElevationBoost)], "cg_landingInfoColorEB_B", "1.0", CVAR_ARCHIVE },
+	{ &cg_landingInfoColorR[toInt(speedrun::LandingType::RandomBoost)], "cg_landingInfoColorRB_R", "1.0", CVAR_ARCHIVE },
+	{ &cg_landingInfoColorG[toInt(speedrun::LandingType::RandomBoost)], "cg_landingInfoColorRB_G", "1.0", CVAR_ARCHIVE },
+	{ &cg_landingInfoColorB[toInt(speedrun::LandingType::RandomBoost)], "cg_landingInfoColorRB_B", "1.0", CVAR_ARCHIVE },
+	{ &cg_landingInfoColorR[toInt(speedrun::LandingType::SpinGlitch)], "cg_landingInfoColorSG_R", "1.0", CVAR_ARCHIVE },
+	{ &cg_landingInfoColorG[toInt(speedrun::LandingType::SpinGlitch)], "cg_landingInfoColorSG_G", "1.0", CVAR_ARCHIVE },
+	{ &cg_landingInfoColorB[toInt(speedrun::LandingType::SpinGlitch)], "cg_landingInfoColorSG_B", "1.0", CVAR_ARCHIVE },
+	{ &cg_landingInfoColorR[toInt(speedrun::LandingType::VelocityBoost)], "cg_landingInfoColorVB_R", "1.0", CVAR_ARCHIVE },
+	{ &cg_landingInfoColorG[toInt(speedrun::LandingType::VelocityBoost)], "cg_landingInfoColorVB_G", "1.0", CVAR_ARCHIVE },
+	{ &cg_landingInfoColorB[toInt(speedrun::LandingType::VelocityBoost)], "cg_landingInfoColorVB_B", "1.0", CVAR_ARCHIVE },
+	{ &cg_landingInfoColorR[toInt(speedrun::LandingType::VRGI)], "cg_landingInfoColorVRGI_R", "0.75", CVAR_ARCHIVE },
+	{ &cg_landingInfoColorG[toInt(speedrun::LandingType::VRGI)], "cg_landingInfoColorVRGI_G", "0.0", CVAR_ARCHIVE },
+	{ &cg_landingInfoColorB[toInt(speedrun::LandingType::VRGI)], "cg_landingInfoColorVRGI_B", "0.0", CVAR_ARCHIVE },
+	{ &cg_drawSpeed, "cg_drawSpeed", "0", CVAR_ARCHIVE },
+	{ &cg_speedScale, "cg_speedScale", "0.9", CVAR_ARCHIVE },
+	{ &cg_speedX, "cg_speedX", "0", CVAR_ARCHIVE },
+	{ &cg_speedY, "cg_speedY", "75", CVAR_ARCHIVE },
+	{ &cg_speedColorR, "cg_speedColorR", "1.0", CVAR_ARCHIVE },
+	{ &cg_speedColorG, "cg_speedColorG", "1.0", CVAR_ARCHIVE },
+	{ &cg_speedColorB, "cg_speedColorB", "1.0", CVAR_ARCHIVE },
+	{ &cg_speedColorA, "cg_speedColorA", "0.9", CVAR_ARCHIVE },
 	{ &cg_drawStrafeHelper, "cg_drawStrafeHelper", "0", CVAR_ARCHIVE },
 	{ &cg_strafeHelperCenter, "cg_strafeHelperCenter", "1", CVAR_ARCHIVE },
 	{ &cg_strafeHelperCenterMarker, "cg_strafeHelperCenterMarker", "1", CVAR_ARCHIVE },

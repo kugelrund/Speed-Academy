@@ -97,14 +97,15 @@ static void		UI_GetCharacterCvars ( void );
 static void		UI_UpdateSaberCvars ( void );
 static void		UI_GetSaberCvars ( void );
 static void		UI_ResetSaberCvars ( void );
-static void		UI_InitAllocForcePowers ( const char *forceName );
-static void		UI_AffectForcePowerLevel ( const char *forceName );
+static void		UI_InitAllocForcePowers ( const char *forceName, qboolean unlimited = false );
+static void		UI_AffectForcePowerLevel ( const char *forceName, qboolean unlimited = false );
 static void		UI_ShowForceLevelDesc ( const char *forceName );
 static void		UI_ResetForceLevels ( void );
 static void		UI_ClearWeapons ( void );
 static void		UI_GiveWeapon ( const int weaponIndex );
 static void		UI_EquipWeapon ( const int weaponIndex );
 static void		UI_LoadMissionSelectMenu( const char *cvarName );
+static void		UI_MissionSelectAnyNext ( void );
 static void		UI_AddWeaponSelection ( const int weaponIndex, const int ammoIndex, const int ammoAmount, const char *iconItemName,const char *litIconItemName, const char *hexBackground, const char *soundfile );
 static void		UI_AddThrowWeaponSelection ( const int weaponIndex, const int ammoIndex, const int ammoAmount, const char *iconItemName,const char *litIconItemName, const char *hexBackground, const char *soundfile );
 static void		UI_RemoveWeaponSelection ( const int weaponIndex );
@@ -125,6 +126,8 @@ static void		UI_InitWeaponSelect( void );
 static void		UI_WeaponHelpActive( void );
 static void		UI_UpdateFightingStyle ( void );
 static void		UI_UpdateFightingStyleChoices ( void );
+static void		UI_GetFightingStyleAny( void );
+static void		UI_SetFightingStyleAny( void );
 static void		UI_CalcForceStatus(void);
 static void		UI_DecrementForcePowerLevel( void );
 static void		UI_DecrementCurrentForcePower ( void );
@@ -1212,12 +1215,26 @@ static qboolean UI_RunMenuScript ( const char **args )
 
 			UI_InitAllocForcePowers(forceName);
 		}
+		else if (Q_stricmp(name, "initallocforcepowerany") == 0)
+		{
+			const char *forceName;
+			String_Parse(args, &forceName);
+
+			UI_InitAllocForcePowers(forceName, qtrue);
+		}
 		else if (Q_stricmp(name, "affectforcepowerlevel") == 0) 
 		{
 			const char *forceName;
 			String_Parse(args, &forceName);
 
 			UI_AffectForcePowerLevel(forceName);
+		}
+		else if (Q_stricmp(name, "affectforcepowerlevelany") == 0)
+		{
+			const char *forceName;
+			String_Parse(args, &forceName);
+
+			UI_AffectForcePowerLevel(forceName, qtrue);
 		}
 		else if (Q_stricmp(name, "decrementcurrentforcepower") == 0) 
 		{
@@ -1280,6 +1297,10 @@ static qboolean UI_RunMenuScript ( const char **args )
 			{
 				UI_LoadMissionSelectMenu(cvarName);
 			}
+		}
+		else if (Q_stricmp(name, "missionselectanynext") == 0)
+		{
+			UI_MissionSelectAnyNext();
 		}
 		else if (Q_stricmp(name, "calcforcestatus") == 0) 
 		{
@@ -1452,6 +1473,14 @@ static qboolean UI_RunMenuScript ( const char **args )
 		else if (Q_stricmp(name, "updatefightingstyle") == 0) 
 		{
 			UI_UpdateFightingStyle();
+		}
+		else if (Q_stricmp(name, "getfightingstyleany") == 0)
+		{
+			UI_GetFightingStyleAny();
+		}
+		else if (Q_stricmp(name, "setfightingstyleany") == 0)
+		{
+			UI_SetFightingStyleAny();
 		}
 		else if (Q_stricmp(name, "update") == 0) 
 		{
@@ -4456,7 +4485,7 @@ static qboolean UI_GetForcePowerIndex ( const char *forceName, short *forcePower
 }
 
 // Set the fields for the allocation of force powers (Used by Force Power Allocation screen) 
-static void UI_InitAllocForcePowers ( const char *forceName )
+static void UI_InitAllocForcePowers ( const char *forceName, const qboolean unlimited )
 {
 	menuDef_t	*menu;
 	itemDef_t	*item;
@@ -4502,7 +4531,7 @@ static void UI_InitAllocForcePowers ( const char *forceName )
 		item->window.background = ui.R_RegisterShaderNoMip(itemGraphic);
 
 		// If maxed out on power - don't allow update
-		if (forcelevel>=3)
+		if (forcelevel>=3 && !unlimited)
 		{
 			Com_sprintf (itemName, sizeof(itemName), "%s_fbutton", powerEnums[forcePowerI].title);
 			item = (itemDef_s *) Menu_FindItemByName(menu, itemName);
@@ -5009,7 +5038,7 @@ static void UI_DecrementCurrentForcePower ( void )
 void Item_MouseEnter(itemDef_t *item, float x, float y);
 
 // Try to increment force power level (Used by Force Power Allocation screen) 
-static void UI_AffectForcePowerLevel ( const char *forceName )
+static void UI_AffectForcePowerLevel ( const char *forceName, const qboolean unlimited )
 {
 	short forcePowerI=0,i;
 	menuDef_t	*menu;
@@ -5043,7 +5072,7 @@ static void UI_AffectForcePowerLevel ( const char *forceName )
 	}
 	
 
-	if (forcelevel>2)
+	if (forcelevel>2 && !unlimited)
 	{	// Too big, can't be incremented
 		return;
 	}
@@ -5055,22 +5084,37 @@ static void UI_AffectForcePowerLevel ( const char *forceName )
 
 	if( pState && !com_demo )
 	{
-		pState->forcePowerLevel[powerEnums[forcePowerI].powerEnum]++;	// Increment it
-		pState->forcePowersKnown |= ( 1 << powerEnums[forcePowerI].powerEnum );
+		if (forcelevel>2)
+		{
+			pState->forcePowerLevel[powerEnums[forcePowerI].powerEnum] = 0;	// cycle back to 0
+			pState->forcePowersKnown &= ~( 1 << powerEnums[forcePowerI].powerEnum );
+		}
+		else
+		{
+			pState->forcePowerLevel[powerEnums[forcePowerI].powerEnum]++;	// Increment it
+			pState->forcePowersKnown |= ( 1 << powerEnums[forcePowerI].powerEnum );
+		}
 		forcelevel = pState->forcePowerLevel[powerEnums[forcePowerI].powerEnum];
 	}
 	else
 	{	// always want this to happen in demo mode
-		uiInfo.forcePowerLevel[powerEnums[forcePowerI].powerEnum]++;	// Increment it
+		if (forcelevel>2)
+		{
+			uiInfo.forcePowerLevel[powerEnums[forcePowerI].powerEnum] = 0;	// cycle back to 0
+		}
+		else
+		{
+			uiInfo.forcePowerLevel[powerEnums[forcePowerI].powerEnum]++;	// Increment it
+		}
 		forcelevel = uiInfo.forcePowerLevel[powerEnums[forcePowerI].powerEnum];
 	}
 
-	UI_SetHexPicLevel( menu,uiInfo.forcePowerUpdated,forcelevel,qtrue );
+	UI_SetHexPicLevel( menu,uiInfo.forcePowerUpdated,forcelevel,!unlimited );
 
 	UI_ShowForceLevelDesc ( forceName );
 
 	// A field was updated, so make it so others can't be
-	if (uiInfo.forcePowerUpdated>FP_UPDATED_NONE)
+	if (uiInfo.forcePowerUpdated>FP_UPDATED_NONE && !unlimited)
 	{
 		vec4_t color = { 0.25f, 0.25f, 0.25f, 1.0f};
 		char itemName[128];
@@ -5284,6 +5328,44 @@ static void UI_UpdateFightingStyle ( void )
 	else	// Must be at the beginning of the game so the client hasn't been created, shove data in a cvar
 	{
 		Cvar_Set ( "g_fighting_style", va("%d",saberStyle) );		
+	}
+}
+
+static void UI_GetFightingStyleAny ( void )
+{
+	Cvar_Set( "ui_setFightingStyleFast", "0" );
+	Cvar_Set( "ui_setFightingStyleStrong", "0" );
+
+	client_t	*cl = &svs.clients[0];	// 0 because only ever us as a player
+	if (cl && cl->gentity && cl->gentity->client)
+	{
+		playerState_t *pState = cl->gentity->client;
+		if (pState->saberStylesKnown & (1<<SS_FAST))
+		{
+			Cvar_Set( "ui_setFightingStyleFast", "1" );
+		}
+		if (pState->saberStylesKnown & (1<<SS_STRONG))
+		{
+			Cvar_Set( "ui_setFightingStyleStrong", "1" );
+		}
+	}
+}
+
+static void UI_SetFightingStyleAny ( void )
+{
+	client_t	*cl = &svs.clients[0];	// 0 because only ever us as a player
+	if (cl && cl->gentity && cl->gentity->client)
+	{
+		playerState_t *pState = cl->gentity->client;
+		pState->saberStylesKnown = (1<<SS_MEDIUM);
+		if ( Cvar_VariableIntegerValue("ui_setFightingStyleFast") )
+		{
+			pState->saberStylesKnown |= (1<<SS_FAST);
+		}
+		if ( Cvar_VariableIntegerValue("ui_setFightingStyleStrong") )
+		{
+			pState->saberStylesKnown |= (1<<SS_STRONG);
+		}
 	}
 }
 
@@ -5567,6 +5649,35 @@ static void	UI_LoadMissionSelectMenu( const char *cvarName )
 		Menus_CloseByName("ingameMissionSelect3");
 	}
 
+}
+
+static void UI_MissionSelectAnyNext ( void )
+{
+	if (Cvar_VariableIntegerValue("ui_missionSelectAnyShowForceSelect"))
+	{
+		if (Cvar_VariableIntegerValue("ui_missionSelectAnyShowSaberSelect"))
+		{
+			Cvar_Set("ui_forceSelectAnyGoto", "saberselect");
+			Cvar_Set("ui_saberSelectAnyGoto", "weaponselect");
+		}
+		else
+		{
+			Cvar_Set("ui_forceSelectAnyGoto", "weaponselect");
+		}
+		Menus_OpenByName("ingameForceSelectAny");
+	}
+	else
+	{
+		if (Cvar_VariableIntegerValue("ui_missionSelectAnyShowSaberSelect"))
+		{
+			Cvar_Set("ui_saberSelectAnyGoto", "weaponselect");
+			Menus_OpenByName("saberMenuAny");
+		}
+		else
+		{
+			Menus_OpenByName("ingameWpnSelect");
+		}
+	}
 }
 
 // Update the player weapons with the chosen weapon
@@ -6113,6 +6224,21 @@ static void UI_GetSaberCvars ( void )
 
 	Cvar_Set ( "ui_newfightingstyle", "0");
 
+	if (!_strcmpi("dual",Cvar_VariableString ( "ui_saber_type" )))
+	{
+		// Hack to move the first saber up a bit on startup already if currently
+		// using dual sabers. Needed for the unrestricted saber selection menu
+		// of Speed-Academy
+		auto* menu = Menu_GetFocused();
+		if (menu)
+		{
+			auto* item = (itemDef_s *) Menu_FindItemByName( menu, "saber" );
+			if (item)
+			{
+				Item_RunScript(item, "transition2 saber 12 -130 615 615 20 1");
+			}
+		}
+	}
 }
 
 static void UI_ResetSaberCvars ( void )

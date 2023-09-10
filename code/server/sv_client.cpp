@@ -493,7 +493,11 @@ static void SV_UserMove( client_t *cl, msg_t *msg ) {
 
 	// if this is the first usercmd we have received
 	// this gamestate, put the client into the world
-	if ( cl->state == CS_PRIMED ) {
+	if ( cl->state == CS_PRIMED && sv.time > sv.initialTime + 100 ) {
+		// Do not allow client to join on the first regular frame. NPCs are not
+		// spawned by then, which might cause problems for scripts that could
+		// be triggered by the client joining already. This caused problems for
+		// fast PCs on t1_inter for example, where the cutscene would not start.
 
 		SV_ClientEnterWorld( cl, &cmds[0], eSavedGameJustLoaded );
 #ifndef _XBOX	// No auto-saving for now?

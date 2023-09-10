@@ -206,6 +206,8 @@ static void SV_MapTransition_f(void)
 {		
 	char	*spawntarget;
 
+	SpeedrunLevelFinished();
+
 //	SCR_PrecacheScreenshot();
 	SV_Player_EndOfLevelSave();
 

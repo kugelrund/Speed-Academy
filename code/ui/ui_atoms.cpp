@@ -295,6 +295,14 @@ void UI_Init( int apiVersion, uiimport_t *uiimport, qboolean inGameLoad )
 
 	ui.Cvar_Create( "ui_disableWeaponSway", "0", CVAR_ARCHIVE );
 
+	// Additions for Speed-Academy
+	ui.Cvar_Create( "ui_missionSelectAnySetCoreForcePowers",		"1",		CVAR_ARCHIVE );
+	ui.Cvar_Create( "ui_missionSelectAnyShowForceSelect",		"0",		CVAR_ARCHIVE );
+	ui.Cvar_Create( "ui_missionSelectAnyShowSaberSelect",		"0",		CVAR_ARCHIVE );
+	ui.Cvar_Create( "ui_forceSelectAnyGoto",		"",		CVAR_ROM );
+	ui.Cvar_Create( "ui_saberSelectAnyGoto",		"",		CVAR_ROM );
+	ui.Cvar_Create( "ui_setFightingStyleFast",		"0",		CVAR_ROM );
+	ui.Cvar_Create( "ui_setFightingStyleStrong",		"0",		CVAR_ROM );
 	
 
 	_UI_Init(inGameLoad);

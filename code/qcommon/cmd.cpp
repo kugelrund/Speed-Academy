@@ -3,11 +3,11 @@
 #include "../game/q_shared.h"
 #include "qcommon.h"
 
-#define	MAX_CMD_BUFFER	8192
+#define	MAX_CMD_BUFFER	16384
+#define	MAX_CMD_LINE	8192
 int			cmd_wait;
 msg_t		cmd_text;
 byte		cmd_text_buf[MAX_CMD_BUFFER];
-char		cmd_defer_text_buf[MAX_CMD_BUFFER];
 
 
 //=============================================================================
@@ -134,7 +134,7 @@ void Cbuf_Execute (void)
 {
 	int		i;
 	char	*text;
-	char	line[MAX_CMD_BUFFER];
+	char	line[MAX_CMD_LINE];
 	int		quotes;
 
 	while (cmd_text.cursize)

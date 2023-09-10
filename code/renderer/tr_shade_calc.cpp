@@ -1209,6 +1209,8 @@ void RB_CalcElevationTexCoords( float *dstTexCoords ) {
 	const float elevAreaRatio = elevAreaHeight / elevTextureHeight;
 	const float elevAreaOffset = 1.0f/elevTextureHeight;
 
+	const float signEB = Cvar_VariableIntegerValue("g_reverseBoosts") ? -1.0 : 1.0;
+
 	// This reflects SURFACE_CLIP_EPSILON from the collision code (cm_local.h).
 	// A small hull around geometry such that collision starts a little earlier.
 	// So we have to add this to the geometry here as well.
@@ -1225,7 +1227,7 @@ void RB_CalcElevationTexCoords( float *dstTexCoords ) {
 		const float collisionZEstimate = ((int)((tess.xyz[i][2] +
 			backEnd.ori.origin[2] + surfaceClipEpsilon) * 8.0f)) / 8.0f;
 		// the actual elevation delta that the player would have if they land here.
-		const float elevDelta = playerJumpStartWorldZ - collisionZEstimate;
+		const float elevDelta = signEB * (playerJumpStartWorldZ - collisionZEstimate);
 		dstTexCoords[0] = 0.5f;  // X-coordinate doesnt matter
 		dstTexCoords[1] = (elevDelta - antiFlickerShift) /
 		                  (elevDeltaMaxAllowed) * elevAreaRatio + elevAreaOffset;

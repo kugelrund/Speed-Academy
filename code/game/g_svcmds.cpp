@@ -172,11 +172,8 @@ gentity_t *G_GetSelfForPlayerCmd( void )
 	}
 }
 
-static void Svcmd_Saber_f()
+static void G_SetSaber(char* saber, char* saber2)
 {
-	char *saber = gi.argv(1);
-	char *saber2 = gi.argv(2);
-
 	if ( !g_entities[0].client || !saber || !saber[0] )
 	{
 		return;
@@ -194,6 +191,11 @@ static void Svcmd_Saber_f()
 		gi.cvar_set( "g_saber2", "" );
 		WP_RemoveSaber( &g_entities[0], 1 );
 	}
+}
+
+static void Svcmd_Saber_f()
+{
+	G_SetSaber(gi.argv(1), gi.argv(2));
 }
 
 static void Svcmd_SaberBlade_f()
@@ -996,6 +998,144 @@ void G_GrabEntity( gentity_t *grabber, char *target )
 	}
 }
 
+static void G_SetCoreForcePowerLevel(int level)
+{
+	level = min(3, max(0, level));
+
+	g_entities[0].client->ps.forcePowerLevel[FP_LEVITATION] = level;
+	g_entities[0].client->ps.forcePowerLevel[FP_SPEED] = level;
+	g_entities[0].client->ps.forcePowerLevel[FP_PUSH] = level;
+	g_entities[0].client->ps.forcePowerLevel[FP_PULL] = level;
+	g_entities[0].client->ps.forcePowerLevel[FP_SABERTHROW] = level;
+	g_entities[0].client->ps.forcePowerLevel[FP_SABER_DEFENSE] = level;
+	g_entities[0].client->ps.forcePowerLevel[FP_SABER_OFFENSE] = level;
+	g_entities[0].client->ps.forcePowerLevel[FP_SEE] = level;
+
+	if (level == 0) {
+		// yavin1b settings
+		g_entities[0].client->ps.forcePowersKnown |=
+			(1<<FP_SABERTHROW)|(1<<FP_SABER_DEFENSE)|(1<<FP_SABER_OFFENSE);
+		g_entities[0].client->ps.forcePowersKnown &=
+			~((1<<FP_LEVITATION)|(1<<FP_SPEED)|(1<<FP_PUSH)|(1<<FP_PULL)|(1<<FP_SEE));
+		g_entities[0].client->ps.forcePowerLevel[FP_SABERTHROW] = FORCE_LEVEL_1;
+		g_entities[0].client->ps.forcePowerLevel[FP_SABER_DEFENSE] = FORCE_LEVEL_1;
+		g_entities[0].client->ps.forcePowerLevel[FP_SABER_OFFENSE] = FORCE_LEVEL_1;
+	} else {
+		// tier1 - tier3
+		g_entities[0].client->ps.forcePowersKnown |=
+			(1<<FP_LEVITATION)|(1<<FP_SPEED)|(1<<FP_PUSH)|(1<<FP_PULL)|(1<<FP_SABERTHROW)|
+			(1<<FP_SABER_DEFENSE)|(1<<FP_SABER_OFFENSE)|(1<<FP_SEE);
+	}
+}
+
+static void Svcmd_MissionSelectAny_f()
+{
+	if (gi.argc() <= 1)
+	{
+		gi.SendConsoleCommand( "uimenu ingameMissionSelectAny\n" );
+		return;
+	}
+
+	int core_force_level = 0;
+
+	const char* arg = gi.argv(1);
+	if (Q_stricmp(arg, "1") == 0 || Q_stricmp(arg, "t1") == 0 ||
+	    Q_stricmp(arg, "2") == 0 || Q_stricmp(arg, "t2") == 0 ||
+	    Q_stricmp(arg, "3") == 0 || Q_stricmp(arg, "t3") == 0)
+	{   // tier training missions
+
+		gi.cvar_set("tiers_complete", "");
+		if (Q_stricmp(arg, "1") == 0 || Q_stricmp(arg, "t1") == 0)
+		{
+			// using 2 to avoid getting the help prompt on weapon select
+			gi.cvar_set("tier_storyinfo", "2");
+			gi.SendConsoleCommand( "uimenu ingameMissionSelectAny1\n" );
+			core_force_level = 1;
+		}
+		else if (Q_stricmp(arg, "2") == 0 || Q_stricmp(arg, "t2") == 0)
+		{
+			gi.cvar_set("tier_storyinfo", "7");
+			gi.SendConsoleCommand( "uimenu ingameMissionSelectAny2\n" );
+			core_force_level = 2;
+		}
+		else
+		{
+			gi.cvar_set("tier_storyinfo", "13");
+			gi.SendConsoleCommand( "uimenu ingameMissionSelectAny3\n" );
+			core_force_level = 3;
+		}
+	}
+	else
+	{   // story missions
+
+		if (Q_stricmp(arg, "hoth2") == 0 || Q_stricmp(arg, "hoth") == 0) {
+			gi.cvar_set("weapon_menu", "1");
+		} else if (Q_stricmp(arg, "hoth3") == 0) {
+			gi.cvar_set("weapon_menu", "4");
+		} else if (Q_stricmp(arg, "vjun1") == 0 || Q_stricmp(arg, "vjun") == 0) {
+			gi.cvar_set("weapon_menu", "2");
+		} else if (Q_stricmp(arg, "vjun2") == 0) {
+			gi.cvar_set("weapon_menu", "5");
+		} else if (Q_stricmp(arg, "vjun3") == 0) {
+			gi.cvar_set("weapon_menu", "6");
+		} else if (Q_stricmp(arg, "taspir1") == 0 || Q_stricmp(arg, "taspir") == 0) {
+			gi.cvar_set("weapon_menu", "3");
+		} else if (Q_stricmp(arg, "taspir2") == 0) {
+			gi.cvar_set("weapon_menu", "7");
+		} else if (Q_stricmp(arg, "kor1") == 0 || Q_stricmp(arg, "kor") == 0) {
+			gi.cvar_set("weapon_menu", "8");
+		} else if (Q_stricmp(arg, "kor2") == 0) {
+			gi.cvar_set("weapon_menu", "9");
+		} else {
+			gi.Printf(S_COLOR_RED"Usage: missionselect [t1,t2,t3,hoth2,hoth3,vjun1,vjun2,vjun3,taspir1,taspir2,kor1,kor2]\n");
+			return;
+		}
+
+		if (Q_stricmpn(arg, "hoth", strlen("hoth")) == 0) {
+			gi.cvar_set("tier_storyinfo", "6");
+			core_force_level = 1;
+		} else if (Q_stricmpn(arg, "vjun", strlen("vjun")) == 0) {
+			gi.cvar_set("tier_storyinfo", "12");
+			core_force_level = 2;
+		} else if (Q_stricmpn(arg, "taspir", strlen("taspir")) == 0 ||
+		           Q_stricmpn(arg, "kor", strlen("kor")) == 0) {
+			gi.cvar_set("tier_storyinfo", "19");
+			core_force_level = 3;
+		}
+
+		if (gi.Cvar_VariableIntegerValue("ui_missionSelectAnyShowForceSelect"))
+		{
+			if (gi.Cvar_VariableIntegerValue("ui_missionSelectAnyShowSaberSelect"))
+			{
+				gi.cvar_set("ui_forceSelectAnyGoto", "saberselect");
+				gi.cvar_set("ui_saberSelectAnyGoto", "weaponselect");
+			}
+			else
+			{
+				gi.cvar_set("ui_forceSelectAnyGoto", "weaponselect");
+			}
+			gi.SendConsoleCommand( "uimenu ingameForceSelectAny\n" );
+		}
+		else
+		{
+			if (gi.Cvar_VariableIntegerValue("ui_missionSelectAnyShowSaberSelect"))
+			{
+				gi.cvar_set("ui_saberSelectAnyGoto", "weaponselect");
+				gi.SendConsoleCommand( "uimenu saberMenuAny\n" );
+			}
+			else
+			{
+				gi.SendConsoleCommand( "uimenu ingameWpnSelect\n" );
+			}
+		}
+	}
+
+	if (gi.Cvar_VariableIntegerValue("ui_missionSelectAnySetCoreForcePowers"))
+	{
+		G_SetCoreForcePowerLevel(core_force_level);
+	}
+}
+
 /*
 =================
 ConsoleCommand
@@ -1178,7 +1318,7 @@ qboolean	ConsoleCommand( void ) {
 		Svcmd_ForceSetLevel_f( FP_ABSORB );
 		return qtrue;
 	}
-	if ( Q_stricmp( cmd, "setForceSight" ) == 0 )	
+	if ( Q_stricmp( cmd, "setForceSight" ) == 0 || Q_stricmp( cmd, "setForceSense" ) == 0 )	
 	{
 		Svcmd_ForceSetLevel_f( FP_SEE );
 		return qtrue;
@@ -1414,6 +1554,82 @@ qboolean	ConsoleCommand( void ) {
 			{
 				g_entities[0].client->ps.forcePowerLevel[i] = FORCE_LEVEL_3;
 			}
+		}
+	}
+
+	if (Q_stricmp (cmd, "forceselect") == 0)
+	{
+		if (gi.argc() > 1)
+		{
+			const int level = min(3, max(0, atoi(gi.argv(1))));
+			if (level == 0) {
+				g_entities[0].client->ps.forcePowersKnown &= ~(
+					(1<<FP_ABSORB)|(1<<FP_HEAL)|(1<<FP_TELEPATHY)|(1<<FP_PROTECT)|
+					(1<<FP_DRAIN)|(1<<FP_GRIP)|(1<<FP_LIGHTNING)|(1<<FP_RAGE));
+			} else {
+				g_entities[0].client->ps.forcePowersKnown |= (
+					(1<<FP_ABSORB)|(1<<FP_HEAL)|(1<<FP_TELEPATHY)|(1<<FP_PROTECT)|
+					(1<<FP_DRAIN)|(1<<FP_GRIP)|(1<<FP_LIGHTNING)|(1<<FP_RAGE));
+			}
+			g_entities[0].client->ps.forcePowerLevel[FP_ABSORB] = level;
+			g_entities[0].client->ps.forcePowerLevel[FP_HEAL] = level;
+			g_entities[0].client->ps.forcePowerLevel[FP_TELEPATHY] = level;
+			g_entities[0].client->ps.forcePowerLevel[FP_PROTECT] = level;
+			g_entities[0].client->ps.forcePowerLevel[FP_DRAIN] = level;
+			g_entities[0].client->ps.forcePowerLevel[FP_GRIP] = level;
+			g_entities[0].client->ps.forcePowerLevel[FP_LIGHTNING] = level;
+			g_entities[0].client->ps.forcePowerLevel[FP_RAGE] = level;
+		}
+
+		if (gi.argc() > 2)
+		{
+			const int level = atoi(gi.argv(2));
+			G_SetCoreForcePowerLevel(level);
+		}
+
+		gi.cvar_set("ui_forceSelectAnyGoto", "");
+		gi.SendConsoleCommand( "uimenu ingameForceSelectAny\n" );
+		return qtrue;
+	}
+
+	if (Q_stricmp (cmd, "missionselect") == 0)
+	{
+		Svcmd_MissionSelectAny_f();
+		return qtrue;
+	}
+
+	if (Q_stricmp (cmd, "saberselect") == 0)
+	{
+		gi.SendConsoleCommand( "uimenu saberMenuAny\n ");
+	}
+
+	if (Q_stricmp (cmd, "saberreload") == 0)
+	{
+		G_SetSaber(g_saber->string, g_saber2->string);
+
+		if (g_saber_color->string)
+		{
+			saber_colors_t color = TranslateSaberColor(g_saber_color->string);
+			for (int n = 0; n < MAX_BLADES; n++)
+			{
+				g_entities[0].client->ps.saber[0].blade[n].color = color;
+			}
+		}
+		if (g_saber2_color->string)
+		{
+			saber_colors_t color = TranslateSaberColor(g_saber2_color->string);
+			for (int n = 0; n < MAX_BLADES; n++)
+			{
+				g_entities[0].client->ps.saber[1].blade[n].color = color;
+			}
+		}
+
+		if ((g_entities[0].client->ps.saberAnimLevel == SS_FAST &&
+		     !(g_entities[0].client->ps.saberStylesKnown & (1<<SS_FAST))) ||
+		    (g_entities[0].client->ps.saberAnimLevel == SS_STRONG &&
+		     !(g_entities[0].client->ps.saberStylesKnown & (1<<SS_STRONG))))
+		{
+			Svcmd_SaberAttackCycle_f();
 		}
 	}
 

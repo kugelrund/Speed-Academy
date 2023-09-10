@@ -57,6 +57,7 @@ typedef struct {
 	int				timeResidual;		// <= 1000 / sv_frame->value					//   during savegame.
 	float			timeResidualFraction;	// fraction of a msec accumulated
 	int				nextFrameTime;		// when time > nextFrameTime, process world		// this doesn't get used anywhere! -Ste
+	int				initialTime;
 	struct cmodel_s	*models[MAX_MODELS];
 	char			*configstrings[MAX_CONFIGSTRINGS];
 	//

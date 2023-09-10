@@ -47,6 +47,109 @@ Higher values show more decimals.
 Note that this is currently not the timing that is used on the leaderboards.
 Default: `0`.
 
+#### `cg_drawJumpHelper` (0 or 1)
+
+Draw a helper for correctly timing jump release and crouch jumping.
+
+#### `cg_jumpHelperX` (#)
+
+Horizontal position of the jump helper.
+Default: `0.0` (center of the screen).
+
+#### `cg_jumpHelperY` (#)
+
+Vertical position of the jump helper.
+Default: `0.0` (center of the screen).
+
+#### `cg_jumpHelperWidth` (#)
+
+Width of the jump helper.
+Note that this becomes height when using the vertical jump helper (`cg_jumpHelperHorizontal 0`).
+Default: `300`.
+
+#### `cg_jumpHelperHeight` (#)
+
+Height of the jump helper.
+Note that this becomes width when using the vertical jump helper (`cg_jumpHelperHorizontal 0`).
+Default: `20`.
+
+#### `cg_jumpHelperHorizontal` (-1, 0 or 1)
+
+Whether to draw the jump helper horizontally left-to-right (`1`), horizontally right-to-left (`-1`) or vertically bottom-to-top (`0`).
+Default: `1`.
+
+#### `cg_jumpHelperMirror` (0 or 1)
+
+Whether to mirror the jump helper.
+Mirrors horizontally when drawing horizontally, vertically otherwise.
+Default: `1`.
+
+#### `cg_jumpHelperAutoScale` (0 or 1)
+
+Whether to rescale the jump helper to the same size for each force level.
+Default: `0`.
+
+#### `cg_jumpHelperCrouch` (0 or 1)
+
+Show an additional height section for crouch jumping, appended to normal jump height.
+Default: `1`.
+
+#### `cg_jumpHelperCurrentScale` (#)
+
+Scale of the indicator for the current height within the jump helper.
+Negative values draw from top to bottom, positive values from bottom to top.
+Default: `0.5`.
+
+#### `cg_drawLandingInfo` (0 or 1)
+
+Draw info about what kind of boost happened on landing.
+
+#### `cg_landingInfoDuration` (#)
+
+Duration for showing landing info in milliseconds.
+Default: `500` (half a second).
+
+#### `cg_landingInfoScale` (#)
+
+Scale of the text for landing info display.
+Default: `0.9`.
+
+#### `cg_landingInfoX` (#)
+
+Horizontal offset for drawing landing info text, relative to the center of the screen.
+Default: `0.0` (center of the screen).
+
+#### `cg_landingInfoY` (#)
+
+Vertical offset for drawing landing info text, relative to the center of the screen.
+Default: `90.0` (Slightly below center of the screen).
+
+#### `cg_landingInfoText[...]` (text)
+
+Set the text to display for each type of landing.
+Types of landings are `CB`, `EB`, `RB`, `SG`, `VB`, `VRGI`.
+Defaults are those abbreviations.
+
+#### `cg_drawSpeed` (0 or 1)
+
+Draw the current player speed.
+Default: `0`.
+
+#### `cg_speedScale` (#)
+
+Scale of the text for speed display.
+Default: `0.9`.
+
+#### `cg_speedX` (#)
+
+Horizontal offset for drawing speed text, relative to the center of the screen.
+Default: `0.0` (center of the screen).
+
+#### `cg_speedY` (#)
+
+Vertical offset for drawing speed text, relative to the center of the screen.
+Default: `75.0` (Slightly below center of the screen).
+
 #### `cg_drawStrafeHelper` (0 or 1)
 
 Draw a strafe helper.
@@ -75,7 +178,10 @@ Default: `4.0`.
 
 #### `cg_strafeHelperSpeedScale` (#)
 
-Scale of the text for speed display.
+Scale of the text for speed display tied to strafe helper.
+Note that this shows the speed after friction but prior to acceleration, as this is what is relevant for optimal strafing.
+It is not the intuitive current player speed.
+For that, see `cg_drawSpeed`.
 Default: `0.9`.
 
 #### `cg_strafeHelperSpeedX` (#)
@@ -131,6 +237,10 @@ Allows to disable "crouch boosting".
 When set to `0`, VRGI can not be bypassed by crouching anymore.
 Default: `1`.
 
+#### `g_reverseBoosts` (0 or 1)
+
+Flip elevation logic for VRGI.
+
 #### `g_randomBoosts` (0 or 1)
 
 Allows to disable "random" boosts.
@@ -166,7 +276,40 @@ Default: `0`.
 
 ## New Commands
 
+### Menus
+
+#### `forceselect [non-core level] [core level]`
+
+Opens a menu to choose force power levels for any power without limitations.
+The optional first argument allows setting all non-core force powers to a common level before showing the menu.
+The optional second argument allows the same for core force powers.
+Levels must be between `0` and `3`.
+
+#### `missionselect [t1,t2,t3,hoth2,hoth3,vjun1,vjun2,vjun3,taspir1,taspir2,kor1,kor2]`
+
+Opens mission selection menu to start a mission.
+If no argument is given, shows an initial menu that allows choosing a mission category.
+If argument is a tier, shows mission selection for that tier.
+If argument is a story mission, shows the weapon selection for that story mission.
+
+#### `saberselect`
+
+Opens saber creation menu to choose any saber, including styles.
+
 ### HUD
+
+#### `jumpHelperColor[...] <r> <g> <b> <a>` (components in range 0.0 to 1.0)
+
+Sets the color for one of the jump helper elements `Background`, `Crouch`, `CrouchExtend`, `Extend`, `Optimal`, `Current` or `Cancel` to the given red, green, blue and alpha values.
+
+#### `landingInfoColor[...] <r> <g> <b>` (components in range 0.0 to 1.0)
+
+Sets the color for the landing info text of either landing type to the given red, green, blue and alpha values.
+Types of landings are `CB`, `EB`, `RB`, `SG`, `VB`, `VRGI`.
+
+#### `speedColor <r> <g> <b> <a>` (components in range 0.0 to 1.0)
+
+Sets the color for the speed display to the given red, green, blue and alpha values.
 
 #### `strafeHelperColor[...] <r> <g> <b> <a>` (components in range 0.0 to 1.0)
 

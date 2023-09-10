@@ -10,6 +10,8 @@
 #include "../game/g_shared.h"
 #include "cg_camera.h"
 
+#include "../speedrun/landing_info.hpp"
+
 // The entire cgame module is unloaded and reloaded on each level change,
 // so there is NO persistant data between levels on the client side.
 // If you absolutely need something stored, it can either be kept
@@ -637,6 +639,61 @@ extern	vmCvar_t		cg_drawSpeedrunTotalTimer;
 extern	vmCvar_t		cg_drawSpeedrunLevelTimer;
 extern	vmCvar_t		cg_drawMovementRestriction;
 extern	vmCvar_t		cg_drawOverbounceInfo;
+extern	vmCvar_t		cg_drawJumpHelper;
+extern	vmCvar_t		cg_jumpHelperX;
+extern	vmCvar_t		cg_jumpHelperY;
+extern	vmCvar_t		cg_jumpHelperWidth;
+extern	vmCvar_t		cg_jumpHelperHeight;
+extern	vmCvar_t		cg_jumpHelperHorizontal;
+extern	vmCvar_t		cg_jumpHelperMirror;
+extern	vmCvar_t		cg_jumpHelperAutoScale;
+extern	vmCvar_t		cg_jumpHelperCrouch;
+extern	vmCvar_t		cg_jumpHelperCurrentScale;
+extern	vmCvar_t		cg_jumpHelperColorBackgroundR;
+extern	vmCvar_t		cg_jumpHelperColorBackgroundG;
+extern	vmCvar_t		cg_jumpHelperColorBackgroundB;
+extern	vmCvar_t		cg_jumpHelperColorBackgroundA;
+extern	vmCvar_t		cg_jumpHelperColorCancelR;
+extern	vmCvar_t		cg_jumpHelperColorCancelG;
+extern	vmCvar_t		cg_jumpHelperColorCancelB;
+extern	vmCvar_t		cg_jumpHelperColorCancelA;
+extern	vmCvar_t		cg_jumpHelperColorCrouchR;
+extern	vmCvar_t		cg_jumpHelperColorCrouchG;
+extern	vmCvar_t		cg_jumpHelperColorCrouchB;
+extern	vmCvar_t		cg_jumpHelperColorCrouchA;
+extern	vmCvar_t		cg_jumpHelperColorCrouchExtendR;
+extern	vmCvar_t		cg_jumpHelperColorCrouchExtendG;
+extern	vmCvar_t		cg_jumpHelperColorCrouchExtendB;
+extern	vmCvar_t		cg_jumpHelperColorCrouchExtendA;
+extern	vmCvar_t		cg_jumpHelperColorCurrentR;
+extern	vmCvar_t		cg_jumpHelperColorCurrentG;
+extern	vmCvar_t		cg_jumpHelperColorCurrentB;
+extern	vmCvar_t		cg_jumpHelperColorCurrentA;
+extern	vmCvar_t		cg_jumpHelperColorExtendR;
+extern	vmCvar_t		cg_jumpHelperColorExtendG;
+extern	vmCvar_t		cg_jumpHelperColorExtendB;
+extern	vmCvar_t		cg_jumpHelperColorExtendA;
+extern	vmCvar_t		cg_jumpHelperColorOptimalR;
+extern	vmCvar_t		cg_jumpHelperColorOptimalG;
+extern	vmCvar_t		cg_jumpHelperColorOptimalB;
+extern	vmCvar_t		cg_jumpHelperColorOptimalA;
+extern	vmCvar_t		cg_drawLandingInfo;
+extern	vmCvar_t		cg_landingInfoDuration;
+extern	vmCvar_t		cg_landingInfoScale;
+extern	vmCvar_t		cg_landingInfoX;
+extern	vmCvar_t		cg_landingInfoY;
+extern	vmCvar_t		cg_landingInfoText[speedrun::numLandingTypes()];
+extern	vmCvar_t		cg_landingInfoColorR[speedrun::numLandingTypes()];
+extern	vmCvar_t		cg_landingInfoColorG[speedrun::numLandingTypes()];
+extern	vmCvar_t		cg_landingInfoColorB[speedrun::numLandingTypes()];
+extern	vmCvar_t		cg_drawSpeed;
+extern	vmCvar_t		cg_speedScale;
+extern	vmCvar_t		cg_speedX;
+extern	vmCvar_t		cg_speedY;
+extern	vmCvar_t		cg_speedColorR;
+extern	vmCvar_t		cg_speedColorG;
+extern	vmCvar_t		cg_speedColorB;
+extern	vmCvar_t		cg_speedColorA;
 extern	vmCvar_t		cg_drawStrafeHelper;
 extern	vmCvar_t		cg_strafeHelperCenter;
 extern	vmCvar_t		cg_strafeHelperCenterMarker;

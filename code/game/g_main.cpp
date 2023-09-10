@@ -201,6 +201,7 @@ cvar_t	*g_broadsword;
 cvar_t	*g_vrgi;
 cvar_t	*g_spinGlitch;
 cvar_t	*g_crouchBoosts;
+cvar_t	*g_reverseBoosts;
 cvar_t	*g_randomBoosts;
 cvar_t	*g_selfKnockback;
 
@@ -681,6 +682,7 @@ void G_InitCvars( void ) {
 	g_vrgi = gi.cvar( "g_vrgi", "1", CVAR_ARCHIVE );
 	g_spinGlitch = gi.cvar( "g_spinGlitch", "1", CVAR_ARCHIVE );
 	g_crouchBoosts = gi.cvar( "g_crouchBoosts", "1", CVAR_ARCHIVE );
+	g_reverseBoosts = gi.cvar( "g_reverseBoosts", "0", CVAR_ARCHIVE );
 	g_randomBoosts = gi.cvar( "g_randomBoosts", "1", CVAR_CHEAT );
 	g_selfKnockback = gi.cvar( "g_selfKnockback", "0", CVAR_CHEAT );
 

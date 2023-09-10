@@ -451,6 +451,7 @@ void SV_SpawnServer( char *server, ForceReload_e eForceReload, qboolean bAllowSc
 	sv.time += 100;
 	G2API_SetTime(sv.time,G2T_SV_TIME);
 
+	sv.initialTime = sv.time;
 
 	// save systeminfo and serverinfo strings
 	SV_SetConfigstring( CS_SYSTEMINFO, Cvar_InfoString( CVAR_SYSTEMINFO ) );
