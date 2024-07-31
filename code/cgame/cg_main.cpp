@@ -410,6 +410,13 @@ vmCvar_t	cg_strafeHelperColorSpeedB;
 vmCvar_t	cg_strafeHelperColorSpeedA;
 vmCvar_t	cg_fovThirdPerson;
 vmCvar_t	cg_sensitivityFactorTurret;
+vmCvar_t	cg_pitchATST;
+vmCvar_t	cg_pitchVehicle;
+vmCvar_t	cg_yawATST;
+vmCvar_t	cg_yawRancor;
+vmCvar_t	cg_yawSpeeder;
+vmCvar_t	cg_yawTauntaun;
+vmCvar_t	cg_yawVehicle;
 
 typedef struct {
 	vmCvar_t	*vmCvar;
@@ -627,6 +634,13 @@ static cvarTable_t cvarTable[] = {
 	{ &cg_strafeHelperColorSpeedA, "cg_strafeHelperColorSpeedA", "0.9", CVAR_ARCHIVE },
 	{ &cg_fovThirdPerson, "cg_fovThirdPerson", "0", CVAR_ARCHIVE },
 	{ &cg_sensitivityFactorTurret, "cg_sensitivityFactorTurret", "0.25", CVAR_ARCHIVE },
+	{ &cg_pitchATST, "cg_pitchATST", "0.0", CVAR_ARCHIVE },
+	{ &cg_pitchVehicle, "cg_pitchVehicle", "0.0", CVAR_ARCHIVE },
+	{ &cg_yawATST, "cg_yawATST", "0.0", CVAR_ARCHIVE },
+	{ &cg_yawRancor, "cg_yawRancor", "0.0", CVAR_ARCHIVE },
+	{ &cg_yawSpeeder, "cg_yawSpeeder", "0.0", CVAR_ARCHIVE },
+	{ &cg_yawTauntaun, "cg_yawTauntaun", "0.0", CVAR_ARCHIVE },
+	{ &cg_yawVehicle, "cg_yawVehicle", "0.0", CVAR_ARCHIVE },
 };
 
 static int cvarTableSize = sizeof( cvarTable ) / sizeof( cvarTable[0] );

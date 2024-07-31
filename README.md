@@ -232,6 +232,50 @@ Allows changing how much the sensitivity is scaled by when steering a turret.
 The normal `cg_sensitivity` is multiplied with this factor when in a turret, so a value of `1.0` means the usual sensitivity is used.
 Default: `0.25`.
 
+#### `cg_pitchATST` (#)
+
+Sets the vertical sensitivity factor when controlling an AT-ST.
+A value of `0` means that the normal pitch override of the game for AT-ST is applied (`0.01`).
+Default: `0`.
+
+#### `cg_pitchVehicle` (#)
+
+Sets the vertical sensitivity factor when controlling any vehicle.
+The settings specific to certain vehicle types (like `cg_pitchATST`) take precedence over this.
+A value of `0` means that `m_pitch` or the normal pitch override of the game is used.
+Default: `0`.
+
+#### `cg_yawATST` (#)
+
+Sets the horizontal sensitivity factor when controlling an AT-ST.
+A value of `0` means that the normal yaw override of the game for AT-ST is applied (`0.003`).
+Default: `0`.
+
+#### `cg_yawRancor` (#)
+
+Sets the horizontal sensitivity factor when controlling a Rancor.
+A value of `0` means that the normal yaw override of the game for Rancor is applied (`0.006`).
+Default: `0`.
+
+#### `cg_yawSpeeder` (#)
+
+Sets the horizontal sensitivity factor when controlling a speeder bike.
+A value of `0` means that the normal yaw override of the game for Speeder is applied (`0.0038`).
+Default: `0`.
+
+#### `cg_yawTauntaun` (#)
+
+Sets the horizontal sensitivity factor when controlling a Tauntaun.
+A value of `0` means that the normal yaw override of the game for Tauntaun is applied (`0.006`).
+Default: `0`.
+
+#### `cg_yawVehicle` (#)
+
+Sets the horizontal sensitivity factor when controlling any vehicle.
+The settings specific to certain vehicle types (like `cg_yawSpeeder`, `cg_yawTauntaun`, ...) take precedence over this.
+A value of `0` means that `m_yaw` or the normal yaw override of the game is used.
+Default: `0`.
+
 #### `g_vrgi` (0 or 1)
 
 Enable or disable the "velocity reduction on ground impact" (VRGI).

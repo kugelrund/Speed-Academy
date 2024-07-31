@@ -1981,6 +1981,56 @@ void CG_RunEmplacedWeapon()
 
 //=========================================================================
 
+static float GetVehicleOverridePitchSpecificCvar(const char* vehicle_name) {
+	if (!strcmp(vehicle_name, "ATST_vehicle")) {
+		return cg_pitchATST.value;
+	}
+	return 0.0f;
+}
+
+static float GetVehicleOverrideYawSpecificCvar(const char* vehicle_name) {
+	if (!strcmp(vehicle_name, "ATST_vehicle")) {
+		return cg_yawATST.value;
+	}
+	if (!strcmp(vehicle_name, "Rancor_vehicle")) {
+		return cg_yawRancor.value;
+	}
+	if (!strcmp(vehicle_name, "Swoop") || !strcmp(vehicle_name, "swoop_mp") ||
+	    !strcmp(vehicle_name, "swoop_mp2") ||!strcmp(vehicle_name, "swoop_red")) {
+		return cg_yawSpeeder.value;
+	}
+	if (!strcmp(vehicle_name, "WildTauntaun")) {
+		return cg_yawTauntaun.value;
+	}
+	return 0.0f;
+}
+
+static float GetVehicleOverridePitch(const vehicleInfo_t* vehicle_info) {
+	const float cvar_specific = GetVehicleOverridePitchSpecificCvar(vehicle_info->name);
+	if (cvar_specific != 0.0f) {
+		return cvar_specific;
+	}
+	const float cvar_generic = cg_pitchVehicle.value;
+	if (cvar_generic != 0.0f) {
+		return cvar_generic;
+	}
+	// otherwise (if not overriden through cvar by player) use the game's override value
+	return vehicle_info->mousePitch;
+}
+
+static float GetVehicleOverrideYaw(const vehicleInfo_t* vehicle_info) {
+	const float cvar_specific = GetVehicleOverrideYawSpecificCvar(vehicle_info->name);
+	if (cvar_specific != 0.0) {
+		return cvar_specific;
+	}
+	const float cvar_generic = cg_yawVehicle.value;
+	if (cvar_generic != 0.0f) {
+		return cvar_generic;
+	}
+	// otherwise (if not overriden through cvar by player) use the game's override value
+	return vehicle_info->mouseYaw;
+}
+
 /*
 =================
 CG_DrawActiveFrame
@@ -2066,14 +2116,8 @@ void CG_DrawActiveFrame( int serverTime, stereoFrame_t stereoView ) {
 		// Mouse turns slower.
 		if ( ( pVeh = G_IsRidingVehicle( &g_entities[0] ) ) != NULL )
 		{
-			if ( pVeh->m_pVehicleInfo->mousePitch )
-			{
-				mPitchOverride = pVeh->m_pVehicleInfo->mousePitch;
-			}
-			if ( pVeh->m_pVehicleInfo->mouseYaw )
-			{
-				mYawOverride = pVeh->m_pVehicleInfo->mouseYaw; 
-			}
+			mPitchOverride = GetVehicleOverridePitch(pVeh->m_pVehicleInfo);
+			mYawOverride = GetVehicleOverrideYaw(pVeh->m_pVehicleInfo);
 		}
 	}
 	cgi_SetUserCmdValue( cg.weaponSelect, speed, mPitchOverride, mYawOverride );
