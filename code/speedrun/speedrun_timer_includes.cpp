@@ -1,12 +1,13 @@
 #include "speedrun_timer_includes.h"
 #include "../../server/exe_headers.h"
+#include "../qcommon/stv_version.h"
 
 
 namespace {
 
 void SpeedrunTimerPrint(const char* levelTimeString,
                         const char* totalTimeString) {
-	Com_Printf(S_COLOR_RED "=========================\n"
+	Com_Printf(S_COLOR_RED "====== (v" VERSION_STRING_DOTTED ") ======\n"
 	           S_COLOR_GREEN "Level time: " S_COLOR_WHITE "%s\n",
 	           levelTimeString);
 	if (totalTimeString != nullptr)
@@ -14,12 +15,12 @@ void SpeedrunTimerPrint(const char* levelTimeString,
 		Com_Printf(S_COLOR_GREEN "Total time: " S_COLOR_WHITE "%s\n",
 		           totalTimeString);
 	}
-	Com_Printf(S_COLOR_RED "=========================\n");
+	Com_Printf(S_COLOR_RED "====== (v" VERSION_STRING_DOTTED ") ======\n");
 }
 
 void SpeedrunTimerPrintNoNotify(const char* levelTimeString,
                                 const char* totalTimeString) {
-	Com_PrintfNoNotify(S_COLOR_RED "=========================\n"
+	Com_PrintfNoNotify(S_COLOR_RED "====== (v" VERSION_STRING_DOTTED ") ======\n"
 	                   S_COLOR_GREEN "Level time: " S_COLOR_WHITE "%s\n",
 	                   levelTimeString);
 	if (totalTimeString != nullptr)
@@ -27,7 +28,7 @@ void SpeedrunTimerPrintNoNotify(const char* levelTimeString,
 		Com_PrintfNoNotify(S_COLOR_GREEN "Total time: " S_COLOR_WHITE "%s\n",
 		                   totalTimeString);
 	}
-	Com_PrintfNoNotify(S_COLOR_RED "=========================\n");
+	Com_PrintfNoNotify(S_COLOR_RED "====== (v" VERSION_STRING_DOTTED ") ======\n");
 }
 
 }  // anonymous namespace
