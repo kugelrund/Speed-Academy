@@ -314,8 +314,8 @@ Default: `0`.
 #### `sv_speedrunModeIL` (0 or 1)
 
 Individual-level run mode.
-When set to `1`, ingame timer will reset every time an autosave is loaded.
-When set to `0`, ingame timer will reset only when yavin1b is loaded.
+When set to `1`, ingame timer will reset every time an autosave is loaded and level time will be printed to the top left notification area.
+When set to `0`, ingame timer will reset only when yavin1b is loaded and level time will only be printed in the console.
 Note that this is currently not the timing that is used on the leaderboards.
 Default: `0`.
 

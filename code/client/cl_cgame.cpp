@@ -1023,7 +1023,7 @@ Ghoul2 Insert End
 		SpeedrunUnpauseTimer(args[1]);
 		break;
 	case CG_SPEEDRUN_LEVEL_FINISHED:
-		SpeedrunLevelFinished();
+		SpeedrunLevelFinished(sv_speedrunModeIL->integer);
 		break;
 	case CG_SPEEDRUN_RUN_FINISHED:
 		SpeedrunRunFinished();
