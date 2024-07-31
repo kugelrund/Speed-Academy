@@ -1394,9 +1394,13 @@ void funcGlassDie( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, i
 		}
 	}
 
-	// Really naughty cheating.  Put in an EVENT at some point...
-	cgi_R_GetBModelVerts( cgs.inlineDrawModel[self->s.modelindex], verts, normal );
-	CG_DoGlass( verts, normal, self->pos1, self->pos2, self->splashRadius );
+	// check the inlineDrawModel for being null, because this caused a crash
+	// when loading a save with broken glass
+	if (cgs.inlineDrawModel[self->s.modelindex]) {
+		// Really naughty cheating.  Put in an EVENT at some point...
+		cgi_R_GetBModelVerts( cgs.inlineDrawModel[self->s.modelindex], verts, normal );
+		CG_DoGlass( verts, normal, self->pos1, self->pos2, self->splashRadius );
+	}
 
 	self->takedamage = qfalse;//stop chain reaction runaway loops
 
