@@ -3605,6 +3605,14 @@ int PM_GetLandingAnim( void )
 	}
 	else if ( PM_InAirKickingAnim( anim ) )
 	{
+		if ( !g_spinGlitch->integer ) {
+			// This is not really spinning; but it is another animation that can
+			// be used to avoid VRGI. So we treat it the same as spin glitch and
+			// apply the VRGI when spin glitch is disabled.
+			PM_StickLanding();
+		} else if ( pm->ps->clientNum == 0 ) {
+			speedrun::SetLastLandingInfo({speedrun::LandingType::SpinGlitch, level.time});
+		}
 		switch ( anim )
 		{
 		case BOTH_A7_KICK_F_AIR:
