@@ -1245,6 +1245,20 @@ void CL_FirstSnapshot( void ) {
 	RE_RegisterMedia_LevelLoadEnd();
 
 	cls.state = CA_ACTIVE;
+	SpeedrunUnpauseTimer();
+	if (sv.timeBeforeLoad > 0 && sv.timeBeforeLoad < sv.time) {
+		// sv.timeBeforeLoad > 0 means that we loaded back into the past on the
+		// same map as before.
+		// sv.timeBeforeLoad < sv.time means that connecting to the server and
+		// getting this first snapshot took so long that we are now ahead of the
+		// last time from before we loaded.
+		// As we paused the speedrun timer during all of this, we basically
+		// jumped into the future without that time being tracked. To fix that,
+		// we have to add this difference to the timer.
+		const int msec_add = sv.time - sv.timeBeforeLoad;
+		SpeedrunTimerAddMilliseconds(msec_add);
+	}
+	sv.timeBeforeLoad = 0;
 
 	// set the timedelta so we are exactly on this first frame
 	cl.serverTimeDelta = cl.frame.serverTime - cls.realtime;

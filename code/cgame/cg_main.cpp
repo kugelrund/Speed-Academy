@@ -2549,7 +2549,6 @@ void CG_Init( int serverCommandSequence ) {
 
 	cg.missionFailedScreen = qfalse;	// Screen hasn't been opened.
 	cgi_UI_MenuCloseAll();	// So the loadscreen menu will turn off just after the opening snapshot
-	cgi_SpeedrunUnpauseTimer();
 }
 
 /*
