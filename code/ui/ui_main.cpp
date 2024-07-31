@@ -61,7 +61,7 @@ static struct
 #ifdef _XBOX
 #define MAX_SAVELOADFILES	8
 #else
-#define MAX_SAVELOADFILES	100
+#define MAX_SAVELOADFILES	1000
 #endif
 #define MAX_SAVELOADNAME	32
 
