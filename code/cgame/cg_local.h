@@ -719,6 +719,7 @@ extern	vmCvar_t		cg_strafeHelperColorSpeedR;
 extern	vmCvar_t		cg_strafeHelperColorSpeedG;
 extern	vmCvar_t		cg_strafeHelperColorSpeedB;
 extern	vmCvar_t		cg_strafeHelperColorSpeedA;
+extern	vmCvar_t		cg_fovThirdPerson;
 
 void CG_NewClientinfo( int clientNum );
 //

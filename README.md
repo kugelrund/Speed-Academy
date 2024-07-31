@@ -205,6 +205,14 @@ Color components (red, green, blue, alpha) for different strafe helper elements.
 These are `Accelerating`, `Optimal`, `CenterMarker` and `Speed`.
 Colors can be set more conveniently with the corresponding commands.
 
+### Render
+
+#### `cg_fovThirdPerson` (#)
+
+Sets the field of view for third person view in degrees.
+If set to `0`, uses third person FOV equal to the normal first person FOV given by `cg_fov`.
+Default: `0`
+
 #### `r_showElevationBoosts` (0 or 1)
 
 Enable or disable coloring heights that give an elevation boost if jumping from

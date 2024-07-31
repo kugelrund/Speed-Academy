@@ -1284,6 +1284,13 @@ qboolean CG_CalcFOVFromX( float fov_x )
 	return (inwater);
 }
 
+static float GetUserFOV() {
+	if (cg.renderingThirdPerson && cg_fovThirdPerson.integer) {
+		return cg_fovThirdPerson.value;
+	}
+	return cg_fov.value;
+}
+
 float CG_ForceSpeedFOV( void )
 {
 	float fov;
@@ -1292,18 +1299,19 @@ float CG_ForceSpeedFOV( void )
 	float amt = forceSpeedFOVMod[player->client->ps.forcePowerLevel[FP_SPEED]];
 	if ( timeLeft < 500 )
 	{//start going back
-		fov = cg_fov.value + (timeLeft)/500*amt;
+		fov = GetUserFOV() + (timeLeft)/500*amt;
 	}
 	else if ( length - timeLeft < 1000 )
 	{//start zooming in
-		fov = cg_fov.value + (length - timeLeft)/1000*amt;
+		fov = GetUserFOV() + (length - timeLeft)/1000*amt;
 	}
 	else
 	{//stay at this FOV
-		fov = cg_fov.value+amt;
+		fov = GetUserFOV()+amt;
 	}
 	return fov;
 }
+
 /*
 ====================
 CG_CalcFov
@@ -1363,7 +1371,7 @@ static qboolean	CG_CalcFov( void ) {
 		}
 		else
 		{
-			fov_x = cg_fov.value;
+			fov_x = GetUserFOV();
 		}
 		if ( fov_x < 1 ) {
 			fov_x = 1;
