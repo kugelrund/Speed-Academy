@@ -226,6 +226,12 @@ Applies after reloading the map.
 
 ### Gameplay
 
+#### `cg_sensitivityFactorTurret` (#)
+
+Allows changing how much the sensitivity is scaled by when steering a turret.
+The normal `cg_sensitivity` is multiplied with this factor when in a turret, so a value of `1.0` means the usual sensitivity is used.
+Default: `0.25`.
+
 #### `g_vrgi` (0 or 1)
 
 Enable or disable the "velocity reduction on ground impact" (VRGI).

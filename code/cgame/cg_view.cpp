@@ -2059,7 +2059,7 @@ void CG_DrawActiveFrame( int serverTime, stereoFrame_t stereoView ) {
 	{//pointless check, but..
 		if ( cg_entities[0].gent->s.eFlags & EF_LOCKED_TO_WEAPON ) 
 		{
-			speed *= 0.25f;
+			speed *= cg_sensitivityFactorTurret.value;
 		}
 		Vehicle_t *pVeh = NULL;
 
