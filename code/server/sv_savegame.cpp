@@ -1282,6 +1282,8 @@ qboolean SG_ReadSavegame(const char *psPathlessBaseName)
 	char		sMapCmd [iSG_MAPCMD_SIZE];
 	qboolean	qbAutosave;
 
+	const int timeBeforeLoad = sv.time;
+
 	int iPrevTestSave = sv_testsave->integer;
 	sv_testsave->integer = 0;
 
@@ -1319,6 +1321,7 @@ qboolean SG_ReadSavegame(const char *psPathlessBaseName)
 	qbAutosave = ReadGame();
 	eSavedGameJustLoaded = (qbAutosave)?eAUTO:eFULL;
 
+	const bool isSameMap = !Q_stricmp(sMapCmd, sv_mapname->string);
 	SV_SpawnServer(sMapCmd, eForceReload_NOTHING, (eSavedGameJustLoaded != eFULL) );	// note that this also trashes the whole G_Alloc pool as well (of course)		
 
 	// read in all the level data...
@@ -1331,6 +1334,11 @@ qboolean SG_ReadSavegame(const char *psPathlessBaseName)
 		SG_ReadServerConfigStrings();		
 	}
 	ge->ReadLevel(qbAutosave, qbLoadTransition);	// always done now, but ent reader only does player if auto
+
+	if (isSameMap && timeBeforeLoad >= sv.time)
+	{
+		sv.timeBeforeLoad = timeBeforeLoad;
+	}
 
 	if(!SG_Close())
 	{

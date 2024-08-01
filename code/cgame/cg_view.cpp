@@ -1284,6 +1284,13 @@ qboolean CG_CalcFOVFromX( float fov_x )
 	return (inwater);
 }
 
+static float GetUserFOV() {
+	if (cg.renderingThirdPerson && cg_fovThirdPerson.integer) {
+		return cg_fovThirdPerson.value;
+	}
+	return cg_fov.value;
+}
+
 float CG_ForceSpeedFOV( void )
 {
 	float fov;
@@ -1292,18 +1299,19 @@ float CG_ForceSpeedFOV( void )
 	float amt = forceSpeedFOVMod[player->client->ps.forcePowerLevel[FP_SPEED]];
 	if ( timeLeft < 500 )
 	{//start going back
-		fov = cg_fov.value + (timeLeft)/500*amt;
+		fov = GetUserFOV() + (timeLeft)/500*amt;
 	}
 	else if ( length - timeLeft < 1000 )
 	{//start zooming in
-		fov = cg_fov.value + (length - timeLeft)/1000*amt;
+		fov = GetUserFOV() + (length - timeLeft)/1000*amt;
 	}
 	else
 	{//stay at this FOV
-		fov = cg_fov.value+amt;
+		fov = GetUserFOV()+amt;
 	}
 	return fov;
 }
+
 /*
 ====================
 CG_CalcFov
@@ -1363,7 +1371,7 @@ static qboolean	CG_CalcFov( void ) {
 		}
 		else
 		{
-			fov_x = cg_fov.value;
+			fov_x = GetUserFOV();
 		}
 		if ( fov_x < 1 ) {
 			fov_x = 1;
@@ -1973,6 +1981,56 @@ void CG_RunEmplacedWeapon()
 
 //=========================================================================
 
+static float GetVehicleOverridePitchSpecificCvar(const char* vehicle_name) {
+	if (!strcmp(vehicle_name, "ATST_vehicle")) {
+		return cg_pitchATST.value;
+	}
+	return 0.0f;
+}
+
+static float GetVehicleOverrideYawSpecificCvar(const char* vehicle_name) {
+	if (!strcmp(vehicle_name, "ATST_vehicle")) {
+		return cg_yawATST.value;
+	}
+	if (!strcmp(vehicle_name, "Rancor_vehicle")) {
+		return cg_yawRancor.value;
+	}
+	if (!strcmp(vehicle_name, "Swoop") || !strcmp(vehicle_name, "swoop_mp") ||
+	    !strcmp(vehicle_name, "swoop_mp2") ||!strcmp(vehicle_name, "swoop_red")) {
+		return cg_yawSpeeder.value;
+	}
+	if (!strcmp(vehicle_name, "WildTauntaun")) {
+		return cg_yawTauntaun.value;
+	}
+	return 0.0f;
+}
+
+static float GetVehicleOverridePitch(const vehicleInfo_t* vehicle_info) {
+	const float cvar_specific = GetVehicleOverridePitchSpecificCvar(vehicle_info->name);
+	if (cvar_specific != 0.0f) {
+		return cvar_specific;
+	}
+	const float cvar_generic = cg_pitchVehicle.value;
+	if (cvar_generic != 0.0f) {
+		return cvar_generic;
+	}
+	// otherwise (if not overriden through cvar by player) use the game's override value
+	return vehicle_info->mousePitch;
+}
+
+static float GetVehicleOverrideYaw(const vehicleInfo_t* vehicle_info) {
+	const float cvar_specific = GetVehicleOverrideYawSpecificCvar(vehicle_info->name);
+	if (cvar_specific != 0.0) {
+		return cvar_specific;
+	}
+	const float cvar_generic = cg_yawVehicle.value;
+	if (cvar_generic != 0.0f) {
+		return cvar_generic;
+	}
+	// otherwise (if not overriden through cvar by player) use the game's override value
+	return vehicle_info->mouseYaw;
+}
+
 /*
 =================
 CG_DrawActiveFrame
@@ -2051,21 +2109,15 @@ void CG_DrawActiveFrame( int serverTime, stereoFrame_t stereoView ) {
 	{//pointless check, but..
 		if ( cg_entities[0].gent->s.eFlags & EF_LOCKED_TO_WEAPON ) 
 		{
-			speed *= 0.25f;
+			speed *= cg_sensitivityFactorTurret.value;
 		}
 		Vehicle_t *pVeh = NULL;
 
 		// Mouse turns slower.
 		if ( ( pVeh = G_IsRidingVehicle( &g_entities[0] ) ) != NULL )
 		{
-			if ( pVeh->m_pVehicleInfo->mousePitch )
-			{
-				mPitchOverride = pVeh->m_pVehicleInfo->mousePitch;
-			}
-			if ( pVeh->m_pVehicleInfo->mouseYaw )
-			{
-				mYawOverride = pVeh->m_pVehicleInfo->mouseYaw; 
-			}
+			mPitchOverride = GetVehicleOverridePitch(pVeh->m_pVehicleInfo);
+			mYawOverride = GetVehicleOverrideYaw(pVeh->m_pVehicleInfo);
 		}
 	}
 	cgi_SetUserCmdValue( cg.weaponSelect, speed, mPitchOverride, mYawOverride );

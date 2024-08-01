@@ -1538,38 +1538,6 @@
 			}
 		}
 
-		itemDef
-		{
-			name				beginmission
-			type				ITEM_TYPE_BUTTON
-			rect				400 447 220 24
-			text				@MENUS_BEGIN_MISSION
-			font				2
-			forecolor			1 .682 0 1
-			textscale			1
-			textalign			ITEM_ALIGN_LEFT
-			textalignx			0
-			textaligny			-1
-			desctext			@MENUS_BEGIN_MISSION_DESC
-			visible			1
-			cvartest			"weapon_menu"
-			showcvar
-			{
-				"4" 
-			}
-			mouseEnter 
-			{ 
-			}
-			mouseExit 
-			{ 
-			}
-			action
-			{
-				play		"sound/interface/menuroam.wav"
-				exec "maptransition hoth3"
-			}
-		}
-
 		// Don't change the name of this, code looks for this name to turn it on and off
 		// This is a big hack so that from Academy4 it will only bring up the weapon select menu 
 		// and then go right to VJUN1. 
@@ -1602,6 +1570,73 @@
 			{
 				play		"sound/interface/menuroam.wav"
 				exec "maptransition vjun1"
+			}
+		}
+
+		// Don't change the name of this, code looks for this name to turn it on and off
+		// This is a big hack so that from Academy6 it will only bring up the weapon select menu 
+		// and then go right to TASPIN1. 
+		itemDef
+		{
+			name				beginmission
+			type				ITEM_TYPE_BUTTON
+			rect				400 447 220 24
+			text				@MENUS_BEGIN_MISSION
+			font				2
+			forecolor			1 .682 0 1
+			textscale			1
+			textalign			ITEM_ALIGN_LEFT
+			textalignx			0
+			textaligny			-1
+			desctext			@MENUS_BEGIN_MISSION_DESC
+			visible			1
+			cvartest			"weapon_menu"
+			showcvar
+			{
+				"3"
+			}
+			mouseEnter 
+			{ 
+			}
+			mouseExit 
+			{ 
+			}
+			action
+			{
+				play		"sound/interface/menuroam.wav"
+				exec "maptransition taspir1"
+			}
+		}
+
+		itemDef
+		{
+			name				beginmission
+			type				ITEM_TYPE_BUTTON
+			rect				400 447 220 24
+			text				@MENUS_BEGIN_MISSION
+			font				2
+			forecolor			1 .682 0 1
+			textscale			1
+			textalign			ITEM_ALIGN_LEFT
+			textalignx			0
+			textaligny			-1
+			desctext			@MENUS_BEGIN_MISSION_DESC
+			visible			1
+			cvartest			"weapon_menu"
+			showcvar
+			{
+				"4" 
+			}
+			mouseEnter 
+			{ 
+			}
+			mouseExit 
+			{ 
+			}
+			action
+			{
+				play		"sound/interface/menuroam.wav"
+				exec "maptransition hoth3"
 			}
 		}
 
@@ -1666,41 +1701,6 @@
 			{
 				play		"sound/interface/menuroam.wav"
 				exec "maptransition vjun3"
-			}
-		}
-
-		// Don't change the name of this, code looks for this name to turn it on and off
-		// This is a big hack so that from Academy6 it will only bring up the weapon select menu 
-		// and then go right to TASPIN1. 
-		itemDef
-		{
-			name				beginmission
-			type				ITEM_TYPE_BUTTON
-			rect				400 447 220 24
-			text				@MENUS_BEGIN_MISSION
-			font				2
-			forecolor			1 .682 0 1
-			textscale			1
-			textalign			ITEM_ALIGN_LEFT
-			textalignx			0
-			textaligny			-1
-			desctext			@MENUS_BEGIN_MISSION_DESC
-			visible			1
-			cvartest			"weapon_menu"
-			showcvar
-			{
-				"3"
-			}
-			mouseEnter 
-			{ 
-			}
-			mouseExit 
-			{ 
-			}
-			action
-			{
-				play		"sound/interface/menuroam.wav"
-				exec "maptransition taspir1"
 			}
 		}
 

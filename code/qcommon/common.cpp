@@ -1062,7 +1062,7 @@ void Com_Init( char *commandLine ) {
 		Cmd_AddCommand ("quit", Com_Quit_f);
 		Cmd_AddCommand ("writeconfig", Com_WriteConfig_f );
 		
-		com_maxfps = Cvar_Get ("com_maxfps", "85", CVAR_ARCHIVE);
+		com_maxfps = Cvar_Get ("com_maxfps", "125", CVAR_ARCHIVE);
 		
 		com_developer = Cvar_Get ("developer", "0", CVAR_TEMP );
 		com_logfile = Cvar_Get ("logfile", "0", CVAR_TEMP );

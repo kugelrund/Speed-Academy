@@ -37,14 +37,12 @@ Default `0`.
 
 Draw a total run timer.
 Higher values show more decimals.
-Note that this is currently not the timing that is used on the leaderboards.
 Default: `0`.
 
 #### `cg_drawSpeedrunLevelTimer` (0-3)
 
 Draw a current level timer.
 Higher values show more decimals.
-Note that this is currently not the timing that is used on the leaderboards.
 Default: `0`.
 
 #### `cg_drawJumpHelper` (0 or 1)
@@ -205,6 +203,14 @@ Color components (red, green, blue, alpha) for different strafe helper elements.
 These are `Accelerating`, `Optimal`, `CenterMarker` and `Speed`.
 Colors can be set more conveniently with the corresponding commands.
 
+### Render
+
+#### `cg_fovThirdPerson` (#)
+
+Sets the field of view for third person view in degrees.
+If set to `0`, uses third person FOV equal to the normal first person FOV given by `cg_fov`.
+Default: `0`
+
 #### `r_showElevationBoosts` (0 or 1)
 
 Enable or disable coloring heights that give an elevation boost if jumping from
@@ -217,6 +223,56 @@ Color can be set more conveniently with the command `showElevationBoostsColor`.
 Applies after reloading the map.
 
 ### Gameplay
+
+#### `cg_sensitivityFactorTurret` (#)
+
+Allows changing how much the sensitivity is scaled by when steering a turret.
+The normal `sensitivity` is multiplied with this factor when in a turret, so a value of `1.0` means the usual sensitivity is used.
+Default: `0.25`.
+
+#### `cg_pitchATST` (#)
+
+Sets the vertical sensitivity factor when controlling an AT-ST.
+A value of `0` means that the normal pitch override of the game for AT-ST is applied (`0.01`).
+Default: `0`.
+
+#### `cg_pitchVehicle` (#)
+
+Sets the vertical sensitivity factor when controlling any vehicle.
+The settings specific to certain vehicle types (like `cg_pitchATST`) take precedence over this.
+A value of `0` means that `m_pitch` or the normal pitch override of the game is used.
+Default: `0`.
+
+#### `cg_yawATST` (#)
+
+Sets the horizontal sensitivity factor when controlling an AT-ST.
+A value of `0` means that the normal yaw override of the game for AT-ST is applied (`0.003`).
+Default: `0`.
+
+#### `cg_yawRancor` (#)
+
+Sets the horizontal sensitivity factor when controlling a Rancor.
+A value of `0` means that the normal yaw override of the game for Rancor is applied (`0.006`).
+Default: `0`.
+
+#### `cg_yawSpeeder` (#)
+
+Sets the horizontal sensitivity factor when controlling a speeder bike.
+A value of `0` means that the normal yaw override of the game for Speeder is applied (`0.0038`).
+Default: `0`.
+
+#### `cg_yawTauntaun` (#)
+
+Sets the horizontal sensitivity factor when controlling a Tauntaun.
+A value of `0` means that the normal yaw override of the game for Tauntaun is applied (`0.006`).
+Default: `0`.
+
+#### `cg_yawVehicle` (#)
+
+Sets the horizontal sensitivity factor when controlling any vehicle.
+The settings specific to certain vehicle types (like `cg_yawSpeeder`, `cg_yawTauntaun`, ...) take precedence over this.
+A value of `0` means that `m_yaw` or the normal yaw override of the game is used.
+Default: `0`.
 
 #### `g_vrgi` (0 or 1)
 
@@ -256,9 +312,8 @@ Default: `0`.
 #### `sv_speedrunModeIL` (0 or 1)
 
 Individual-level run mode.
-When set to `1`, ingame timer will reset every time an autosave is loaded.
-When set to `0`, ingame timer will reset only when yavin1b is loaded.
-Note that this is currently not the timing that is used on the leaderboards.
+When set to `1`, ingame timer will reset every time an autosave is loaded and level time will be printed to the top left notification area.
+When set to `0`, ingame timer will reset only when yavin1b is loaded and level time will only be printed in the console.
 Default: `0`.
 
 #### `sv_speedrunModeCheckpoint` (0 or 1)

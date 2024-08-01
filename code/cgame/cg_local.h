@@ -719,6 +719,15 @@ extern	vmCvar_t		cg_strafeHelperColorSpeedR;
 extern	vmCvar_t		cg_strafeHelperColorSpeedG;
 extern	vmCvar_t		cg_strafeHelperColorSpeedB;
 extern	vmCvar_t		cg_strafeHelperColorSpeedA;
+extern	vmCvar_t		cg_fovThirdPerson;
+extern	vmCvar_t		cg_sensitivityFactorTurret;
+extern	vmCvar_t		cg_pitchATST;
+extern	vmCvar_t		cg_pitchVehicle;
+extern	vmCvar_t		cg_yawATST;
+extern	vmCvar_t		cg_yawRancor;
+extern	vmCvar_t		cg_yawSpeeder;
+extern	vmCvar_t		cg_yawTauntaun;
+extern	vmCvar_t		cg_yawVehicle;
 
 void CG_NewClientinfo( int clientNum );
 //
