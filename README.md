@@ -37,14 +37,12 @@ Default `0`.
 
 Draw a total run timer.
 Higher values show more decimals.
-Note that this is currently not the timing that is used on the leaderboards.
 Default: `0`.
 
 #### `cg_drawSpeedrunLevelTimer` (0-3)
 
 Draw a current level timer.
 Higher values show more decimals.
-Note that this is currently not the timing that is used on the leaderboards.
 Default: `0`.
 
 #### `cg_drawJumpHelper` (0 or 1)
@@ -316,7 +314,6 @@ Default: `0`.
 Individual-level run mode.
 When set to `1`, ingame timer will reset every time an autosave is loaded and level time will be printed to the top left notification area.
 When set to `0`, ingame timer will reset only when yavin1b is loaded and level time will only be printed in the console.
-Note that this is currently not the timing that is used on the leaderboards.
 Default: `0`.
 
 #### `sv_speedrunModeCheckpoint` (0 or 1)
