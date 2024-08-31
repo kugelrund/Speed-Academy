@@ -528,7 +528,7 @@ static cvarTable_t cvarTable[] = {
 
 	// Additions for Speed Academy
 	{ &cg_drawSecrets, "cg_drawSecrets", "0", CVAR_ARCHIVE },
-	{ &cg_drawSpeedrunTotalTimer, "cg_drawSpeedrunTotalTimer", "0", CVAR_ARCHIVE  },
+	{ &cg_drawSpeedrunTotalTimer, "cg_drawSpeedrunTotalTimer", "1", CVAR_ARCHIVE  },
 	{ &cg_drawSpeedrunLevelTimer, "cg_drawSpeedrunLevelTimer", "0", CVAR_ARCHIVE  },
 	{ &cg_drawMovementRestriction, "cg_drawMovementRestriction", "1", CVAR_ARCHIVE },
 	{ &cg_drawOverbounceInfo, "cg_drawOverbounceInfo", "0", CVAR_ARCHIVE },
