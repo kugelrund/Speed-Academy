@@ -230,7 +230,7 @@ static void PM_CrashLand( void )
 So with these conditions, there are a few ways to avoid `PM_GetLandingAnim` being called and thereby avoiding VRGI:
 
 * By crouching while landing, the player can make `pm->cmd.upmove < 0`. This is known as **Crouch Boost**.
-* When landing with the right height difference between jump-off and landing position, the player can make `delta <= 10` and `forceLanding == false`. This is known as **Elevation Boost**. Note that the player cannot be holding the backwards key while landing in this case either.
+* When landing with the right height difference between jump-off and landing position, the player can make `delta <= 10` and `forceLanding == false`. This is known as **Elevation Boost**. Note that for this case the backwards key is not allowed to have been pressed when the jump was initiated either.
 * TODO: **Velocity Boost**
 
 Otherwise, `PM_GetLandingAnim` is called and the only way to still avoid VRGI is to land while being in one of the special non-VRGI animations like with the **Spin Glitch**, as described before.
