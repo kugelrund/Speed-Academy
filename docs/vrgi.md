@@ -17,7 +17,7 @@ pm->ps->velocity[1] *= 0.5f;
 
 in most code paths of this function, meaning for most current animations.
 However, there are a few types of animations that did not get this halving of speed.
-Among these are spinning animations that are triggered by the player holding the attack button while moving in the air.
+Among these are spinning animations that are triggered by the player holding the attack button with the lightsaber equipped while moving in the air.
 By performing these spins with the correct timing, VRGI can be avoided due to the spinning animation being active while landing.
 This is known as **Spin Glitch** in the community.
 
