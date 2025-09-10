@@ -2,6 +2,8 @@
 
 ## Movement Restrictions
 
+Variables:
+
 - `cg_drawMovementRestriction` (0 or 1)
 
   Draw the currently active movement restriction.
@@ -39,7 +41,7 @@
 
 ## HUD Information
 
-### Variables
+Variables:
 
 - `cg_drawSecrets` (0 or 1)
 
@@ -48,7 +50,7 @@
 
 ## Landing Info
 
-### Variables
+Variables:
 
 - `cg_drawLandingInfo` (0 or 1)
 
@@ -80,7 +82,7 @@
   Types of landings are `CB`, `EB`, `RB`, `SG`, `VB`, `VRGI`.
   Defaults are those abbreviations.
 
-### Commands
+Commands:
 
 - `landingInfoColor[...] <r> <g> <b>` (components in range 0.0 to 1.0)
 
@@ -89,7 +91,7 @@
 
 ## Speed Display
 
-### Variables
+Variables:
 
 - `cg_drawSpeed` (0 or 1)
 
@@ -111,7 +113,7 @@
   Vertical offset for drawing speed text, relative to the center of the screen.
   Default: `75.0` (Slightly below center of the screen).
 
-### Commands
+Commands:
 
 - `speedColor <r> <g> <b> <a>` (components in range 0.0 to 1.0)
 
@@ -119,7 +121,7 @@
 
 ## Strafe Helper
 
-### Variables
+Variables:
 
 - `cg_drawStrafeHelper` (0 or 1)
 
@@ -176,7 +178,7 @@
   These are `Accelerating`, `Optimal`, `CenterMarker` and `Speed`.
   Colors can be set more conveniently with the corresponding commands.
 
-### Commands
+Commands:
 
 - `strafeHelperColor[...] <r> <g> <b> <a>` (components in range 0.0 to 1.0)
 
@@ -184,7 +186,7 @@
 
 ## Jump Helper
 
-### Variables
+Variables:
 
 - `cg_drawJumpHelper` (0 or 1)
 
@@ -239,7 +241,7 @@
   Negative values draw from top to bottom, positive values from bottom to top.
   Default: `0.5`.
 
-### Commands
+Commands:
 
 - `jumpHelperColor[...] <r> <g> <b> <a>` (components in range 0.0 to 1.0)
 
@@ -247,7 +249,7 @@
 
 ## Elevation Boost Visualization
 
-### Variables
+Variables:
 
 - `r_showElevationBoosts` (0 or 1)
 
@@ -260,7 +262,7 @@
   Color can be set more conveniently with the command `showElevationBoostsColor`.
   Applies after reloading the map.
 
-### Commands
+Commands:
 
 - `showElevationBoostsColor <r> <g> <b>` (components in range 0 to 255)
 
@@ -269,7 +271,7 @@
 
 ## Speedrun Modes
 
-### Variables
+Variables:
 
 - `cg_drawSpeedrunTotalTimer` (0-3)
 
@@ -301,7 +303,7 @@
   Create an automatic save when a checkpoint is reached in checkpoint mode.
   Default: `0`.
 
-### Commands
+Commands:
 
 - `settimedcheckpoint <x1> <y1> <z1> <x2> <y2> <z2>`
 
@@ -311,7 +313,7 @@
 
 ## Mouse Input
 
-### Variables
+Variables:
 
 - `cg_sensitivityFactorTurret` (#)
 
@@ -370,7 +372,7 @@
 
 ## Cosmetics
 
-### Variables
+Variables:
 
 - `cg_fovThirdPerson` (#)
 
@@ -380,7 +382,7 @@
 
 ## Menus
 
-### Commands
+Commands:
 
 - `forceselect [non-core level] [core level]`
 
@@ -402,7 +404,7 @@
 
 ## Overbounces
 
-### Variables
+Variables:
 
 - `cg_drawOverbounceInfo` (0 or 1)
 
@@ -410,6 +412,8 @@
   Default: `0`.
 
 ## Damage Boosting
+
+Variables:
 
 - `g_selfKnockback` (0 or 1)
 
