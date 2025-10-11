@@ -1999,7 +1999,7 @@ static float GetVehicleOverrideYawSpecificCvar(const char* vehicle_name) {
 	    !strcmp(vehicle_name, "swoop_mp2") ||!strcmp(vehicle_name, "swoop_red")) {
 		return cg_yawSpeeder.value;
 	}
-	if (!strcmp(vehicle_name, "WildTauntaun")) {
+	if (!strcmp(vehicle_name, "Tauntaun") || !strcmp(vehicle_name, "WildTauntaun")) {
 		return cg_yawTauntaun.value;
 	}
 	return 0.0f;
