@@ -645,6 +645,16 @@ int cgi_EndGame(void)
 	return syscall( CG_SENDCONSOLECOMMAND, "cam_disable; disconnect\n" );//; cinematic outcast
 }
 
+void cgi_ReportLastPmoveFrametime(int msec)
+{
+	syscall(CG_REPORT_LAST_PMOVE_FRAMETIME, msec);
+}
+
+float cgi_OverbounceProbability(float height_difference, float vertical_speed, float gravity)
+{
+	return syscall(CG_OVERBOUNCE_PROBABILITY, PASSFLOAT(height_difference), PASSFLOAT(vertical_speed), PASSFLOAT(gravity)) / 10000.0f;
+}
+
 void cgi_SpeedrunPauseTimer(int priority)
 {
 	syscall(CG_SPEEDRUN_PAUSE_TIMER, priority);

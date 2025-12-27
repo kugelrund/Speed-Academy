@@ -462,4 +462,11 @@ void CL_GenericMenu_f(void);
 void CL_DataPad_f(void);
 void CL_EndScreenDissolve_f(void);
 
+
+//
+// cl_overbounce.cpp
+//
+void CL_ReportLastPmoveFrametime(int);
+float CL_OverbounceProbability(float height_difference, float vertical_speed, float gravity);
+
 #endif //__CLIENT_H__

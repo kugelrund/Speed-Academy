@@ -1016,6 +1016,12 @@ Ghoul2 Insert End
 		}
 		return strlen(text);
 		//break;
+	case CG_REPORT_LAST_PMOVE_FRAMETIME:
+		CL_ReportLastPmoveFrametime(args[1]);
+		break;
+	case CG_OVERBOUNCE_PROBABILITY:
+		return CL_OverbounceProbability(VMF(1), VMF(2), VMF(3)) * 10000.0f;
+		break;
 	case CG_SPEEDRUN_PAUSE_TIMER:
 		SpeedrunPauseTimer(args[1]);
 		break;

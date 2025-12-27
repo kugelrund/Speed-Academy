@@ -23,7 +23,6 @@
 #include "wp_saber.h"
 #include "g_vehicles.h"
 #include "../speedrun/landing_info.hpp"
-#include "../speedrun/overbounce_prediction/OverbouncePrediction.hpp"
 #include "../speedrun/strafe_helper/strafe_helper.h"
 #include <float.h>
 
@@ -14971,9 +14970,6 @@ void Pmove( pmove_t *pmove )
 	VectorCopy (pm->ps->velocity, pml.previous_velocity);
 
 	pml.frametime = pml.msec * 0.001;
-	if ( cg_drawOverbounceInfo.integer && pm->ps->clientNum == 0 ) {
-		OverbouncePrediction::reportLastFrametime( pml.frametime );
-	}
 	
 	if ( pm->ps->clientNum >= MAX_CLIENTS &&
 		pm->gent &&
