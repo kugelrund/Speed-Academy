@@ -3796,9 +3796,20 @@ static void CG_DrawOverbounceInfo( void ) {
 		return;
 	}
 
-	double const height_difference = cg.snap->ps.origin[2] +
-	                                 player_gent->mins[2] - trace.endpos[2];
-	if ( height_difference <= 0.0 ) {
+	double const surfaceClipEpsilon = 0.125;
+	// CM_TraceThroughBrush in JKA has an extra check which returns early if
+	// the trace is completely outside the bounding box of the brush. This
+	// check ignores SURFACE_CLIP_EPSILON. Since the traces that lead to
+	// overbounces have their end hover slightly above the collision,
+	// SURFACE_CLIP_EPSILON is bypassed. Our trace that we do here on the other
+	// hand looks as far down as possible, so it will never have this bypass.
+	// So to simulate the trace that we would have for overbounces, we remove
+	// SURFACE_CLIP_EPSILON from our trace result. Stricly speaking we should
+	// only do this is the trace is limited by CM_TraceThroughBrush (rather
+	// than by a patch or terrain brush), but this seems to be the common case.
+	double const height_difference =
+		cg.snap->ps.origin[2] + player_gent->mins[2] - (trace.endpos[2] - surfaceClipEpsilon);
+	if ( height_difference <= surfaceClipEpsilon * 1.03125 ) {
 		return;
 	}
 
