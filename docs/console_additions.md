@@ -411,6 +411,23 @@ Variables:
   Draw overbounce probabilities, G is for Go, J is for Jump.
   Default: `0`.
 
+- `r_overbouncePrediction` (0 or 1)
+
+  Enable or disable coloring heights that have overbounce potential.
+
+- `r_overbouncePredictionColor[R,G or B]` (0 - 255)
+
+  Color components (red, green, blue) used to mark heights that have overbounce potential.
+  Color can be set more conveniently with the command `overbouncePredictionColor`.
+  Applies after reloading the map.
+
+Commands:
+
+- `overbouncePredictionColor <r> <g> <b>` (components in range 0 to 255)
+
+  Sets the color for showing overbounce potential heights.
+  Applies after reloading the map.
+
 ## Damage Boosting
 
 Variables:

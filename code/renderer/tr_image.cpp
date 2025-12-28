@@ -2723,6 +2723,50 @@ static void R_CreateElevationImage( void ) {
 
 /*
 ==================
+R_CreateOverbounceImage
+
+Image for coloring in overbounce levels.
+==================
+*/
+static void R_CreateOverbounceImage( void ) {
+	// We create the image like this
+	//
+	// 0123456789
+	// 0000000000
+	// 0000000000
+	// 0000000000
+	//
+	// where "0" is fully transparent and "9" is fully opaque. Vertices that are
+	// within the overbounce level will have their UV-coordinate set somewhere
+	// in the topmost row texture pixels. Top of the top-most row if right on
+	// the minimum of the overbounce level range, bottom of the top-most row if
+	// right on the maximum. The column is set according to the overbounce
+	// probability of that overbounce level. Vertices that are outside the
+	// overbounce level will have their UV-coordinate set in one of the other
+	// rows that are all zero.
+	//
+	// By using GL_REPEAT we can use different texture repetitions for different
+	// overbounce levels to map each vertex to a corresponding value.
+	const int overbounceImageHeight = 8192;
+	const int overbounceImageWidth = 128;
+	byte data[overbounceImageHeight][overbounceImageWidth][4];
+	memset(data, 255, sizeof(data));
+	for (int x=0; x < overbounceImageWidth; ++x) {
+		data[0][x][3] = (256/overbounceImageWidth) * x;
+	}
+	for (int y=1; y < overbounceImageHeight - 1; ++y) {
+		for (int x=0; x < overbounceImageWidth; ++x) {
+			data[y][x][3] = 0;
+		}
+	}
+	tr.overbounceImage = R_CreateImage("*overbounce", (byte *)data, overbounceImageWidth, overbounceImageHeight, GL_RGBA, qfalse, qfalse, qtrue, GL_REPEAT);
+	GL_Bind(tr.overbounceImage);
+	qglTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	qglTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+}
+
+/*
+==================
 R_CreateBuiltinImages
 ==================
 */
@@ -2750,8 +2794,6 @@ void R_CreateBuiltinImages( void ) {
 
 	tr.screenImage = R_CreateImage("*screen", (byte *)data, 8, 8, GL_RGBA, qfalse, qfalse, qfalse, GL_REPEAT );
 #endif
-
-	R_CreateElevationImage();
 
 
 #ifndef _XBOX	// GLOWXXX
@@ -2825,6 +2867,10 @@ void R_CreateBuiltinImages( void ) {
 
 	R_CreateDlightImage();
 	R_CreateFogImage();
+
+	// Additions for Speed-Academy
+	R_CreateElevationImage();
+	R_CreateOverbounceImage();
 }
 
 void R_DeleteBuiltinImages()

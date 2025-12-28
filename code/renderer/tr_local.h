@@ -256,7 +256,8 @@ typedef enum {
 	TCGEN_ENVIRONMENT_MAPPED,
 	TCGEN_FOG,
 	TCGEN_VECTOR,			// S and T from world coordinates
-	TCGEN_ELEVATION
+	TCGEN_ELEVATION,
+	TCGEN_OVERBOUNCE
 } texCoordGen_t;
 
 typedef enum {
@@ -1162,6 +1163,8 @@ typedef struct {
 	
 	// Addition for Speed-Academy to color in area of elevation boosts
 	image_t					*elevationImage;
+	// Addition for Speed-Academy to color in overbounce levels
+	image_t					*overbounceImage;
 
 #ifndef _XBOX	// GLOWXXX
 	// Handle to the Glow Effect Vertex Shader. - AReis
@@ -1189,6 +1192,8 @@ typedef struct {
 
 	// Addition for Speed-Academy to color in area of elevation boosts
 	shader_t				*elevationShader;
+	// Addition for Speed-Outcast to color in overbounce levels
+	shader_t				*overbounceShader;
 
 	int						numLightmaps;
 	image_t					*lightmaps[MAX_LIGHTMAPS];
@@ -1418,6 +1423,10 @@ extern	cvar_t	*r_showElevationBoosts;
 extern	cvar_t	*r_showElevationBoostsColorR;
 extern	cvar_t	*r_showElevationBoostsColorG;
 extern	cvar_t	*r_showElevationBoostsColorB;
+extern	cvar_t	*r_overbouncePrediction;
+extern	cvar_t	*r_overbouncePredictionColorR;
+extern	cvar_t	*r_overbouncePredictionColorG;
+extern	cvar_t	*r_overbouncePredictionColorB;
 //====================================================================
 
 // Point sprite stuff.
@@ -1935,8 +1944,9 @@ void	RB_CalcEnvironmentTexCoords( float *dstTexCoords );
 void	RB_CalcFogTexCoords( float *dstTexCoords );
 void	RB_CalcTurbulentTexCoords( const waveForm_t *wf, float *dstTexCoords );
 
-// Addition for Speed-Academy
+// Additions for Speed-Academy
 void	RB_CalcElevationTexCoords( float *dstTexCoords );
+void	RB_CalcOverbounceTexCoords( float *dstTexCoords );
 
 #ifdef _XBOX
 void	RB_CalcWaveColor( const waveForm_t *wf, DWORD *dstColors );
