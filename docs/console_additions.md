@@ -411,6 +411,14 @@ Variables:
   Draw overbounce probabilities, G is for Go, J is for Jump.
   Default: `0`.
 
+- `g_overbounceWithoutInputs` (0 or 1)
+
+  In JKO and JKA, overbounces only happen when holding a directional key (WASD) on landing.
+  This allows enabling overbounces without any of those inputs, like in original Quake 3.
+  That also allows vertical overbounces.
+  **Cheat protected**.
+  Default: `0`.
+
 - `r_overbouncePrediction` (0 or 1)
 
   Enable or disable coloring heights that have overbounce potential.

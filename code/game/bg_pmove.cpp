@@ -5284,7 +5284,7 @@ static void PM_GroundTrace( void ) {
 				pm->ps->pm_flags |= PMF_TIME_LAND;
 				pm->ps->pm_time = 250;
 			}
-			if (!pm->cmd.forwardmove && !pm->cmd.rightmove) {
+			if (!pm->cmd.forwardmove && !pm->cmd.rightmove && !g_overbounceWithoutInputs->integer) {
 				if ( Flying != FLY_HOVER )
 				{
 					pm->ps->velocity[2] = 0;	//wouldn't normally want this because of slopes, but we aren't tyring to move...
