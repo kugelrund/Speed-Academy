@@ -3784,7 +3784,6 @@ static void CG_Draw2DScreenTints( void )
 +*/
 static void CG_DrawOverbounceInfo( void ) {
 	gentity_t const *const player_gent = cg_entities[cg.snap->ps.clientNum].gent;
-	playerState_t const &player_state = player_gent->client->ps;
 
 	vec3_t start;
 	vec3_t end;
@@ -3803,12 +3802,6 @@ static void CG_DrawOverbounceInfo( void ) {
 		return;
 	}
 
-	float jump_velocity = JUMP_VELOCITY;
-	if ( player_state.forcePowerLevel[FP_LEVITATION] > 0 ) {
-		extern float forceJumpStrength[];
-		jump_velocity += forceJumpStrength[player_state.forcePowerLevel[FP_LEVITATION]] / 10.0f;
-	}
-
 	double const go_overbounce_probability = cgi_OverbounceProbability(
 		height_difference, cg.snap->ps.velocity[2], cg.snap->ps.gravity);
 	double const go_overbounce_percentage = std::round( go_overbounce_probability * 100.0 );
@@ -3818,7 +3811,7 @@ static void CG_DrawOverbounceInfo( void ) {
 	}
 	if ( cg.snap->ps.velocity[2] == 0.0 ) {
 		double const jump_overbounce_probability = cgi_OverbounceProbability(
-			height_difference, jump_velocity, cg.snap->ps.gravity);
+			height_difference, JUMP_VELOCITY, cg.snap->ps.gravity);
 		double const jump_overbounce_percentage = std::round( jump_overbounce_probability * 100.0 );
 		if ( jump_overbounce_probability > 0.0 ) {
 			cgi_R_Font_DrawString( 10, 255, va( "J: %.0f%%", jump_overbounce_percentage ),
