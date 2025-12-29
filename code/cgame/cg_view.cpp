@@ -2107,6 +2107,10 @@ void CG_DrawActiveFrame( int serverTime, stereoFrame_t stereoView ) {
 	float mYawOverride = 0.0f;
 	if ( cg.snap->ps.clientNum == 0 )
 	{//pointless check, but..
+		if ( cg.renderingThirdPerson )
+		{
+			speed *= cg_sensitivityFactorThirdPerson.value;
+		}
 		if ( cg_entities[0].gent->s.eFlags & EF_LOCKED_TO_WEAPON ) 
 		{
 			speed *= cg_sensitivityFactorTurret.value;

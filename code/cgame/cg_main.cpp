@@ -408,6 +408,7 @@ vmCvar_t	cg_strafeHelperColorSpeedG;
 vmCvar_t	cg_strafeHelperColorSpeedB;
 vmCvar_t	cg_strafeHelperColorSpeedA;
 vmCvar_t	cg_fovThirdPerson;
+vmCvar_t	cg_sensitivityFactorThirdPerson;
 vmCvar_t	cg_sensitivityFactorTurret;
 vmCvar_t	cg_pitchATST;
 vmCvar_t	cg_pitchVehicle;
@@ -636,6 +637,7 @@ static cvarTable_t cvarTable[] = {
 	{ &cg_strafeHelperColorSpeedB, "cg_strafeHelperColorSpeedB", "1.0", CVAR_ARCHIVE },
 	{ &cg_strafeHelperColorSpeedA, "cg_strafeHelperColorSpeedA", "0.9", CVAR_ARCHIVE },
 	{ &cg_fovThirdPerson, "cg_fovThirdPerson", "0", CVAR_ARCHIVE },
+	{ &cg_sensitivityFactorThirdPerson, "cg_sensitivityFactorThirdPerson", "1.0", CVAR_ARCHIVE },
 	{ &cg_sensitivityFactorTurret, "cg_sensitivityFactorTurret", "0.25", CVAR_ARCHIVE },
 	{ &cg_pitchATST, "cg_pitchATST", "0.0", CVAR_ARCHIVE },
 	{ &cg_pitchVehicle, "cg_pitchVehicle", "0.0", CVAR_ARCHIVE },

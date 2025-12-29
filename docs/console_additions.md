@@ -315,6 +315,12 @@ Commands:
 
 Variables:
 
+- `cg_sensitivityFactorThirdPerson` (#)
+
+  Allows changing how much the sensitivity is scaled by when playing in third person.
+  The normal `sensitivity` is multiplied with this factor when playing in third person, so a value of `1.0` means the usual sensitivity is used.
+  Default: `1.0`.
+
 - `cg_sensitivityFactorTurret` (#)
 
   Allows changing how much the sensitivity is scaled by when steering a turret.
