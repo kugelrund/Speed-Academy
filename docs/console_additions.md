@@ -370,6 +370,10 @@ Variables:
   Use raw mouse input. Only applies after an `in_restart` (or after restarting the game).
   Default: `1`.
 
+- `ui_sensitivity` (#)
+
+  Sets mouse sensitivity in menus. Default: `1.0`.
+
 ## Cosmetics
 
 Variables:

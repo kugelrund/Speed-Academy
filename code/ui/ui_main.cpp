@@ -355,6 +355,8 @@ vmCvar_t	ui_hideBcallout;
 vmCvar_t	ui_hideXcallout;
 //END JLFCALLOUT
 
+vmCvar_t	ui_sensitivity;
+
 
 static cvarTable_t cvarTable[] = 
 {
@@ -384,6 +386,8 @@ static cvarTable_t cvarTable[] =
 	{ &ui_hideBcallout,		"ui_hideBcallout",	"", 0}, 
 	{ &ui_hideXcallout,		"ui_hideXcallout",	"", 0}, 
 //END JLFCALLOUT
+
+	{ &ui_sensitivity,		"ui_sensitivity",	"1.0", CVAR_ARCHIVE},
 };
 
 #define FP_UPDATED_NONE -1
@@ -3966,7 +3970,7 @@ UI_MouseEvent
 void _UI_MouseEvent( int dx, int dy )
 {
 	// update mouse screen position
-	uiInfo.uiDC.cursorx += dx;
+	uiInfo.uiDC.cursorx += dx * ui_sensitivity.value;
 	if (uiInfo.uiDC.cursorx < 0)
 	{
 		uiInfo.uiDC.cursorx = 0;
@@ -3976,7 +3980,7 @@ void _UI_MouseEvent( int dx, int dy )
 		uiInfo.uiDC.cursorx = SCREEN_WIDTH;
 	}
 
-	uiInfo.uiDC.cursory += dy;
+	uiInfo.uiDC.cursory += dy * ui_sensitivity.value;
 	if (uiInfo.uiDC.cursory < 0)
 	{
 		uiInfo.uiDC.cursory = 0;

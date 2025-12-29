@@ -251,8 +251,8 @@ typedef struct {
 	int			realTime;
 	int			frameTime;
 	qboolean	cursorShow;
-	int			cursorx;
-	int			cursory;
+	float		cursorx;
+	float		cursory;
 	qboolean	debug;
 
 	cachedAssets_t Assets;
@@ -486,7 +486,7 @@ menuDef_t	*Menu_GetFocused(void);
 void		Controls_GetConfig( void );
 void		Controls_SetConfig(qboolean restart);
 qboolean	Display_KeyBindPending(void);
-qboolean	Display_MouseMove(void *p, int x, int y);
+qboolean	Display_MouseMove(void *p, float x, float y);
 int			Display_VisibleMenuCount(void);
 qboolean	Int_Parse(const char **p, int *i);
 void		Init_Display(displayContextDef_t *dc);
