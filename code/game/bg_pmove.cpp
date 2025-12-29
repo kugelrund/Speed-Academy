@@ -15199,10 +15199,15 @@ void Pmove( pmove_t *pmove )
 	// If we didn't move at all, then why bother doing this again -MW.
 	if(!(VectorCompare(pm->ps->origin,pml.previous_origin)))
 	{
+		const int was_walking = pml.walking;
 		PM_GroundTrace();
 		if ( Flying == FLY_HOVER )
 		{//never stick to the ground
 			PM_HoverTrace();
+		}
+		if ( pm->ps->clientNum == 0 && !was_walking && pml.walking &&
+		     DotProduct(pm->ps->velocity, pml.groundTrace.plane.normal) < 0.0 ) {
+			speedrun::SetLastLandingInfo({speedrun::LandingType::Overbounce, level.time});
 		}
 	}
 

@@ -79,7 +79,7 @@ Variables:
 - `cg_landingInfoText[...]` (text)
 
   Set the text to display for each type of landing.
-  Types of landings are `CB`, `EB`, `RB`, `SG`, `VB`, `VRGI`.
+  Types of landings are `CB`, `EB`, `OB`, `RB`, `SG`, `VB`, `VRGI`.
   Defaults are those abbreviations.
 
 Commands:
@@ -87,7 +87,7 @@ Commands:
 - `landingInfoColor[...] <r> <g> <b>` (components in range 0.0 to 1.0)
 
   Sets the color for the landing info text of either landing type to the given red, green, blue and alpha values.
-  Types of landings are `CB`, `EB`, `RB`, `SG`, `VB`, `VRGI`.
+  Types of landings are `CB`, `EB`, `OB`, `RB`, `SG`, `VB`, `VRGI`.
 
 ## Speed Display
 
