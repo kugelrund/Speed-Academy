@@ -3191,5 +3191,38 @@
 				hide			highlight14
 			} 
 		}
+
+		itemDef 
+		{	
+			name				forceleaderboardrules
+			group				speedrun
+			type				ITEM_TYPE_BUTTON
+			text				"Reset to leaderboard rules"
+			rect				260 393 340 14
+			textalign			ITEM_ALIGN_CENTER
+			textstyle			1
+			textalignx			170
+			textaligny			0
+			font 				4
+			textscale 			1
+			forecolor			1 .682 0 1
+			visible				0
+			descText			"Reset common settings required for leaderboard submission."
+
+			mouseenter 
+			{ 
+				show			button_glow
+				setitemrect		button_glow	260 392 340 20
+			}
+			mouseexit 
+			{ 
+				hide			button_glow
+			}
+			action 
+			{
+				play			"sound/interface/button1.wav"
+				exec			"exec leaderboard_rules.cfg" ;
+			}
+		}
 	}
 }
