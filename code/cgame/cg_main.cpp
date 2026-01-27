@@ -417,6 +417,8 @@ vmCvar_t	cg_yawRancor;
 vmCvar_t	cg_yawSpeeder;
 vmCvar_t	cg_yawTauntaun;
 vmCvar_t	cg_yawVehicle;
+vmCvar_t	cg_drawPlayerInfo;
+vmCvar_t	cg_drawPlayerPrecision;
 
 typedef struct {
 	vmCvar_t	*vmCvar;
@@ -646,6 +648,8 @@ static cvarTable_t cvarTable[] = {
 	{ &cg_yawSpeeder, "cg_yawSpeeder", "0.0", CVAR_ARCHIVE },
 	{ &cg_yawTauntaun, "cg_yawTauntaun", "0.0", CVAR_ARCHIVE },
 	{ &cg_yawVehicle, "cg_yawVehicle", "0.0", CVAR_ARCHIVE },
+	{ &cg_drawPlayerInfo, "cg_drawPlayerInfo", "0", CVAR_ARCHIVE },
+	{ &cg_drawPlayerPrecision, "cg_drawPlayerPrecision", "0", CVAR_ARCHIVE },
 };
 
 static int cvarTableSize = sizeof( cvarTable ) / sizeof( cvarTable[0] );
