@@ -4046,6 +4046,28 @@ static void CreateInternalShaders( void ) {
 	stages[0].stateBits = GLS_SRCBLEND_SRC_ALPHA | GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA;
 	tr.overbounceShader = FinishShader();
 
+	// Addition for Speed-Academy to color in area of maximum jump height
+	memset(&shader, 0, sizeof(shader));
+	memset(&stages, 0, sizeof(stages));
+	Q_strncpyz(shader.name, "<maxheight>", sizeof(shader.name));
+	memcpy(shader.lightmapIndex, lightmapsNone, sizeof(shader.lightmapIndex));
+	memcpy(shader.styles, stylesDefault, sizeof(shader.styles));
+	for (int i = 0; i < MAX_SHADER_STAGES; i++) {
+		stages[i].bundle[0].texMods = texMods[i];
+	}
+	stages[0].active = true;
+	stages[0].bundle[0].tcGen = TCGEN_MAXHEIGHT;
+	stages[0].bundle[0].image = tr.maxHeightImage;
+	// lets use a single, fixed custom color
+	stages[0].constantColor[0] = r_showMaximumHeightColorR->integer;
+	stages[0].constantColor[1] = r_showMaximumHeightColorG->integer;
+	stages[0].constantColor[2] = r_showMaximumHeightColorB->integer;
+	stages[0].constantColor[3] = 255;
+	stages[0].rgbGen = CGEN_CONST;
+	// alpha settings so that we only overlay the range with a semitransparent color
+	stages[0].stateBits = GLS_SRCBLEND_SRC_ALPHA | GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA;
+	tr.maxHeightShader = FinishShader();
+
 #ifndef _XBOX	// GLOWXXX
 	#define GL_PROGRAM_ERROR_STRING_ARB						0x8874
 	#define GL_PROGRAM_ERROR_POSITION_ARB					0x864B

@@ -256,8 +256,9 @@ typedef enum {
 	TCGEN_ENVIRONMENT_MAPPED,
 	TCGEN_FOG,
 	TCGEN_VECTOR,			// S and T from world coordinates
-	TCGEN_ELEVATION,
-	TCGEN_OVERBOUNCE
+	TCGEN_ELEVATION,		// Speed Academy
+	TCGEN_OVERBOUNCE,		// Speed Academy
+	TCGEN_MAXHEIGHT			// Speed Academy
 } texCoordGen_t;
 
 typedef enum {
@@ -1165,6 +1166,8 @@ typedef struct {
 	image_t					*elevationImage;
 	// Addition for Speed-Academy to color in overbounce levels
 	image_t					*overbounceImage;
+	// Addition for Speed-Academy to color in area of maximum jump height
+	image_t					*maxHeightImage;
 
 #ifndef _XBOX	// GLOWXXX
 	// Handle to the Glow Effect Vertex Shader. - AReis
@@ -1194,6 +1197,8 @@ typedef struct {
 	shader_t				*elevationShader;
 	// Addition for Speed-Outcast to color in overbounce levels
 	shader_t				*overbounceShader;
+	// Addition for Speed-Academy to color in area of maximum jump height
+	shader_t				*maxHeightShader;
 
 	int						numLightmaps;
 	image_t					*lightmaps[MAX_LIGHTMAPS];
@@ -1427,6 +1432,10 @@ extern	cvar_t	*r_overbouncePrediction;
 extern	cvar_t	*r_overbouncePredictionColorR;
 extern	cvar_t	*r_overbouncePredictionColorG;
 extern	cvar_t	*r_overbouncePredictionColorB;
+extern	cvar_t	*r_showMaximumHeight;
+extern	cvar_t	*r_showMaximumHeightColorR;
+extern	cvar_t	*r_showMaximumHeightColorG;
+extern	cvar_t	*r_showMaximumHeightColorB;
 //====================================================================
 
 // Point sprite stuff.
@@ -1947,6 +1956,7 @@ void	RB_CalcTurbulentTexCoords( const waveForm_t *wf, float *dstTexCoords );
 // Additions for Speed-Academy
 void	RB_CalcElevationTexCoords( float *dstTexCoords );
 void	RB_CalcOverbounceTexCoords( float *dstTexCoords );
+void	RB_CalcMaximumHeightTexCoords(float* dstTexCoords);
 
 #ifdef _XBOX
 void	RB_CalcWaveColor( const waveForm_t *wf, DWORD *dstColors );
@@ -2194,7 +2204,8 @@ struct DDS_HEADER
 };
 #endif
 
-
+// Speed Academy
 void RE_SetPlayerJumpStartWorldZ(float value);
+void RE_SetPlayerJumpForceLevel(int value);
 
 #endif //TR_LOCAL_H

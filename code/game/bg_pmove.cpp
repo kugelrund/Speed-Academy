@@ -14924,6 +14924,7 @@ void Pmove( pmove_t *pmove )
 			cgi_R_SetPlayerJumpStartWorldZ( pm->ps->jumpZStart + pm->gent->mins[2] );
 		}
 	}
+	cgi_R_SetPlayerJumpForceLevel(pm->ps->forcePowerLevel[FP_LEVITATION]);
 
 	// this counter lets us debug movement problems with a journal by setting a conditional breakpoint fot the previous frame
 	c_pmove++;

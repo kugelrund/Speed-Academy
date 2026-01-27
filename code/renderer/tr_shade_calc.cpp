@@ -1182,6 +1182,11 @@ static float playerJumpStartWorldZ;
 void RE_SetPlayerJumpStartWorldZ(float value) {
 	playerJumpStartWorldZ = value;
 }
+// Speed Academy : max jump height viewer
+static int playerJumpForceValue;
+void RE_SetPlayerJumpForceLevel(int value) {
+	playerJumpForceValue = value;
+}
 
 /*
 ========================
@@ -1291,7 +1296,51 @@ void RB_CalcOverbounceTexCoords( float *dstTexCoords ) {
 	}
 }
 
+// Copy from the game, it's ugly but it works
+int const NUM_FORCE_POWER_LEVELS = 4;
+float forceJumpHeight[NUM_FORCE_POWER_LEVELS] =
+{
+	32,//normal jump (+stepheight+crouchdiff = 66)
+	96,//(+stepheight+crouchdiff = 130)
+	192,//(+stepheight+crouchdiff = 226)
+	384//(+stepheight+crouchdiff = 418)
+};
+float forceJumpHeightMax[NUM_FORCE_POWER_LEVELS] =
+{
+	66,//normal jump (32+stepheight(18)+crouchdiff(24) = 74)
+	130,//(96+stepheight(18)+crouchdiff(24) = 138)
+	226,//(192+stepheight(18)+crouchdiff(24) = 234)
+	418//(384+stepheight(18)+crouchdiff(24) = 426)
+};
 
+void RB_CalcMaximumHeightTexCoords(float* dstTexCoords) {
+
+	const float maxHeightTextureHeight = 4.0f;  // has to be same as elevationImage height.
+	const float maxHeightAreaHeight = (maxHeightTextureHeight - 2.0f);
+	const float maxHeightAreaRatio = maxHeightAreaHeight / maxHeightTextureHeight;
+	const float maxHeightAreaOffset = 1.0f / maxHeightTextureHeight;
+
+	const float sign = -1.0;
+
+	const float surfaceClipEpsilon = 0.125f;
+	const float maxHeightDeltaMaxAllowed = forceJumpHeight[playerJumpForceValue];
+	//const float maxHeightDeltaMaxAllowed = forceJumpHeightMax[playerJumpForceValue];
+	const float antiFlickerShift = 1.0f / 16384.0f;
+
+
+	for (int i = 0; i < tess.numVertexes; ++i) {
+
+		const float collisionZEstimate = ((int)((tess.xyz[i][2] +
+			backEnd.ori.origin[2] + surfaceClipEpsilon) * 8.0f)) / 8.0f;
+
+		const float maxHeightDelta = sign * (playerJumpStartWorldZ - collisionZEstimate);
+
+		dstTexCoords[0] = 0.5f;  // X-coordinate doesnt matter
+		dstTexCoords[1] = (maxHeightDelta - antiFlickerShift) /
+			(maxHeightDeltaMaxAllowed)*maxHeightAreaRatio + maxHeightAreaOffset;
+		dstTexCoords += 2;
+	}
+}
 
 
 #if id386 && !(defined __linux__ && defined __i386__)
