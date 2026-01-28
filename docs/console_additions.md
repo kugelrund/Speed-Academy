@@ -125,16 +125,19 @@ Variables:
 
 - `cg_drawPlayerInfo` (0 to 7)
 
-  Draw information about the player in the currnet 3D environement.
-  These three informations are the player Position, Velocity, and 'Jumping'.
-  `0` : Nothing
-  `1` : Position
-  `2` : Velocity
-  `3` : Position + Velocity
-  `4` : Jumping
-  `5` : Position + Jumping
-  `6` : Velocity + Jumping
-  `7` : Position + Velocity + Jumping
+  Draw information about the player in the current 3D environment.
+  The types of information are the player's position, velocity, and jumping state.
+  Depending on the value of this variable, different information is shown:
+
+  - `0` : Nothing
+  - `1` : Position
+  - `2` : Velocity
+  - `3` : Position + Velocity
+  - `4` : Jumping
+  - `5` : Position + Jumping
+  - `6` : Velocity + Jumping
+  - `7` : Position + Velocity + Jumping
+
   Default: `0`.
 
 - `cg_drawPlayerInfoPrecision` (0 to 5)
