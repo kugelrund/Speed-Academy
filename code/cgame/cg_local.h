@@ -730,7 +730,7 @@ extern	vmCvar_t		cg_yawSpeeder;
 extern	vmCvar_t		cg_yawTauntaun;
 extern	vmCvar_t		cg_yawVehicle;
 extern	vmCvar_t		cg_drawPlayerInfo;
-extern	vmCvar_t		cg_drawPlayerPrecision;
+extern	vmCvar_t		cg_drawPlayerInfoPrecision;
 
 void CG_NewClientinfo( int clientNum );
 //
