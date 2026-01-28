@@ -3352,7 +3352,7 @@ static float CG_DrawMovementRestriction(float y) {
 
 /*
 ===========================
-CG_DrawMovementRestriction
+CG_DrawPlayerInfo
 ===========================
 */
 // Helper function to convert floats to string with precision
