@@ -198,6 +198,10 @@ cvar_t	*r_overbouncePrediction;
 cvar_t	*r_overbouncePredictionColorR;
 cvar_t	*r_overbouncePredictionColorG;
 cvar_t	*r_overbouncePredictionColorB;
+cvar_t	*r_showMaximumHeight;
+cvar_t	*r_showMaximumHeightColorR;
+cvar_t	*r_showMaximumHeightColorG;
+cvar_t	*r_showMaximumHeightColorB;
 
 
 void ( APIENTRY * qglMultiTexCoord2fARB )( GLenum texture, GLfloat s, GLfloat t );
@@ -1119,6 +1123,21 @@ void R_SetOverbouncePredictionColor_f ( void )
 	Cvar_Set("r_overbouncePredictionColorB", Cmd_Argv(3));
 }
 
+void R_SetShowMaxHeightColor_f(void)
+{
+	if (Cmd_Argc() != 4) {
+		Com_Printf("Usage: r_showMaximumHeightColor <red 0-255> <green 0-255> <blue 0-255>\n");
+		Com_Printf("Current color is: %d %d %d\n",
+			r_showMaximumHeightColorR->integer,
+			r_showMaximumHeightColorG->integer,
+			r_showMaximumHeightColorB->integer);
+		return;
+	}
+	Cvar_Set("r_showMaximumHeightColorR", Cmd_Argv(1));
+	Cvar_Set("r_showMaximumHeightColorG", Cmd_Argv(2));
+	Cvar_Set("r_showMaximumHeightColorB", Cmd_Argv(3));
+}
+
 /*
 ===============
 R_Register
@@ -1323,6 +1342,10 @@ extern qboolean Sys_LowPhysicalMemory();
 	r_overbouncePredictionColorR = Cvar_Get( "r_overbouncePredictionColorR", "0", CVAR_ARCHIVE );
 	r_overbouncePredictionColorG = Cvar_Get( "r_overbouncePredictionColorG", "0", CVAR_ARCHIVE );
 	r_overbouncePredictionColorB = Cvar_Get( "r_overbouncePredictionColorB", "255", CVAR_ARCHIVE );
+	r_showMaximumHeight = Cvar_Get("r_showMaximumHeight", "0", CVAR_ARCHIVE);
+	r_showMaximumHeightColorR = Cvar_Get("r_showMaximumHeightColorR", "0", CVAR_ARCHIVE);
+	r_showMaximumHeightColorG = Cvar_Get("r_showMaximumHeightColorG", "0", CVAR_ARCHIVE);
+	r_showMaximumHeightColorB = Cvar_Get("r_showMaximumHeightColorB", "255", CVAR_ARCHIVE);
 
 	// make sure all the commands added here are also
 	// removed in R_Shutdown
@@ -1348,6 +1371,7 @@ extern void R_ReloadFonts_f(void);
 	// Additions for Speed-Academy
 	Cmd_AddCommand( "showElevationBoostsColor", R_SetShowElevationBoostsColor_f );
 	Cmd_AddCommand( "overbouncePredictionColor", R_SetOverbouncePredictionColor_f );
+	Cmd_AddCommand(	"showMaximumColor", R_SetShowMaxHeightColor_f );
 	// make sure all the commands added above are also
 	// removed in R_Shutdown
 }
@@ -1699,7 +1723,9 @@ refexport_t *GetRefAPI ( int apiVersion ) {
 	re.Language_UsesSpaces = Language_UsesSpaces;
 	re.AnyLanguage_ReadCharFromString = AnyLanguage_ReadCharFromString;
 
+	// Speed Academy additions
 	re.SetPlayerJumpStartWorldZ = RE_SetPlayerJumpStartWorldZ;
+	re.SetPlayerJumpForceLevel = RE_SetPlayerJumpForceLevel;
 
 	return &re;
 }
