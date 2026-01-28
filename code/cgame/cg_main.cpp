@@ -649,7 +649,7 @@ static cvarTable_t cvarTable[] = {
 	{ &cg_yawTauntaun, "cg_yawTauntaun", "0.0", CVAR_ARCHIVE },
 	{ &cg_yawVehicle, "cg_yawVehicle", "0.0", CVAR_ARCHIVE },
 	{ &cg_drawPlayerInfo, "cg_drawPlayerInfo", "0", CVAR_ARCHIVE },
-	{ &cg_drawPlayerInfoPrecision, "cg_drawPlayerPrecision", "2", CVAR_ARCHIVE },
+	{ &cg_drawPlayerInfoPrecision, "cg_drawPlayerInfoPrecision", "2", CVAR_ARCHIVE },
 };
 
 static int cvarTableSize = sizeof( cvarTable ) / sizeof( cvarTable[0] );
