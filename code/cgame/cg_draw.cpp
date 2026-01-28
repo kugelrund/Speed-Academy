@@ -11,6 +11,8 @@
 #include "..\speedrun\landing_info.hpp"
 #include "..\speedrun\strafe_helper\strafe_helper.h"
 #include "..\speedrun\speedrun_timer_q3\timer_helper.h"
+#include <iomanip> // setprecision
+#include <sstream> // stringstream
 
 #ifdef _XBOX
 #include "../client/fffx.h"
@@ -3348,6 +3350,96 @@ static float CG_DrawMovementRestriction(float y) {
 	return y + BIGCHAR_HEIGHT + 10;
 }
 
+/*
+===========================
+CG_DrawPlayerInfo
+===========================
+*/
+// Helper function to convert floats to string with precision
+static std::string FloatToString(float value, int precision){
+	std::stringstream bufferStringStream;
+	bufferStringStream << std::fixed << std::setprecision(precision) << value;
+	return bufferStringStream.str();
+}
+// Array needed to know what the maximum height is
+extern float forceJumpHeight[];
+// The function
+static void CG_DrawPlayerInfo(int precision) {
+	// cg_drawPlayerInfo between 0 and 7 will give different results depending on which bit is set to customize what we want to see.
+	gentity_t const* player_gent = cg_entities[cg.snap->ps.clientNum].gent;
+	const int pos_x_string = 8; // little offset to not be all the way on the left
+	int y = 16; // little offset to still have the console print everything
+	// Precision boundaries
+	if (precision < 0) precision = 0;
+	if (precision > 5) precision = 5;
+
+	if (cg_drawPlayerInfo.integer & 0b1)
+	{
+		///// POSITION /////
+		const std::string positionWord = "Position";
+		std::string pos_x = "X : " + FloatToString(player_gent->client->ps.origin[0], precision);
+		std::string pos_y = "Y : " + FloatToString(player_gent->client->ps.origin[1], precision);
+		std::string pos_z = "Z : " + FloatToString(player_gent->client->ps.origin[2], precision);
+
+		y = y + 16;
+		cgi_R_Font_DrawString(pos_x_string, y + 2, positionWord.c_str(), colorTable[CT_GREEN], cgs.media.qhFontMedium, -1, 0.7f);
+		y = y + 16;
+		cgi_R_Font_DrawString(pos_x_string, y + 2, pos_x.c_str(), colorTable[CT_LTGOLD1], cgs.media.qhFontMedium, -1, 0.7f);
+		y = y + 16;
+		cgi_R_Font_DrawString(pos_x_string, y + 2, pos_y.c_str(), colorTable[CT_LTGOLD1], cgs.media.qhFontMedium, -1, 0.7f);
+		y = y + 16;
+		cgi_R_Font_DrawString(pos_x_string, y + 2, pos_z.c_str(), colorTable[CT_LTGOLD1], cgs.media.qhFontMedium, -1, 0.7f);
+		///// POSITION /////
+	}
+
+	if (cg_drawPlayerInfo.integer & 0b10)
+	{
+		///// VELOCITY /////
+		const std::string velocityWord = "Velocity";
+		std::string vel_x = "X : " + FloatToString(player_gent->client->ps.velocity[0], precision);
+		std::string vel_y = "Y : " + FloatToString(player_gent->client->ps.velocity[1], precision);
+		std::string vel_z = "Z : " + FloatToString(player_gent->client->ps.velocity[2], precision);
+
+		y = y + 16;
+		cgi_R_Font_DrawString(pos_x_string, y + 2, velocityWord.c_str(), colorTable[CT_GREEN], cgs.media.qhFontMedium, -1, 0.7f);
+		y = y + 16;
+		cgi_R_Font_DrawString(pos_x_string, y + 2, vel_x.c_str(), colorTable[CT_LTGOLD1], cgs.media.qhFontMedium, -1, 0.7f);
+		y = y + 16;
+		cgi_R_Font_DrawString(pos_x_string, y + 2, vel_y.c_str(), colorTable[CT_LTGOLD1], cgs.media.qhFontMedium, -1, 0.7f);
+		y = y + 16;
+		cgi_R_Font_DrawString(pos_x_string, y + 2, vel_z.c_str(), colorTable[CT_LTGOLD1], cgs.media.qhFontMedium, -1, 0.7f);
+		///// VELOCITY /////
+	}
+
+	if (cg_drawPlayerInfo.integer & 0b100)// && g_cheats->integer)
+	{
+		///// JUMPING /////
+		const std::string jumpWord = "Jump";
+		y = y + 16;
+		cgi_R_Font_DrawString(pos_x_string, y + 2, jumpWord.c_str(), colorTable[CT_GREEN], cgs.media.qhFontMedium, -1, 0.7f);
+		
+		y = y + 16;
+		if (player_gent->client->ps.forceJumpZStart == 0.0)
+		{
+			std::string jumpPositions = FloatToString(forceJumpHeight[player_gent->client->ps.forcePowerLevel[FP_LEVITATION]], precision) + " | N/A";
+			cgi_R_Font_DrawString(pos_x_string, y + 2, jumpPositions.c_str(), colorTable[CT_LTGOLD1], cgs.media.qhFontMedium, -1, 0.7f);
+
+			y = y + 16;
+			cgi_R_Font_DrawString(pos_x_string, y + 2, "Ground", colorTable[CT_LTGOLD1], cgs.media.qhFontMedium, -1, 0.7f);
+		}
+		else
+		{
+			std::string jumpPositions = FloatToString(forceJumpHeight[player_gent->client->ps.forcePowerLevel[FP_LEVITATION]], 0) + " | " // Set precision to 0 for this
+				+ FloatToString(player_gent->client->ps.origin[2] - player_gent->client->ps.forceJumpZStart + (player_gent->client->ps.velocity[2] * 0.008), precision);;
+			cgi_R_Font_DrawString(pos_x_string, y + 2, jumpPositions.c_str(), colorTable[CT_LTGOLD1], cgs.media.qhFontMedium, -1, 0.7f);
+
+			y = y + 16;
+			cgi_R_Font_DrawString(pos_x_string, y + 2, "Jumping", colorTable[CT_LTGOLD1], cgs.media.qhFontMedium, -1, 0.7f);
+		}
+		///// JUMPING /////
+	}
+}
+
 
 /*
 =================
@@ -4252,6 +4344,11 @@ static void CG_Draw2D( void )
 	if ( cg_drawOverbounceInfo.integer )
 	{
 		CG_DrawOverbounceInfo();
+	}
+
+	// Left side of the screen
+	if (cg_drawPlayerInfo.integer) {
+		CG_DrawPlayerInfo(cg_drawPlayerInfoPrecision.integer);
 	}
 
 /*	if (cg.showInformation)

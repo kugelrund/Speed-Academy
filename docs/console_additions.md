@@ -119,6 +119,32 @@ Commands:
 
   Sets the color for the speed display to the given red, green, blue and alpha values.
 
+## Player Information Display
+
+Variables:
+
+- `cg_drawPlayerInfo` (0 to 7)
+
+  Draw information about the player in the current 3D environment.
+  The types of information are the player's position, velocity, and jumping state.
+  Depending on the value of this variable, different information is shown:
+
+  - `0` : Nothing
+  - `1` : Position
+  - `2` : Velocity
+  - `3` : Position + Velocity
+  - `4` : Jumping
+  - `5` : Position + Jumping
+  - `6` : Velocity + Jumping
+  - `7` : Position + Velocity + Jumping
+
+  Default: `0`.
+
+- `cg_drawPlayerInfoPrecision` (0 to 5)
+
+  Changes the quantity of numbers drawn after the point for each variables.
+  Default: `2`.
+
 ## Strafe Helper
 
 Variables:
