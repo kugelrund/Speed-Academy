@@ -2123,7 +2123,7 @@ static void ComputeTexCoords( shaderStage_t *pStage ) {
 			RB_CalcOverbounceTexCoords( ( float * ) tess.svars.texcoords[b] );
 			break;
 		case TCGEN_MAXHEIGHT: // Speed-Academy
-			RB_CalcMaximumHeightTexCoords((float*)tess.svars.texcoords[b]);
+			RB_CalcMaximumJumpHeightTexCoords((float*)tess.svars.texcoords[b]);
 			break;
 		case TCGEN_ENVIRONMENT_MAPPED:
 #ifdef _XBOX

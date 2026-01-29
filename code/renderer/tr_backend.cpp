@@ -1133,7 +1133,7 @@ void RB_RenderDrawSurfList( drawSurf_t *drawSurfs, int numDrawSurfs ) {
 		RB_RenderDrawSurfListOverbounce( drawSurfs, numDrawSurfs );
 	}
 
-	if (r_showMaximumHeight->integer)
+	if (r_showMaxJumpHeight->integer)
 	{
 		RB_RenderDrawSurfListMaxHeightColoring(drawSurfs, numDrawSurfs);
 	}

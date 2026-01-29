@@ -4057,11 +4057,11 @@ static void CreateInternalShaders( void ) {
 	}
 	stages[0].active = true;
 	stages[0].bundle[0].tcGen = TCGEN_MAXHEIGHT;
-	stages[0].bundle[0].image = tr.maxHeightImage;
+	stages[0].bundle[0].image = tr.maxJumpHeightImage;
 	// lets use a single, fixed custom color
-	stages[0].constantColor[0] = r_showMaximumHeightColorR->integer;
-	stages[0].constantColor[1] = r_showMaximumHeightColorG->integer;
-	stages[0].constantColor[2] = r_showMaximumHeightColorB->integer;
+	stages[0].constantColor[0] = r_showMaxJumpHeightR->integer;
+	stages[0].constantColor[1] = r_showMaxJumpHeightG->integer;
+	stages[0].constantColor[2] = r_showMaxJumpHeightB->integer;
 	stages[0].constantColor[3] = 255;
 	stages[0].rgbGen = CGEN_CONST;
 	// alpha settings so that we only overlay the range with a semitransparent color

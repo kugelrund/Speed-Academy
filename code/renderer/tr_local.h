@@ -1167,7 +1167,7 @@ typedef struct {
 	// Addition for Speed-Academy to color in overbounce levels
 	image_t					*overbounceImage;
 	// Addition for Speed-Academy to color in area of maximum jump height
-	image_t					*maxHeightImage;
+	image_t					*maxJumpHeightImage;
 
 #ifndef _XBOX	// GLOWXXX
 	// Handle to the Glow Effect Vertex Shader. - AReis
@@ -1432,10 +1432,10 @@ extern	cvar_t	*r_overbouncePrediction;
 extern	cvar_t	*r_overbouncePredictionColorR;
 extern	cvar_t	*r_overbouncePredictionColorG;
 extern	cvar_t	*r_overbouncePredictionColorB;
-extern	cvar_t	*r_showMaximumHeight;
-extern	cvar_t	*r_showMaximumHeightColorR;
-extern	cvar_t	*r_showMaximumHeightColorG;
-extern	cvar_t	*r_showMaximumHeightColorB;
+extern	cvar_t	*r_showMaxJumpHeight;
+extern	cvar_t	*r_showMaxJumpHeightR;
+extern	cvar_t	*r_showMaxJumpHeightG;
+extern	cvar_t	*r_showMaxJumpHeightB;
 //====================================================================
 
 // Point sprite stuff.
@@ -1956,7 +1956,7 @@ void	RB_CalcTurbulentTexCoords( const waveForm_t *wf, float *dstTexCoords );
 // Additions for Speed-Academy
 void	RB_CalcElevationTexCoords( float *dstTexCoords );
 void	RB_CalcOverbounceTexCoords( float *dstTexCoords );
-void	RB_CalcMaximumHeightTexCoords(float* dstTexCoords);
+void	RB_CalcMaximumJumpHeightTexCoords(float* dstTexCoords);
 
 #ifdef _XBOX
 void	RB_CalcWaveColor( const waveForm_t *wf, DWORD *dstColors );
@@ -2206,6 +2206,6 @@ struct DDS_HEADER
 
 // Speed Academy
 void RE_SetPlayerJumpStartWorldZ(float value);
-void RE_SetPlayerJumpForceLevel(int value);
+void RE_SetPlayerJumpHeight(int value);
 
 #endif //TR_LOCAL_H
