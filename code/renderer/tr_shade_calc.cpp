@@ -1182,6 +1182,11 @@ static float playerJumpStartWorldZ;
 void RE_SetPlayerJumpStartWorldZ(float value) {
 	playerJumpStartWorldZ = value;
 }
+// Speed Academy : max jump height viewer
+static int playerJumpHeightValue;
+void RE_SetPlayerJumpHeight(int value) {
+	playerJumpHeightValue = value;
+}
 
 /*
 ========================
@@ -1292,6 +1297,33 @@ void RB_CalcOverbounceTexCoords( float *dstTexCoords ) {
 }
 
 
+void RB_CalcMaximumJumpHeightTexCoords(float* dstTexCoords) {
+
+	const float maxHeightTextureHeight = 4.0f;  // has to be same as elevationImage height.
+	const float maxHeightAreaHeight = (maxHeightTextureHeight - 2.0f);
+	const float maxHeightAreaRatio = maxHeightAreaHeight / maxHeightTextureHeight;
+	const float maxHeightAreaOffset = 1.0f / maxHeightTextureHeight;
+
+	const float sign = -1.0;
+
+	const float surfaceClipEpsilon = 0.125f;
+	const float maxHeightDeltaMaxAllowed = playerJumpHeightValue; // We will get the height directly
+	//const float maxHeightCrouchDeltaMaxAllowed = playerJumpHeightValue + 24; // Potential update : add crouchdiff. But it's good already
+	const float antiFlickerShift = 1.0f / 16384.0f;
+
+	// From Jumping start Z to Maximum Jump Height
+	for (int i = 0; i < tess.numVertexes; ++i) {
+
+		const float collisionZEstimate = ((int)((tess.xyz[i][2] +
+			backEnd.ori.origin[2] + surfaceClipEpsilon) * 8.0f)) / 8.0f;
+		const float maxHeightDelta = sign * (playerJumpStartWorldZ - collisionZEstimate);
+
+		dstTexCoords[0] = 0.5f;  // X-coordinate doesnt matter
+		dstTexCoords[1] = (maxHeightDelta - antiFlickerShift) /
+			(maxHeightDeltaMaxAllowed)*maxHeightAreaRatio + maxHeightAreaOffset;
+		dstTexCoords += 2;
+	}
+}
 
 
 #if id386 && !(defined __linux__ && defined __i386__)
