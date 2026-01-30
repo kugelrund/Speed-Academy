@@ -269,6 +269,32 @@ Commands:
   Sets the color for showing elevation boosts.
   Applies after reloading the map.
 
+## Ingame Trigger Rendering
+
+Variables:
+
+- `g_drawBoxTriggers` : 0 or 1
+
+  Draw in different colors (ex : pink or orange for secrets) triggers around the map.
+  By default, triggers will be drawn white when there is no color defined.
+
+- `g_drawBoxPlayer` : 0 or 1
+
+  Draw in RED, the box around the player
+
+- `g_drawBoxPlayerFP` : 0 or 1
+
+  Allows rendering if the box even in first person if set to 1 or more.
+  Needs `g_drawBoxPlayer` to also be set to 1
+
+- `g_drawBoxNPC` : 0 or 1
+
+  Draw in GREEN, the boxes around NPCs (include spawned NPCs)
+
+- `g_drawBoxItems` : 0 or 1
+
+  Draw in BLUE, the boxes around items (include dropped weapons)
+
 ## Speedrun Modes
 
 Variables:

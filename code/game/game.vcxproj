@@ -850,6 +850,7 @@
     <ClCompile Include="g_client.cpp" />
     <ClCompile Include="g_cmds.cpp" />
     <ClCompile Include="g_combat.cpp" />
+    <ClCompile Include="g_drawBox.cpp" />
     <ClCompile Include="g_emplaced.cpp" />
     <ClCompile Include="g_functions.cpp" />
     <ClCompile Include="g_fx.cpp" />
@@ -1052,6 +1053,7 @@
     <ClInclude Include="fields.h" />
     <ClInclude Include="genericparser2.h" />
     <ClInclude Include="ghoul2_shared.h" />
+    <ClInclude Include="g_drawBox.h" />
     <ClInclude Include="g_functions.h" />
     <ClInclude Include="g_headers.h" />
     <ClInclude Include="g_items.h" />
