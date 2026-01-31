@@ -381,6 +381,25 @@ qboolean G_TriggerActive( gentity_t *self )
 	return qtrue;
 }
 
+void MakeTriggerVisible(gentity_t* ent) {
+	// Remove the noclient flag so it gets sent to clients
+	ent->svFlags &= ~SVF_NOCLIENT;
+
+	ent->s.eType = ET_MOVER; // Use mover type so we can find it (useless in SP)
+
+	// Mark it somehow so we knows it's a trigger
+	ent->s.eFlags |= EF_TELEPORT_BIT; // Reuse an unused flag as a marker (useless in SP)
+
+	VectorCopy(ent->mins, ent->s.origin);
+	VectorCopy(ent->maxs, ent->s.origin2);
+	/*
+	gi.Printf("Making trigger %d visible: mins=(%.1f,%.1f,%.1f) maxs=(%.1f,%.1f,%.1f)\n",
+		ent->s.number,
+		ent->mins[0], ent->mins[1], ent->mins[2],
+		ent->maxs[0], ent->maxs[1], ent->maxs[2]);
+	*/
+}
+
 /*QUAKED trigger_multiple (.1 .5 .1) ? PLAYERONLY FACING USE_BUTTON FIRE_BUTTON NPCONLY LIMITED_PILOT x INACTIVE MULTIPLE
 PLAYERONLY - only a player can trigger this by touch
 FACING - Won't fire unless triggering ent's view angles are within 45 degrees of trigger's angles (in addition to any other conditions)
@@ -453,6 +472,12 @@ void SP_trigger_multiple( gentity_t *ent )
 	}
 
 	InitTrigger( ent );
+
+	//if (g_drawTriggers->integer) // No need to check *here*, we can check when we draw the frame instead.
+	{
+		MakeTriggerVisible(ent);
+	}
+
 	gi.linkentity (ent);
 }
 
@@ -505,6 +530,12 @@ void SP_trigger_once( gentity_t *ent )
 	ent->delay *= 1000;//1 = 1 msec, 1000 = 1 sec
 
 	InitTrigger( ent );
+
+	//if (g_drawTriggers->integer) // No need to check *here*, we can check when we draw the frame instead.
+	{
+		MakeTriggerVisible(ent);
+	}
+
 	gi.linkentity (ent);
 }
 

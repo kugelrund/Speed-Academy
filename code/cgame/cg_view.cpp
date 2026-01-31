@@ -23,6 +23,9 @@ extern Vehicle_t *G_IsRidingVehicle( gentity_t *ent );
 extern int g_crosshairSameEntTime;
 extern int g_crosshairEntNum;
 
+// Speed Academy addition
+#include "../game/g_drawBox.h"
+
 /*
 =============================================================================
 
@@ -2192,6 +2195,52 @@ void CG_DrawActiveFrame( int serverTime, stereoFrame_t stereoView ) {
 		CG_AddMarks();
 		CG_AddLocalEntities();
 		CG_DrawMiscEnts();
+
+		// Speed Academy addition : draw boxes
+		// This is valid here because this is called one per frame.
+		extern cvar_t* g_drawBoxPlayer;
+		extern cvar_t* g_drawBoxPlayerFP;
+		extern cvar_t* g_drawBoxNPC;
+		extern cvar_t* g_drawBoxItems;
+		extern cvar_t* g_drawBoxTriggers;
+		extern game_export_t globals;
+
+		if (g_drawBoxNPC->integer || g_drawBoxItems->integer || g_drawBoxTriggers->integer ||
+			(g_drawBoxPlayer->integer && (cg.renderingThirdPerson || (!cg.renderingThirdPerson && g_drawBoxPlayerFP->integer))))
+			// First check if we want to draw something, to not use too much processing if not
+		{
+			for (int i = 0; i < globals.num_entities; i++)
+			{
+				centity_t* cent;
+				cent = &cg_entities[i];
+
+				// Player
+				if (g_drawBoxPlayer->integer && (cg.renderingThirdPerson || (!cg.renderingThirdPerson && g_drawBoxPlayerFP->integer))
+					&& i == 0) // Player is always the first on this array
+				{
+					drawBoxPlayer(cent->gent);
+				}
+
+				// NPCs
+				if (g_drawBoxNPC->integer && cent->gent->e_ThinkFunc == thinkF_NPC_Think)
+				{
+					drawBoxNPC(cent->gent);
+				}
+
+				// Items
+				if (g_drawBoxItems->integer && cent->gent->e_TouchFunc == touchF_Touch_Item)
+				{
+					drawBoxItems(cent->gent);
+				}
+
+				// Triggers
+				if (g_drawBoxTriggers->integer && cent->currentState.eFlags & EF_TELEPORT_BIT)
+				{
+					drawBoxTriggers(cent);
+				}
+			}
+		}
+
 	}
 
 	//check for opaque water
