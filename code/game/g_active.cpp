@@ -4812,6 +4812,16 @@ void ClientThink_real( gentity_t *ent, usercmd_t *ucmd )
 	if ( ent->client && ent->client->NPC_class == CLASS_VEHICLE )
 	{
 		pVeh = ent->m_pVehicle;
+#ifdef _EFY4FIX
+		// Posto failsafe : in EFY4, some invalid entities are riding vehicules (A flechette projectile ?!)
+
+		if (pVeh->m_pPilot && !pVeh->m_pPilot->NPC && pVeh->m_pPilot->client && pVeh->m_pPilot->client->NPC_class != CLASS_PLAYER)
+		{
+			ent->s.m_iVehicleNum = 0;
+			pVeh->m_pPilot = NULL;
+			pVeh = NULL;
+		}
+#endif
 	}
 
 	//Don't let the player do anything if in a camera
@@ -4984,8 +4994,23 @@ extern cvar_t	*g_skippingcin;
 		}
 
 		// Transfer over our driver's commands to us (the vehicle).
+#ifdef _EFY4FIX
+		// Posto : crash prevention for EFY4
+		if ((ent->owner && ent->owner->classname && (strcmp(ent->owner->classname, "freed") == 0 || (strcmp(ent->owner->classname, "tempEntity") == 0))))
+		{
+			return;
+		}
+		else // Normal code
+#endif
 		if ( ent->owner && ent->client && ent->client->NPC_class == CLASS_VEHICLE )
 		{
+#ifdef _EFY4FIX
+			if (!ent->owner->client) // Posto : no, we will crash otherwise
+			{
+
+			}
+			else // Normal code
+#endif
 			memcpy( ucmd, &ent->owner->client->usercmd, sizeof( usercmd_t ) );
 			ucmd->buttons &= ~BUTTON_USE;//Vehicles NEVER try to use ANYTHING!!!
 			//ucmd->weapon = ent->client->ps.weapon;	// but keep our weapon.
@@ -5001,6 +5026,16 @@ extern cvar_t	*g_skippingcin;
 			|| pVeh->m_iBoarding!=0 
 			|| pVeh->m_pVehicleInfo->type!=VH_ANIMAL) )
 	{
+#ifdef _EFY4FIX
+		// Posto failsafe : more crashes still exists
+		if (pVeh->m_pPilot && !pVeh->m_pPilot->NPC)
+		{
+			gentity_t* tempPointer = pVeh->m_pPilot;
+			pVeh->m_pPilot = NULL;
+			if (tempPointer->client && tempPointer->client->NPC_class == CLASS_PLAYER) // Set back pilot of player
+				pVeh->m_pPilot = tempPointer;
+		}
+#endif
 		pVeh->m_pVehicleInfo->Update( pVeh, ucmd );
 	}
 	else if ( ent->client )
@@ -5707,6 +5742,15 @@ void ClientThink( int clientNum, usercmd_t *ucmd ) {
 	// NOTE: Maybe this should be extracted into a RiderUpdate() within the vehicle.
 	if ( ( pVeh = G_IsRidingVehicle( ent ) ) != 0  )
 	{
+#ifdef _EFY4FIX
+		// Posto failsafe : in EFY4, some invalid entities are riding vehicules (a flechette projectile ?!)
+		if (!ent->NPC && ent->client && ent->client->NPC_class != CLASS_PLAYER)
+		{
+			ent->s.m_iVehicleNum = 0;
+			pVeh->m_pPilot = NULL;
+		}
+		else // Normal code
+#endif // _EFY4FIX
 		// If we're still in the vehicle...
 		if ( pVeh->m_pVehicleInfo->UpdateRider( pVeh, ent, ucmd ) )
 		{
@@ -5748,6 +5792,14 @@ void ClientThink( int clientNum, usercmd_t *ucmd ) {
 	if ( ent->client && ent->client->NPC_class == CLASS_VEHICLE )
 	{
 		pVeh = ent->m_pVehicle;
+#ifdef _EFY4FIX
+		// Posto : EFY4 can still crash even with all the checks above...
+		if (pVeh->m_pPilot && (strcmp(pVeh->m_pPilot->classname, "freed") == 0 || strcmp(pVeh->m_pPilot->classname, "tempEntity") == 0))
+		{
+			//return;
+		}
+#endif
+		else // Normal gameplay
 		pVeh->m_pVehicleInfo->AttachRiders( pVeh );
 	}
 

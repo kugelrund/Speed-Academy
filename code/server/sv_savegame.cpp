@@ -570,7 +570,8 @@ void SV_LoadGame_f(void)
 #endif
 
 	if ((sv_speedrunModeIL->integer && Q_stricmpn("auto_", psFilename, strlen("auto_")) == 0) ||
-	    Q_stricmp("auto_yavin1b", psFilename) == 0)
+	    Q_stricmp("auto_yavin1b", psFilename) == 0 ||
+		Q_stricmp("auto_level1", psFilename) == 0 ) // Escape Yavin 4 addition : reset at auto_level1
 	{
 		SpeedrunResetTimer();
 	}

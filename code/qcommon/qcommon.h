@@ -122,7 +122,14 @@ NET
 
 #define	PORT_ANY			-1
 
+
+#ifdef _EFY4FIX
+// EFY4 addition : need more space during the transition from level2_caves --> level_jedi_council1 --> level2_saber_shipment
+#define	MAX_RELIABLE_COMMANDS	128			// max string commands buffered for restransmit
+#else
 #define	MAX_RELIABLE_COMMANDS	64			// max string commands buffered for restransmit
+#endif // _EFY4FIX
+
 
 typedef enum {
 	NA_BAD,					// an address lookup failed
