@@ -200,6 +200,15 @@ void AI_InsertGroupMember( AIGroupInfo_t *group, gentity_t *member )
 {
 	//okay, you know what?  Check this damn group and make sure we're not already in here!
 	int i;
+
+#ifdef _EFY4FIX
+	// Posto : fix EFY4, if this entity was freed earlier but SOMEHOW still exists, return NOW
+	if (!member->NPC && member->classname && strcmp(member->classname, "freed") == 0)
+	{
+		return;
+	}
+#endif
+
 	for ( i = 0; i < group->numGroup; i++ )
 	{
 		if ( group->member[i].number == member->s.number )

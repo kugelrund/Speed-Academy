@@ -1977,6 +1977,12 @@ void G_ChangeMap (const char *mapname, const char *spawntarget, qboolean hub)
 	// in these other cases, SpeedrunLevelFinished will be called from
 	// SV_MapTransition, as not all ways to there pass through here
 
+	// Posto : Addition for EFY4, stop the timer when the map starts
+	if (strcmp(mapname, "level7_fanfare_dark") == 0)
+	{
+		cgi_SpeedrunRunFinished();
+	}
+
 	if ( spawntarget == NULL ) {
 		spawntarget = "";	//prevent it from becoming "(null)"
 	}

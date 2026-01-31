@@ -14982,6 +14982,13 @@ void Pmove( pmove_t *pmove )
 		{
 			pVeh->m_fTimeModifier = (pml.frametime*60.0f);//at 16.67ms (60fps), should be 1.0f
 		}
+#ifdef _EFY4FIX
+		// Posto failsafe : in EFY4, some invalid entities are riding vehicules (A flechette projectile ?! Check .sav files assicated with _EFY4FIX flag not set)
+		if (pVeh->m_pPilot && !pVeh->m_pPilot->NPC && pVeh->m_pPilot->client && pVeh->m_pPilot->client->NPC_class != CLASS_PLAYER)
+		{
+			pVeh->m_pPilot = NULL;
+		}
+#endif
 	}
 	else if ( pm->gent && PM_RidingVehicle() )
 	{
@@ -15243,6 +15250,15 @@ void Pmove( pmove_t *pmove )
 	{
 		pVeh = pm->gent->m_pVehicle;
 
+#ifdef _EFY4FIX
+		// Posto failsafe : in EFY4, some invalid entities are riding vehicules (A flechette projectile ?! Check .sav files assicated with _EFY4FIX flag not set)
+		if (pVeh->m_pPilot && !pVeh->m_pPilot->NPC && pVeh->m_pPilot->client && pVeh->m_pPilot->client->NPC_class != CLASS_PLAYER)
+		{
+			pVeh->m_pPilot = NULL;
+		}
+		else // Normal code
+#endif
+
 		// Using vehicle weapon...
 		//if ( pm->cmd.weapon == WP_NONE )
 		{
@@ -15350,6 +15366,16 @@ void Pmove( pmove_t *pmove )
 	// If we are a vehicle, animate...
 	else if ( pVeh )
 	{
+#ifdef _EFY4FIX
+		// Posto failsafe : in EFY4, some invalid entities are riding vehicules. Forcefully remove them.
+		if (pVeh->m_pPilot && !pVeh->m_pPilot->NPC)
+		{
+			gentity_t* tempPointer = pVeh->m_pPilot;
+			pVeh->m_pPilot = NULL;
+			if (tempPointer->client && tempPointer->client->NPC_class == CLASS_PLAYER)
+				pVeh->m_pPilot = tempPointer; // If player, set the pointer back
+		}
+#endif
 		pVeh->m_pVehicleInfo->Animate( pVeh );
 	}
 	// If we're riding a vehicle, don't do anything!.
