@@ -1999,7 +1999,7 @@ static float GetVehicleOverrideYawSpecificCvar(const char* vehicle_name) {
 	    !strcmp(vehicle_name, "swoop_mp2") ||!strcmp(vehicle_name, "swoop_red")) {
 		return cg_yawSpeeder.value;
 	}
-	if (!strcmp(vehicle_name, "WildTauntaun")) {
+	if (!strcmp(vehicle_name, "Tauntaun") || !strcmp(vehicle_name, "WildTauntaun")) {
 		return cg_yawTauntaun.value;
 	}
 	return 0.0f;
@@ -2107,6 +2107,10 @@ void CG_DrawActiveFrame( int serverTime, stereoFrame_t stereoView ) {
 	float mYawOverride = 0.0f;
 	if ( cg.snap->ps.clientNum == 0 )
 	{//pointless check, but..
+		if ( cg.renderingThirdPerson )
+		{
+			speed *= cg_sensitivityFactorThirdPerson.value;
+		}
 		if ( cg_entities[0].gent->s.eFlags & EF_LOCKED_TO_WEAPON ) 
 		{
 			speed *= cg_sensitivityFactorTurret.value;

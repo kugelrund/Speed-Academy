@@ -720,6 +720,7 @@ extern	vmCvar_t		cg_strafeHelperColorSpeedG;
 extern	vmCvar_t		cg_strafeHelperColorSpeedB;
 extern	vmCvar_t		cg_strafeHelperColorSpeedA;
 extern	vmCvar_t		cg_fovThirdPerson;
+extern	vmCvar_t		cg_sensitivityFactorThirdPerson;
 extern	vmCvar_t		cg_sensitivityFactorTurret;
 extern	vmCvar_t		cg_pitchATST;
 extern	vmCvar_t		cg_pitchVehicle;
@@ -728,6 +729,8 @@ extern	vmCvar_t		cg_yawRancor;
 extern	vmCvar_t		cg_yawSpeeder;
 extern	vmCvar_t		cg_yawTauntaun;
 extern	vmCvar_t		cg_yawVehicle;
+extern	vmCvar_t		cg_drawPlayerInfo;
+extern	vmCvar_t		cg_drawPlayerInfoPrecision;
 
 void CG_NewClientinfo( int clientNum );
 //
@@ -1328,6 +1331,8 @@ void CG_PlayEffectIDOnEnt( const int fxID, const int clientNum, vec3_t origin, c
 void CG_PlayEffect( const char *fxName, vec3_t origin, const vec3_t fwd );
 void CG_PlayEffectID( const int fxID, vec3_t origin, const vec3_t fwd );
 
+void cgi_ReportLastPmoveFrametime(int msec);
+float cgi_OverbounceProbability(float height_difference, float vertical_speed, float gravity);
 void cgi_SpeedrunPauseTimer(int priority = 0);
 void cgi_SpeedrunUnpauseTimer(int priority = 0);
 void cgi_SpeedrunLevelFinished(void);

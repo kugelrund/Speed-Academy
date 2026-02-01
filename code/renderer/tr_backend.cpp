@@ -710,6 +710,90 @@ static void RB_RenderDrawSurfListElevationColoring( drawSurf_t *drawSurfs, int n
 
 /*
 ==================
+RB_RenderDrawSurfListOverbounce
+
+Basically a copy of RB_RenderDrawSurfList stripped down to only whats needed for
+drawing the overbounce coloring.
+==================
+*/
+static void RB_RenderDrawSurfListOverbounce( drawSurf_t *drawSurfs, int numDrawSurfs )
+{
+	int i;
+	drawSurf_t *drawSurf;
+	int entityNum;
+	shader_t *shader;
+	int	fogNum;
+	int dlighted;
+	int oldEntityNum = -1;
+	unsigned int oldSort = (unsigned int) -1;
+	int	depthRange = qfalse;
+	int oldDepthRange = qfalse;
+
+	const float originalTime = backEnd.refdef.floatTime;
+
+	RB_BeginSurface( tr.overbounceShader, 0 );
+	for (i = 0, drawSurf = drawSurfs ; i < numDrawSurfs ; i++, drawSurf++) {
+		if ( drawSurf->sort == oldSort ) {
+			// fast path, same as previous sort
+			rb_surfaceTable[ *drawSurf->surface ]( drawSurf->surface );
+			continue;
+		}
+		R_DecomposeSort( drawSurf->sort, &entityNum, &shader, &fogNum, &dlighted );
+
+		if ((shader->stages[0].stateBits & GLS_SRCBLEND_SRC_ALPHA) ||
+		    !(shader->contentFlags & MASK_PLAYERSOLID))
+		{
+			entityNum = oldEntityNum;
+			continue;
+		}
+		oldSort = drawSurf->sort;
+
+		if ( entityNum != oldEntityNum ) {
+			if (oldEntityNum != -1) {
+				RB_EndSurface();
+			}
+			RB_BeginSurface( tr.overbounceShader, 0 );
+			depthRange = qfalse;
+			if ( entityNum != TR_WORLDENT ) {
+				backEnd.currentEntity = &backEnd.refdef.entities[entityNum];
+				backEnd.refdef.floatTime = originalTime - backEnd.currentEntity->e.shaderTime;
+				R_RotateForEntity( backEnd.currentEntity, &backEnd.viewParms, &backEnd.ori );
+			} else {
+				backEnd.currentEntity = &tr.worldEntity;
+				backEnd.refdef.floatTime = originalTime;
+				backEnd.ori = backEnd.viewParms.world;
+			}
+
+			qglLoadMatrixf( backEnd.ori.modelMatrix );
+			if ( oldDepthRange != depthRange ) {
+				switch ( depthRange ) {
+					default:
+					case 0:
+						qglDepthRange (0, 1);
+						break;
+					case 1:
+						qglDepthRange (0, .3);
+						break;
+					case 2:
+						qglDepthRange (0, 0);
+						break;
+				}
+				oldDepthRange = depthRange;
+			}
+			oldEntityNum = entityNum;
+		}
+
+		// add the triangles for this surface
+		rb_surfaceTable[ *drawSurf->surface ]( drawSurf->surface );
+	}
+	if (oldEntityNum != -1) {
+		RB_EndSurface();
+	}
+}
+
+
+/*
+==================
 RB_RenderDrawSurfList
 ==================
 */
@@ -959,6 +1043,11 @@ void RB_RenderDrawSurfList( drawSurf_t *drawSurfs, int numDrawSurfs ) {
 	if (r_showElevationBoosts->integer)
 	{
 		RB_RenderDrawSurfListElevationColoring( drawSurfs, numDrawSurfs );
+	}
+
+	if (r_overbouncePrediction->integer)
+	{
+		RB_RenderDrawSurfListOverbounce( drawSurfs, numDrawSurfs );
 	}
 
 	if (tr_stencilled && tr_distortionPrePost)

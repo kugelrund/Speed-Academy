@@ -462,4 +462,18 @@ void CL_GenericMenu_f(void);
 void CL_DataPad_f(void);
 void CL_EndScreenDissolve_f(void);
 
+
+//
+// cl_overbounce.cpp
+//
+void CL_ReportLastPmoveFrametime(int);
+float CL_OverbounceProbability(float height_difference, float vertical_speed, float gravity);
+
+struct OverbounceLevel {
+	float max_height_difference;
+	float min_height_difference;
+	float probability;
+};
+OverbounceLevel CL_ClosestOverbounceLevel(float height_difference);
+
 #endif //__CLIENT_H__

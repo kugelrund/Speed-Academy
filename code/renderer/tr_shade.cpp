@@ -2119,6 +2119,9 @@ static void ComputeTexCoords( shaderStage_t *pStage ) {
 		case TCGEN_ELEVATION:
 			RB_CalcElevationTexCoords( ( float * ) tess.svars.texcoords[b] );
 			break;
+		case TCGEN_OVERBOUNCE:
+			RB_CalcOverbounceTexCoords( ( float * ) tess.svars.texcoords[b] );
+			break;
 		case TCGEN_ENVIRONMENT_MAPPED:
 #ifdef _XBOX
 			tess.shader->stages[tess.currentPass].isEnvironment = qtrue;

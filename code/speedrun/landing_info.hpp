@@ -6,6 +6,7 @@ enum class LandingType {
     None = -1,
     CrouchBoost,
     ElevationBoost,
+    Overbounce,
     RandomBoost,
     SpinGlitch,
     VelocityBoost,

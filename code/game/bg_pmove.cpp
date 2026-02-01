@@ -23,7 +23,6 @@
 #include "wp_saber.h"
 #include "g_vehicles.h"
 #include "../speedrun/landing_info.hpp"
-#include "../speedrun/overbounce_prediction/OverbouncePrediction.hpp"
 #include "../speedrun/strafe_helper/strafe_helper.h"
 #include <float.h>
 
@@ -721,7 +720,7 @@ static void PM_Accelerate( vec3_t wishdir, float wishspeed, float accel )
 	float		addspeed, accelspeed, currentspeed;
 
 	if (pm->ps->clientNum == 0) {
-		StrafeHelper_SetAccelerationValues(pml.forward, pm->ps->velocity, wishdir,
+		StrafeHelper_SetAccelerationValues(pm->ps->velocity, wishdir,
 		                                   wishspeed, accel, pml.frametime);
 	}
 
@@ -5285,7 +5284,7 @@ static void PM_GroundTrace( void ) {
 				pm->ps->pm_flags |= PMF_TIME_LAND;
 				pm->ps->pm_time = 250;
 			}
-			if (!pm->cmd.forwardmove && !pm->cmd.rightmove) {
+			if (!pm->cmd.forwardmove && !pm->cmd.rightmove && !g_overbounceWithoutInputs->integer) {
 				if ( Flying != FLY_HOVER )
 				{
 					pm->ps->velocity[2] = 0;	//wouldn't normally want this because of slopes, but we aren't tyring to move...
@@ -14971,9 +14970,6 @@ void Pmove( pmove_t *pmove )
 	VectorCopy (pm->ps->velocity, pml.previous_velocity);
 
 	pml.frametime = pml.msec * 0.001;
-	if ( cg_drawOverbounceInfo.integer && pm->ps->clientNum == 0 ) {
-		OverbouncePrediction::reportLastFrametime( pml.frametime );
-	}
 	
 	if ( pm->ps->clientNum >= MAX_CLIENTS &&
 		pm->gent &&
@@ -15203,10 +15199,15 @@ void Pmove( pmove_t *pmove )
 	// If we didn't move at all, then why bother doing this again -MW.
 	if(!(VectorCompare(pm->ps->origin,pml.previous_origin)))
 	{
+		const int was_walking = pml.walking;
 		PM_GroundTrace();
 		if ( Flying == FLY_HOVER )
 		{//never stick to the ground
 			PM_HoverTrace();
+		}
+		if ( pm->ps->clientNum == 0 && !was_walking && pml.walking &&
+		     DotProduct(pm->ps->velocity, pml.groundTrace.plane.normal) < 0.0 ) {
+			speedrun::SetLastLandingInfo({speedrun::LandingType::Overbounce, level.time});
 		}
 	}
 

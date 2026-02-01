@@ -14,7 +14,6 @@
 #endif // _IMMERSION
 #include "../qcommon/sstring.h"
 #include "../speedrun/landing_info.hpp"
-#include "../speedrun/PlayerOverbouncePrediction.hpp"
 //NOTENOTE: Be sure to change the mirrored code in g_shared.h
 typedef	map< sstring_t, unsigned char, less<sstring_t>, allocator< unsigned char >  >	namePrecache_m;
 extern namePrecache_m	*as_preCacheMap;
@@ -409,6 +408,7 @@ vmCvar_t	cg_strafeHelperColorSpeedG;
 vmCvar_t	cg_strafeHelperColorSpeedB;
 vmCvar_t	cg_strafeHelperColorSpeedA;
 vmCvar_t	cg_fovThirdPerson;
+vmCvar_t	cg_sensitivityFactorThirdPerson;
 vmCvar_t	cg_sensitivityFactorTurret;
 vmCvar_t	cg_pitchATST;
 vmCvar_t	cg_pitchVehicle;
@@ -417,6 +417,8 @@ vmCvar_t	cg_yawRancor;
 vmCvar_t	cg_yawSpeeder;
 vmCvar_t	cg_yawTauntaun;
 vmCvar_t	cg_yawVehicle;
+vmCvar_t	cg_drawPlayerInfo;
+vmCvar_t	cg_drawPlayerInfoPrecision;
 
 typedef struct {
 	vmCvar_t	*vmCvar;
@@ -528,7 +530,7 @@ static cvarTable_t cvarTable[] = {
 
 	// Additions for Speed Academy
 	{ &cg_drawSecrets, "cg_drawSecrets", "0", CVAR_ARCHIVE },
-	{ &cg_drawSpeedrunTotalTimer, "cg_drawSpeedrunTotalTimer", "0", CVAR_ARCHIVE  },
+	{ &cg_drawSpeedrunTotalTimer, "cg_drawSpeedrunTotalTimer", "1", CVAR_ARCHIVE  },
 	{ &cg_drawSpeedrunLevelTimer, "cg_drawSpeedrunLevelTimer", "0", CVAR_ARCHIVE  },
 	{ &cg_drawMovementRestriction, "cg_drawMovementRestriction", "1", CVAR_ARCHIVE },
 	{ &cg_drawOverbounceInfo, "cg_drawOverbounceInfo", "0", CVAR_ARCHIVE },
@@ -577,6 +579,7 @@ static cvarTable_t cvarTable[] = {
 	{ &cg_landingInfoY, "cg_landingInfoY", "90.0", CVAR_ARCHIVE },
 	{ &cg_landingInfoText[toInt(speedrun::LandingType::CrouchBoost)], "cg_landingInfoCB", "CB", CVAR_ARCHIVE },
 	{ &cg_landingInfoText[toInt(speedrun::LandingType::ElevationBoost)], "cg_landingInfoEB", "EB", CVAR_ARCHIVE },
+	{ &cg_landingInfoText[toInt(speedrun::LandingType::Overbounce)], "cg_landingInfoOB", "OB", CVAR_ARCHIVE },
 	{ &cg_landingInfoText[toInt(speedrun::LandingType::RandomBoost)], "cg_landingInfoRB", "RB", CVAR_ARCHIVE },
 	{ &cg_landingInfoText[toInt(speedrun::LandingType::SpinGlitch)], "cg_landingInfoSG", "SG", CVAR_ARCHIVE },
 	{ &cg_landingInfoText[toInt(speedrun::LandingType::VelocityBoost)], "cg_landingInfoVB", "VB", CVAR_ARCHIVE },
@@ -587,6 +590,9 @@ static cvarTable_t cvarTable[] = {
 	{ &cg_landingInfoColorR[toInt(speedrun::LandingType::ElevationBoost)], "cg_landingInfoColorEB_R", "1.0", CVAR_ARCHIVE },
 	{ &cg_landingInfoColorG[toInt(speedrun::LandingType::ElevationBoost)], "cg_landingInfoColorEB_G", "1.0", CVAR_ARCHIVE },
 	{ &cg_landingInfoColorB[toInt(speedrun::LandingType::ElevationBoost)], "cg_landingInfoColorEB_B", "1.0", CVAR_ARCHIVE },
+	{ &cg_landingInfoColorR[toInt(speedrun::LandingType::Overbounce)], "cg_landingInfoColorOB_R", "1.0", CVAR_ARCHIVE },
+	{ &cg_landingInfoColorG[toInt(speedrun::LandingType::Overbounce)], "cg_landingInfoColorOB_G", "1.0", CVAR_ARCHIVE },
+	{ &cg_landingInfoColorB[toInt(speedrun::LandingType::Overbounce)], "cg_landingInfoColorOB_B", "1.0", CVAR_ARCHIVE },
 	{ &cg_landingInfoColorR[toInt(speedrun::LandingType::RandomBoost)], "cg_landingInfoColorRB_R", "1.0", CVAR_ARCHIVE },
 	{ &cg_landingInfoColorG[toInt(speedrun::LandingType::RandomBoost)], "cg_landingInfoColorRB_G", "1.0", CVAR_ARCHIVE },
 	{ &cg_landingInfoColorB[toInt(speedrun::LandingType::RandomBoost)], "cg_landingInfoColorRB_B", "1.0", CVAR_ARCHIVE },
@@ -633,6 +639,7 @@ static cvarTable_t cvarTable[] = {
 	{ &cg_strafeHelperColorSpeedB, "cg_strafeHelperColorSpeedB", "1.0", CVAR_ARCHIVE },
 	{ &cg_strafeHelperColorSpeedA, "cg_strafeHelperColorSpeedA", "0.9", CVAR_ARCHIVE },
 	{ &cg_fovThirdPerson, "cg_fovThirdPerson", "0", CVAR_ARCHIVE },
+	{ &cg_sensitivityFactorThirdPerson, "cg_sensitivityFactorThirdPerson", "1.0", CVAR_ARCHIVE },
 	{ &cg_sensitivityFactorTurret, "cg_sensitivityFactorTurret", "0.25", CVAR_ARCHIVE },
 	{ &cg_pitchATST, "cg_pitchATST", "0.0", CVAR_ARCHIVE },
 	{ &cg_pitchVehicle, "cg_pitchVehicle", "0.0", CVAR_ARCHIVE },
@@ -641,6 +648,8 @@ static cvarTable_t cvarTable[] = {
 	{ &cg_yawSpeeder, "cg_yawSpeeder", "0.0", CVAR_ARCHIVE },
 	{ &cg_yawTauntaun, "cg_yawTauntaun", "0.0", CVAR_ARCHIVE },
 	{ &cg_yawVehicle, "cg_yawVehicle", "0.0", CVAR_ARCHIVE },
+	{ &cg_drawPlayerInfo, "cg_drawPlayerInfo", "0", CVAR_ARCHIVE },
+	{ &cg_drawPlayerInfoPrecision, "cg_drawPlayerInfoPrecision", "2", CVAR_ARCHIVE },
 };
 
 static int cvarTableSize = sizeof( cvarTable ) / sizeof( cvarTable[0] );
@@ -2563,7 +2572,6 @@ void CG_Shutdown( void )
 	cgi_SpeedrunPauseTimer();
 	in_camera = false;
 	FX_Free();
-	playerOverbouncePredictor.reset();
 }
 
 //// DEBUG STUFF

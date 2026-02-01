@@ -204,6 +204,7 @@ cvar_t	*g_crouchBoosts;
 cvar_t	*g_reverseBoosts;
 cvar_t	*g_randomBoosts;
 cvar_t	*g_selfKnockback;
+cvar_t	*g_overbounceWithoutInputs;
 
 qboolean	stop_icarus = qfalse;
 
@@ -685,6 +686,7 @@ void G_InitCvars( void ) {
 	g_reverseBoosts = gi.cvar( "g_reverseBoosts", "0", CVAR_ARCHIVE );
 	g_randomBoosts = gi.cvar( "g_randomBoosts", "1", CVAR_CHEAT );
 	g_selfKnockback = gi.cvar( "g_selfKnockback", "0", CVAR_CHEAT );
+	g_overbounceWithoutInputs = gi.cvar( "g_overbounceWithoutInputs", "0", CVAR_ARCHIVE|CVAR_CHEAT );
 
 	gi.cvar( "tier_storyinfo", "0", CVAR_ROM|CVAR_SAVEGAME|CVAR_NORESTART);
 	gi.cvar( "tiers_complete", "", CVAR_ROM|CVAR_SAVEGAME|CVAR_NORESTART);

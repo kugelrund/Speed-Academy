@@ -194,6 +194,10 @@ cvar_t	*r_showElevationBoosts;
 cvar_t	*r_showElevationBoostsColorR;
 cvar_t	*r_showElevationBoostsColorG;
 cvar_t	*r_showElevationBoostsColorB;
+cvar_t	*r_overbouncePrediction;
+cvar_t	*r_overbouncePredictionColorR;
+cvar_t	*r_overbouncePredictionColorG;
+cvar_t	*r_overbouncePredictionColorB;
 
 
 void ( APIENTRY * qglMultiTexCoord2fARB )( GLenum texture, GLfloat s, GLfloat t );
@@ -1100,6 +1104,21 @@ void R_SetShowElevationBoostsColor_f ( void )
 	Cvar_Set("r_showElevationBoostsColorB", Cmd_Argv(3));
 }
 
+void R_SetOverbouncePredictionColor_f ( void )
+{
+	if (Cmd_Argc() != 4) {
+		Com_Printf("Usage: overbouncePredictionColor <red 0-255> <green 0-255> <blue 0-255>\n" );
+		Com_Printf("Current color is: %d %d %d\n",
+		           r_overbouncePredictionColorR->integer,
+		           r_overbouncePredictionColorG->integer,
+		           r_overbouncePredictionColorB->integer);
+		return;
+	}
+	Cvar_Set("r_overbouncePredictionColorR", Cmd_Argv(1));
+	Cvar_Set("r_overbouncePredictionColorG", Cmd_Argv(2));
+	Cvar_Set("r_overbouncePredictionColorB", Cmd_Argv(3));
+}
+
 /*
 ===============
 R_Register
@@ -1300,6 +1319,10 @@ extern qboolean Sys_LowPhysicalMemory();
 	r_showElevationBoostsColorR = Cvar_Get( "r_showElevationBoostsColorR", "0", CVAR_ARCHIVE );
 	r_showElevationBoostsColorG = Cvar_Get( "r_showElevationBoostsColorG", "255", CVAR_ARCHIVE );
 	r_showElevationBoostsColorB = Cvar_Get( "r_showElevationBoostsColorB", "0", CVAR_ARCHIVE );
+	r_overbouncePrediction = Cvar_Get( "r_overbouncePrediction", "0", CVAR_ARCHIVE );
+	r_overbouncePredictionColorR = Cvar_Get( "r_overbouncePredictionColorR", "0", CVAR_ARCHIVE );
+	r_overbouncePredictionColorG = Cvar_Get( "r_overbouncePredictionColorG", "0", CVAR_ARCHIVE );
+	r_overbouncePredictionColorB = Cvar_Get( "r_overbouncePredictionColorB", "255", CVAR_ARCHIVE );
 
 	// make sure all the commands added here are also
 	// removed in R_Shutdown
@@ -1322,8 +1345,9 @@ extern void R_WorldEffect_f(void);	//TR_WORLDEFFECTS.CPP
 	Cmd_AddCommand( "r_we", R_WorldEffect_f );
 extern void R_ReloadFonts_f(void);
 	Cmd_AddCommand( "r_reloadfonts", R_ReloadFonts_f );
-
+	// Additions for Speed-Academy
 	Cmd_AddCommand( "showElevationBoostsColor", R_SetShowElevationBoostsColor_f );
+	Cmd_AddCommand( "overbouncePredictionColor", R_SetOverbouncePredictionColor_f );
 	// make sure all the commands added above are also
 	// removed in R_Shutdown
 }
@@ -1476,6 +1500,7 @@ void RE_Shutdown( qboolean destroyWindow ) {
 	Cmd_RemoveCommand ("r_reloadfonts");
 
 	Cmd_RemoveCommand ( "showElevationBoostsColor");
+	Cmd_RemoveCommand ( "overbouncePredictionColor");
 
 	R_ShutdownWorldEffects();
 #ifndef _XBOX

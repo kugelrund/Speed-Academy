@@ -9429,7 +9429,7 @@ void Menu_HandleMouseMove(menuDef_t *menu, float x, float y)
 Display_MouseMove
 =================
 */
-qboolean Display_MouseMove(void *p, int x, int y) 
+qboolean Display_MouseMove(void *p, float x, float y) 
 {
 	//JLFMOUSE  AGAIN I THINK THIS SHOULD BE MOOT
 #ifdef _XBOX

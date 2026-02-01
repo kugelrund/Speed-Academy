@@ -2913,12 +2913,12 @@
 		}
 
 		itemDef 
-		{	
-			name				draw_secrets
+		{
+			name				speedrun_mode
 			group				speedrun
 			type				ITEM_TYPE_MULTI
-			text				"Show Secret Count:"
-			cvar				"cg_drawSecrets"
+			text				"Individual Level Mode:"
+			cvar				"sv_speedrunModeIL"
 			cvarFloatList			{  @MENUS_OFF 0 @MENUS_ON 1 }
 			rect				260 244 340 14
 			textalign			ITEM_ALIGN_RIGHT
@@ -2928,28 +2928,28 @@
 			textscale 			1
 			forecolor			.615 .615 .956 1
 			visible				0
-			descText			"Toggle to show number of found and total secrets."
+			descText			"Toggle to enable individual level speedrun mode."
 			action
 			{
 				play			"sound/interface/button1.wav"
 			}
-			mouseenter 
-			{ 
+			mouseenter
+			{
 				show			highlight5
 			}
-			mouseexit 
-			{ 
+			mouseexit
+			{
 				hide			highlight5
-			} 
+			}
 		}
 
-		itemDef 
-		{	
-			name				draw_movementrestriction
+		itemDef
+		{
+			name				draw_secrets
 			group				speedrun
 			type				ITEM_TYPE_MULTI
-			text				"Show Movement Restriction:"
-			cvar				"cg_drawMovementRestriction"
+			text				"Show Secret Count:"
+			cvar				"cg_drawSecrets"
 			cvarFloatList			{  @MENUS_OFF 0 @MENUS_ON 1 }
 			rect				260 258 340 14
 			textalign			ITEM_ALIGN_RIGHT
@@ -2959,7 +2959,7 @@
 			textscale 			1
 			forecolor			.615 .615 .956 1
 			visible				0
-			descText			"Toggle to show or hide current movement restriction."
+			descText			"Toggle to show number of found and total secrets."
 			action
 			{
 				play			"sound/interface/button1.wav"
@@ -2976,11 +2976,11 @@
 
 		itemDef 
 		{	
-			name				draw_overbounceinfo
+			name				draw_movementrestriction
 			group				speedrun
 			type				ITEM_TYPE_MULTI
-			text				"Show Overbounce Info:"
-			cvar				"cg_drawOverbounceInfo"
+			text				"Show Movement Restriction:"
+			cvar				"cg_drawMovementRestriction"
 			cvarFloatList			{  @MENUS_OFF 0 @MENUS_ON 1 }
 			rect				260 272 340 14
 			textalign			ITEM_ALIGN_RIGHT
@@ -2990,7 +2990,7 @@
 			textscale 			1
 			forecolor			.615 .615 .956 1
 			visible				0
-			descText			"Toggle to show or hide overbounce information."
+			descText			"Toggle to show or hide current movement restriction."
 			action
 			{
 				play			"sound/interface/button1.wav"
@@ -3007,13 +3007,13 @@
 
 		itemDef 
 		{	
-			name				draw_speed
+			name				draw_overbounceinfo
 			group				speedrun
 			type				ITEM_TYPE_MULTI
-			text				"Show Speed:"
-			cvar				"cg_drawSpeed"
+			text				"Overbounce Prediction:"
+			cvar				"r_overbouncePrediction"
 			cvarFloatList			{  @MENUS_OFF 0 @MENUS_ON 1 }
-			rect				260 300 340 14
+			rect				260 286 340 14
 			textalign			ITEM_ALIGN_RIGHT
 			textalignx			174
 			textaligny			0
@@ -3021,28 +3021,28 @@
 			textscale 			1
 			forecolor			.615 .615 .956 1
 			visible				0
-			descText			"Toggle to show or hide speed display."
+			descText			"Toggle to show or hide overbounce prediction."
 			action
 			{
 				play			"sound/interface/button1.wav"
 			}
 			mouseenter 
 			{ 
-				show			highlight9
+				show			highlight8
 			}
 			mouseexit 
 			{ 
-				hide			highlight9
+				hide			highlight8
 			} 
 		}
 
 		itemDef 
 		{	
-			name				draw_landinginfo
+			name				draw_speed
 			group				speedrun
 			type				ITEM_TYPE_MULTI
-			text				"Show Landing Info:"
-			cvar				"cg_drawLandingInfo"
+			text				"Show Speed:"
+			cvar				"cg_drawSpeed"
 			cvarFloatList			{  @MENUS_OFF 0 @MENUS_ON 1 }
 			rect				260 314 340 14
 			textalign			ITEM_ALIGN_RIGHT
@@ -3052,7 +3052,7 @@
 			textscale 			1
 			forecolor			.615 .615 .956 1
 			visible				0
-			descText			"Toggle to show or hide landing info."
+			descText			"Toggle to show or hide speed display."
 			action
 			{
 				play			"sound/interface/button1.wav"
@@ -3069,11 +3069,11 @@
 
 		itemDef 
 		{	
-			name				draw_strafehelper
+			name				draw_landinginfo
 			group				speedrun
 			type				ITEM_TYPE_MULTI
-			text				"Strafe Helper:"
-			cvar				"cg_drawStrafeHelper"
+			text				"Show Landing Info:"
+			cvar				"cg_drawLandingInfo"
 			cvarFloatList			{  @MENUS_OFF 0 @MENUS_ON 1 }
 			rect				260 328 340 14
 			textalign			ITEM_ALIGN_RIGHT
@@ -3083,7 +3083,7 @@
 			textscale 			1
 			forecolor			.615 .615 .956 1
 			visible				0
-			descText			"Toggle to show or hide the strafe helper."
+			descText			"Toggle to show or hide landing info."
 			action
 			{
 				play			"sound/interface/button1.wav"
@@ -3100,11 +3100,11 @@
 
 		itemDef 
 		{	
-			name				draw_jumphelper
+			name				draw_strafehelper
 			group				speedrun
 			type				ITEM_TYPE_MULTI
-			text				"Jump Height Helper:"
-			cvar				"cg_drawJumpHelper"
+			text				"Strafe Helper:"
+			cvar				"cg_drawStrafeHelper"
 			cvarFloatList			{  @MENUS_OFF 0 @MENUS_ON 1 }
 			rect				260 342 340 14
 			textalign			ITEM_ALIGN_RIGHT
@@ -3114,7 +3114,7 @@
 			textscale 			1
 			forecolor			.615 .615 .956 1
 			visible				0
-			descText			"Toggle to show or hide the jump height helper."
+			descText			"Toggle to show or hide the strafe helper."
 			action
 			{
 				play			"sound/interface/button1.wav"
@@ -3131,13 +3131,44 @@
 
 		itemDef 
 		{	
+			name				draw_jumphelper
+			group				speedrun
+			type				ITEM_TYPE_MULTI
+			text				"Jump Height Helper:"
+			cvar				"cg_drawJumpHelper"
+			cvarFloatList			{  @MENUS_OFF 0 @MENUS_ON 1 }
+			rect				260 356 340 14
+			textalign			ITEM_ALIGN_RIGHT
+			textalignx			174
+			textaligny			0
+			font 				4
+			textscale 			1
+			forecolor			.615 .615 .956 1
+			visible				0
+			descText			"Toggle to show or hide the jump height helper."
+			action
+			{
+				play			"sound/interface/button1.wav"
+			}
+			mouseenter 
+			{ 
+				show			highlight13
+			}
+			mouseexit 
+			{ 
+				hide			highlight13
+			} 
+		}
+
+		itemDef 
+		{	
 			name				show_elevationboosts
 			group				speedrun
 			type				ITEM_TYPE_MULTI
 			text				"Show Elevation Boosts:"
 			cvar				"r_showElevationBoosts"
 			cvarFloatList			{  @MENUS_OFF 0 @MENUS_ON 1 }
-			rect				260 356 340 14
+			rect				260 370 340 14
 			textalign			ITEM_ALIGN_RIGHT
 			textalignx			174
 			textaligny			0
@@ -3153,12 +3184,45 @@
 			}
 			mouseenter 
 			{ 
-				show			highlight13
+				show			highlight14
 			}
 			mouseexit 
 			{ 
-				hide			highlight13
+				hide			highlight14
 			} 
+		}
+
+		itemDef 
+		{	
+			name				forceleaderboardrules
+			group				speedrun
+			type				ITEM_TYPE_BUTTON
+			text				"Reset to leaderboard rules"
+			rect				260 393 340 14
+			textalign			ITEM_ALIGN_CENTER
+			textstyle			1
+			textalignx			170
+			textaligny			0
+			font 				4
+			textscale 			1
+			forecolor			1 .682 0 1
+			visible				0
+			descText			"Reset common settings required for leaderboard submission."
+
+			mouseenter 
+			{ 
+				show			button_glow
+				setitemrect		button_glow	260 392 340 20
+			}
+			mouseexit 
+			{ 
+				hide			button_glow
+			}
+			action 
+			{
+				play			"sound/interface/button1.wav"
+				exec			"exec leaderboard_rules.cfg" ;
+			}
 		}
 	}
 }

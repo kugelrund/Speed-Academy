@@ -332,6 +332,9 @@ static void CG_SetLandingInfoColor_f( const speedrun::LandingType type ) {
 		case LandingType::ElevationBoost:
 			abbreviation = "EB";
 			break;
+		case LandingType::Overbounce:
+			abbreviation = "OB";
+			break;
 		case LandingType::RandomBoost:
 			abbreviation = "RB";
 			break;
@@ -367,6 +370,10 @@ static void CG_SetLandingInfoColorCrouchBoost_f(void) {
 
 static void CG_SetLandingInfoColorElevationBoost_f(void) {
 	CG_SetLandingInfoColor_f(speedrun::LandingType::ElevationBoost);
+}
+
+static void CG_SetLandingInfoColorOverbounce_f(void) {
+	CG_SetLandingInfoColor_f(speedrun::LandingType::Overbounce);
 }
 
 static void CG_SetLandingInfoColorRandomBoost_f(void) {
@@ -526,6 +533,7 @@ Ghoul2 Insert End
 	{ "jumpHelperColorOptimal", CG_SetJumpHelperColorOptimal_f },
 	{ "landingInfoColorCB", CG_SetLandingInfoColorCrouchBoost_f },
 	{ "landingInfoColorEB", CG_SetLandingInfoColorElevationBoost_f },
+	{ "landingInfoColorOB", CG_SetLandingInfoColorOverbounce_f },
 	{ "landingInfoColorRB", CG_SetLandingInfoColorRandomBoost_f },
 	{ "landingInfoColorSG", CG_SetLandingInfoColorSpinGlitch_f },
 	{ "landingInfoColorVB", CG_SetLandingInfoColorVelocityBoost_f },

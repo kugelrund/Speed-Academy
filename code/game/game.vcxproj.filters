@@ -43,9 +43,6 @@
     <Filter Include="speedrun">
       <UniqueIdentifier>{95be921b-998b-4bcb-a434-daba058451a0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="speedrun\overbounce_prediction">
-      <UniqueIdentifier>{f7244b4c-42e8-4e60-a118-bd7449da3dd2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="speedrun\strafe_helper">
       <UniqueIdentifier>{f412e46d-d743-4697-98c9-94aa0aae53e1}</UniqueIdentifier>
     </Filter>
@@ -519,13 +516,7 @@
     <ClCompile Include="g_vehicles.c">
       <Filter>Vehicles</Filter>
     </ClCompile>
-    <ClCompile Include="..\speedrun\overbounce_prediction\OverbouncePrediction.cpp">
-      <Filter>speedrun\overbounce_prediction</Filter>
-    </ClCompile>
     <ClCompile Include="..\speedrun\landing_info.cpp">
-      <Filter>speedrun</Filter>
-    </ClCompile>
-    <ClCompile Include="..\speedrun\PlayerOverbouncePrediction.cpp">
       <Filter>speedrun</Filter>
     </ClCompile>
     <ClCompile Include="..\speedrun\strafe_helper\strafe_helper.c">
@@ -828,15 +819,6 @@
     </ClInclude>
     <ClInclude Include="g_vehicles.h">
       <Filter>Vehicles</Filter>
-    </ClInclude>
-    <ClInclude Include="..\speedrun\overbounce_prediction\OverbouncePrediction.hpp">
-      <Filter>speedrun\overbounce_prediction</Filter>
-    </ClInclude>
-    <ClInclude Include="..\speedrun\overbounce_prediction\RingBuffer.hpp">
-      <Filter>speedrun\overbounce_prediction</Filter>
-    </ClInclude>
-    <ClInclude Include="..\speedrun\PlayerOverbouncePrediction.hpp">
-      <Filter>speedrun</Filter>
     </ClInclude>
     <ClInclude Include="..\speedrun\strafe_helper\strafe_helper.h">
       <Filter>speedrun\strafe_helper</Filter>

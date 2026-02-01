@@ -9,6 +9,10 @@
 #include "tr_local.h"
 #define	WAVEVALUE( table, base, amplitude, phase, freq )  ((base) + table[ myftol( ( ( (phase) + backEnd.refdef.floatTime * (freq) ) * FUNCTABLE_SIZE ) ) & FUNCTABLE_MASK ] * (amplitude))
 
+#include <algorithm>
+#include <numeric>
+#include <vector>
+
 static float *TableForFunc( genFunc_t func ) 
 {
 	switch ( func )
@@ -1235,7 +1239,57 @@ void RB_CalcElevationTexCoords( float *dstTexCoords ) {
 	}
 }
 
+void RB_CalcOverbounceTexCoords( float *dstTexCoords ) {
+	// get vertex indices in decreasing order of their z-coordinate. that way
+	// we can iterate through the vertices with stricly decreasing closest
+	// overbounce levels. that way we can always assign the next overbounce
+	// level texture to the next texture repetition.
+	std::vector<int> perm(tess.numVertexes);
+	std::iota(perm.begin(), perm.end(), 0);
+	std::sort(perm.begin(), perm.end(), [] (const int i, const int j) {
+		return tess.xyz[i][2] < tess.xyz[j][2];
+	});
 
+	// This reflects SURFACE_CLIP_EPSILON from the collision code (cm_local.h).
+	const float surfaceClipEpsilon = 0.125f;
+
+	OverbounceLevel level = {0.0, 0.0, 0.0};
+	float image_height = 8192;
+	float uv_offset = -1.0;
+	const float uv_range_overbounce = 1.0 / image_height;
+	for (const int i : perm) {
+		// estimated height at which player would collide with this surface.
+		// Note that we intentionally do not add SURFACE_CLIP_EPSILON due to the
+		// special early return in CM_TraceThroughBrush that bypasses this extra
+		// hull around the collision for the overbounce case.
+		const float collisionZEstimate = tess.xyz[i][2] + backEnd.ori.origin[2];
+		// TODO: get this from the actual entity instead of hardcoding it
+		const float minsZ = -24.0f;
+		// the actual elevation delta that the player would have if they land here.
+		const float elevDelta = cl.frame.ps.origin[2] + minsZ - collisionZEstimate;
+		if (elevDelta <= surfaceClipEpsilon) {
+			// above player height, so no overbounce possible
+			dstTexCoords[2*i+0] = 0.0;
+			dstTexCoords[2*i+1] = -1.0 + 2.0 * uv_range_overbounce;
+			continue;
+		}
+
+		const OverbounceLevel new_level = CL_ClosestOverbounceLevel(elevDelta);
+		if (level.max_height_difference != new_level.max_height_difference) {
+			// new overbounce level. move on to next texture repetition
+			uv_offset += 1.0;
+			level = new_level;
+		}
+
+		const float probability = CL_OverbounceProbability(elevDelta, cl.frame.ps.velocity[2], cl.frame.ps.gravity);
+		dstTexCoords[2*i+0] = 2.0f * min(0.5f, probability);
+
+		const float antiFlickerConstant = 1.0f/8.0f;
+		const float factor = (elevDelta - level.min_height_difference)
+		                   / (level.max_height_difference - level.min_height_difference);
+		dstTexCoords[2*i+1] = uv_offset + uv_range_overbounce * min(max(factor, antiFlickerConstant), 1.0f - antiFlickerConstant);
+	}
+}
 
 
 

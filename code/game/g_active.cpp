@@ -4774,6 +4774,16 @@ static void ProcessGenericCmd(gentity_t *ent, byte cmd)
 }
 
 
+static void G_ReportLastPmoveFrametime( int msec )
+{
+	if ( msec < 1 || msec >= 200 ) {
+		return;
+	}
+
+	cgi_ReportLastPmoveFrametime(msec);
+}
+
+
 /*
 ==============
 ClientThink
@@ -5467,6 +5477,10 @@ extern cvar_t	*g_skippingcin;
 		pm.watertype = 0;
 	}
 #endif
+
+	if ( pm.ps->clientNum == 0 ) {
+		G_ReportLastPmoveFrametime( pm.cmd.serverTime - pm.ps->commandTime );
+	}
 
 	// perform a pmove
 	Pmove( &pm );

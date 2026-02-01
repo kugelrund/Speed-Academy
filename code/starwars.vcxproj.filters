@@ -84,6 +84,9 @@
     <Filter Include="speedrun\speedrun_timer_q3">
       <UniqueIdentifier>{adebd98a-1fc3-4810-bc0b-5f95d7ead0d0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="speedrun\overbounce_prediction">
+      <UniqueIdentifier>{9ea21c3b-4fc3-46a0-a125-20025a3e76b6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="client\cl_cgame.cpp">
@@ -667,6 +670,12 @@
     </ClCompile>
     <ClCompile Include="speedrun\speedrun_timer_includes.cpp">
       <Filter>speedrun</Filter>
+    </ClCompile>
+    <ClCompile Include="speedrun\overbounce_prediction\overbounce_prediction.cpp">
+      <Filter>speedrun\overbounce_prediction</Filter>
+    </ClCompile>
+    <ClCompile Include="client\cl_overbounce.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1266,6 +1275,9 @@
     </ClInclude>
     <ClInclude Include="speedrun\speedrun_timer_includes.h">
       <Filter>speedrun</Filter>
+    </ClInclude>
+    <ClInclude Include="speedrun\overbounce_prediction\overbounce_prediction.hpp">
+      <Filter>speedrun\overbounce_prediction</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
