@@ -138,6 +138,7 @@ typedef struct {
 
 	// Additions for Speed-Academy
 	void	(*SetPlayerJumpStartWorldZ)(float value);
+	void	(*SetPlayerJumpHeight)(float value);
 
 } refexport_t;
 

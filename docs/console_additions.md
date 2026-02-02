@@ -295,6 +295,28 @@ Commands:
   Sets the color for showing elevation boosts.
   Applies after reloading the map.
 
+## Maximum Jump Height Visualization
+
+Variables:
+
+- `r_showMaxJumpHeight` (0 or 1)
+
+  Enable or disable coloring heights that can be jumped unto, without crouching,
+  from the current jumping position in the vertical axis.
+
+- `r_showMaxJumpHeight[R,G or B]` (0 - 255)
+
+  Color components (red, green, blue) used to mark how high the player can jump.
+  Color can be set more conveniently with the command `showMaxJumpHeightColor`.
+  Applies after reloading the map.
+
+Commands:
+
+- `showMaxJumpHeightColor <r> <g> <b>` (components in range 0 to 255)
+
+  Sets the color for showing maximum jump height.
+  Applies after reloading the map.
+
 ## Speedrun Modes
 
 Variables:
