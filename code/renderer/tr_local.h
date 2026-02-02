@@ -1166,8 +1166,6 @@ typedef struct {
 	image_t					*elevationImage;
 	// Addition for Speed-Academy to color in overbounce levels
 	image_t					*overbounceImage;
-	// Addition for Speed-Academy to color in area of maximum jump height
-	image_t					*maxJumpHeightImage;
 
 #ifndef _XBOX	// GLOWXXX
 	// Handle to the Glow Effect Vertex Shader. - AReis
@@ -1954,9 +1952,8 @@ void	RB_CalcFogTexCoords( float *dstTexCoords );
 void	RB_CalcTurbulentTexCoords( const waveForm_t *wf, float *dstTexCoords );
 
 // Additions for Speed-Academy
-void	RB_CalcElevationTexCoords( float *dstTexCoords );
+void	RB_CalcElevationTexCoords( float *dstTexCoords, int typeOfElevation );
 void	RB_CalcOverbounceTexCoords( float *dstTexCoords );
-void	RB_CalcMaximumJumpHeightTexCoords(float* dstTexCoords);
 
 #ifdef _XBOX
 void	RB_CalcWaveColor( const waveForm_t *wf, DWORD *dstColors );

@@ -4057,7 +4057,7 @@ static void CreateInternalShaders( void ) {
 	}
 	stages[0].active = true;
 	stages[0].bundle[0].tcGen = TCGEN_MAXHEIGHT;
-	stages[0].bundle[0].image = tr.maxJumpHeightImage;
+	stages[0].bundle[0].image = tr.elevationImage;
 	// lets use a single, fixed custom color
 	stages[0].constantColor[0] = r_showMaxJumpHeightR->integer;
 	stages[0].constantColor[1] = r_showMaxJumpHeightG->integer;

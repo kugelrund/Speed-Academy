@@ -2767,39 +2767,6 @@ static void R_CreateOverbounceImage( void ) {
 
 /*
 ==================
-R_CreateMaxHeightImage
-
-Image for coloring the maxium jump height based on force level.
-==================
-*/
-static void R_CreateMaxHeightImage(void) {
-	// This is a copy of what is done in R_CreateElevationImage
-	// To avoid messing with it, I've done a copy of the funciton here, in case we want to edit one of the two but not both.
-	// tr.maxJumpHeightImage has been added as a new handle to again avoid messing up with what works in R_CreateMaxHeightImage
-	const int maxJumpImageHeight = 4;
-	const byte elevationColoringAlpha = 64;
-	byte data[maxJumpImageHeight][4];
-	memset(data, 255, sizeof(data));
-	for (int y = 0; y < maxJumpImageHeight; ++y) {
-		data[y][3] = elevationColoringAlpha;
-		data[y][3] = elevationColoringAlpha;
-	}
-	data[0][0] = 0;
-	data[0][1] = 0;
-	data[0][2] = 0;
-	data[0][3] = 0;
-	data[maxJumpImageHeight - 1][0] = 0;
-	data[maxJumpImageHeight - 1][1] = 0;
-	data[maxJumpImageHeight - 1][2] = 0;
-	data[maxJumpImageHeight - 1][3] = 0;
-	tr.maxJumpHeightImage = R_CreateImage("*maxheight", (byte*)data, 1, maxJumpImageHeight, GL_RGBA, qfalse, qfalse, qtrue, GL_CLAMP);
-	GL_Bind(tr.maxJumpHeightImage);
-	qglTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	qglTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-}
-
-/*
-==================
 R_CreateBuiltinImages
 ==================
 */
@@ -2904,7 +2871,6 @@ void R_CreateBuiltinImages( void ) {
 	// Additions for Speed-Academy
 	R_CreateElevationImage();
 	R_CreateOverbounceImage();
-	R_CreateMaxHeightImage();
 }
 
 void R_DeleteBuiltinImages()

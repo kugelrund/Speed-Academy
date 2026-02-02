@@ -1193,10 +1193,10 @@ void RE_SetPlayerJumpHeight(float value) {
 RB_CalcElevationTexCoords
 
 Compute texture coordinates for coloring the range that is eligible for an
-elevation boost.
+elevation boost and/or the range of the maximum height the player can jump.
 ========================
 */
-void RB_CalcElevationTexCoords( float *dstTexCoords ) {
+void RB_CalcElevationTexCoords( float *dstTexCoords, int typeOfElevation ) {
 	// The elevation texture looks like this:
 	//
 	// -----
@@ -1218,18 +1218,45 @@ void RB_CalcElevationTexCoords( float *dstTexCoords ) {
 	const float elevAreaRatio = elevAreaHeight / elevTextureHeight;
 	const float elevAreaOffset = 1.0f/elevTextureHeight;
 
-	const float signEB = Cvar_VariableIntegerValue("g_reverseBoosts") ? -1.0 : 1.0;
-
 	// This reflects SURFACE_CLIP_EPSILON from the collision code (cm_local.h).
 	// A small hull around geometry such that collision starts a little earlier.
 	// So we have to add this to the geometry here as well.
 	const float surfaceClipEpsilon = 0.125f;
-	// This is the maximum height delta that will give an elevation boost
-	const float elevDeltaMaxAllowed = 96.0f;
 	// Standing on the ground means that the coloring is exactly on the border
 	// of the ground. That causes flickering. We therefore shift by just a tiny
 	// amount more to avoid the flickering.
 	const float antiFlickerShift = 1.0f/16384.0f;
+	// CASE : ELEVATION BOOST : This is the maximum height delta that will give an elevation boost
+	//const float elevDeltaMaxAllowed = 96.0f;
+	// CASE : MAXIMUM JUMP HEIGHT : We will get the height directly via playerJumpHeightValue
+	// Potential update : add crouchdiff. But it's good already
+	//const float maxHeightDeltaMaxAllowed = playerJumpHeightValue;
+	//const float maxHeightCrouchDeltaMaxAllowed = playerJumpHeightValue + 24;
+
+	// Declarations, valid values will be determined based on the type we want (EB or MJH)
+	float signEB = 0.0;
+	float elevDeltaMaxAllowed = 0.0;
+
+	switch (typeOfElevation)
+	{
+	case TCGEN_ELEVATION:
+		signEB = Cvar_VariableIntegerValue("g_reverseBoosts") ? -1.0 : 1.0;
+		elevDeltaMaxAllowed = 96.0f;
+		break;
+	case TCGEN_MAXHEIGHT:
+		signEB = -1.0f; // Need to be negative in order to draw 'up' in the 3D world
+		elevDeltaMaxAllowed = playerJumpHeightValue;
+		break;
+	default:
+		// Should not happen, return early.
+		// in case we don't want to return, have dummy variables.
+		/*
+		signEB = 1.0f;
+		elevDeltaMaxAllowed = 1.0f;
+		*/
+		return;
+	}
+
 	for (int i = 0; i < tess.numVertexes; ++i) {
 		// estimated height at which player would collide with this surface.
 		// We round this to 1/8th. Not quite sure why, but seems necessary.
@@ -1295,34 +1322,6 @@ void RB_CalcOverbounceTexCoords( float *dstTexCoords ) {
 		dstTexCoords[2*i+1] = uv_offset + uv_range_overbounce * min(max(factor, antiFlickerConstant), 1.0f - antiFlickerConstant);
 	}
 }
-
-
-void RB_CalcMaximumJumpHeightTexCoords(float* dstTexCoords) {
-
-	const float maxHeightTextureHeight = 4.0f;  // has to be same as elevationImage height.
-	const float maxHeightAreaHeight = (maxHeightTextureHeight - 2.0f);
-	const float maxHeightAreaRatio = maxHeightAreaHeight / maxHeightTextureHeight;
-	const float maxHeightAreaOffset = 1.0f / maxHeightTextureHeight;
-
-	const float surfaceClipEpsilon = 0.125f;
-	const float maxHeightDeltaMaxAllowed = playerJumpHeightValue; // We will get the height directly
-	//const float maxHeightCrouchDeltaMaxAllowed = playerJumpHeightValue + 24; // Potential update : add crouchdiff. But it's good already
-	const float antiFlickerShift = 1.0f / 16384.0f;
-
-	// From Jumping start Z to Maximum Jump Height
-	for (int i = 0; i < tess.numVertexes; ++i) {
-
-		const float collisionZEstimate = ((int)((tess.xyz[i][2] +
-			backEnd.ori.origin[2] + surfaceClipEpsilon) * 8.0f)) / 8.0f;
-		const float maxHeightDelta = collisionZEstimate - playerJumpStartWorldZ;
-
-		dstTexCoords[0] = 0.5f;  // X-coordinate doesnt matter
-		dstTexCoords[1] = (maxHeightDelta - antiFlickerShift) /
-			(maxHeightDeltaMaxAllowed)*maxHeightAreaRatio + maxHeightAreaOffset;
-		dstTexCoords += 2;
-	}
-}
-
 
 #if id386 && !(defined __linux__ && defined __i386__)
 #pragma warning(disable: 4035)
