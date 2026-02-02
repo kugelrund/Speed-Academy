@@ -1725,7 +1725,7 @@ refexport_t *GetRefAPI ( int apiVersion ) {
 
 	// Speed Academy additions
 	re.SetPlayerJumpStartWorldZ = RE_SetPlayerJumpStartWorldZ;
-	re.SetPlayerJumpForceLevel = RE_SetPlayerJumpHeight;
+	re.SetPlayerJumpHeight = RE_SetPlayerJumpHeight;
 
 	return &re;
 }

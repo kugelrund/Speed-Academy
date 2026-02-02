@@ -1340,6 +1340,6 @@ int cgi_SpeedrunGetLevelTimeMilliseconds(void);
 
 // Speed Academy
 void cgi_R_SetPlayerJumpStartWorldZ( float value );
-void cgi_R_SetPlayerJumpForceLevel(int value);
+void cgi_R_SetPlayerJumpHeight(float value);
 
 #endif	//__CG_LOCAL_H__

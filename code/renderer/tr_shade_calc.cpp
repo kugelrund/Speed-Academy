@@ -1183,8 +1183,8 @@ void RE_SetPlayerJumpStartWorldZ(float value) {
 	playerJumpStartWorldZ = value;
 }
 // Speed Academy : max jump height viewer
-static int playerJumpHeightValue;
-void RE_SetPlayerJumpHeight(int value) {
+static float playerJumpHeightValue;
+void RE_SetPlayerJumpHeight(float value) {
 	playerJumpHeightValue = value;
 }
 
@@ -1304,8 +1304,6 @@ void RB_CalcMaximumJumpHeightTexCoords(float* dstTexCoords) {
 	const float maxHeightAreaRatio = maxHeightAreaHeight / maxHeightTextureHeight;
 	const float maxHeightAreaOffset = 1.0f / maxHeightTextureHeight;
 
-	const float sign = -1.0;
-
 	const float surfaceClipEpsilon = 0.125f;
 	const float maxHeightDeltaMaxAllowed = playerJumpHeightValue; // We will get the height directly
 	//const float maxHeightCrouchDeltaMaxAllowed = playerJumpHeightValue + 24; // Potential update : add crouchdiff. But it's good already
@@ -1316,7 +1314,7 @@ void RB_CalcMaximumJumpHeightTexCoords(float* dstTexCoords) {
 
 		const float collisionZEstimate = ((int)((tess.xyz[i][2] +
 			backEnd.ori.origin[2] + surfaceClipEpsilon) * 8.0f)) / 8.0f;
-		const float maxHeightDelta = sign * (playerJumpStartWorldZ - collisionZEstimate);
+		const float maxHeightDelta = collisionZEstimate - playerJumpStartWorldZ;
 
 		dstTexCoords[0] = 0.5f;  // X-coordinate doesnt matter
 		dstTexCoords[1] = (maxHeightDelta - antiFlickerShift) /

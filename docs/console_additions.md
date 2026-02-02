@@ -269,7 +269,7 @@ Commands:
   Sets the color for showing elevation boosts.
   Applies after reloading the map.
 
-## Maximul Jump Height Visualization
+## Maximum Jump Height Visualization
 
 Variables:
 

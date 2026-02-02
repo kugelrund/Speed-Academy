@@ -2206,6 +2206,6 @@ struct DDS_HEADER
 
 // Speed Academy
 void RE_SetPlayerJumpStartWorldZ(float value);
-void RE_SetPlayerJumpHeight(int value);
+void RE_SetPlayerJumpHeight(float value);
 
 #endif //TR_LOCAL_H

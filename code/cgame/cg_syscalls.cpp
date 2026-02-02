@@ -689,6 +689,6 @@ void cgi_R_SetPlayerJumpStartWorldZ( float value ) {
 }
 
 // Speed Academy
-void cgi_R_SetPlayerJumpForceLevel(int value) {
-	syscall(CG_R_SET_PLAYER_JUMP_FORCE_LEVEL, (value));
+void cgi_R_SetPlayerJumpHeight(float value) {
+	syscall(CG_R_SET_PLAYER_JUMP_HEIGHT, PASSFLOAT(value));
 }

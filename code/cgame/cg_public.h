@@ -219,7 +219,7 @@ Ghoul2 Insert End
 
 	// Speed Academy
 	CG_R_SET_PLAYER_JUMP_START_Z_WORLD,
-	CG_R_SET_PLAYER_JUMP_FORCE_LEVEL
+	CG_R_SET_PLAYER_JUMP_HEIGHT
 
 } cgameImport_t;
 
