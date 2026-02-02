@@ -1192,7 +1192,7 @@ typedef struct {
 	shader_t				*sunShader;
 
 	// Addition for Speed-Academy to color in area of elevation boosts
-	shader_t				*elevationShader;
+	shader_t				*elevationBoostShader;
 	// Addition for Speed-Outcast to color in overbounce levels
 	shader_t				*overbounceShader;
 	// Addition for Speed-Academy to color in area of maximum jump height

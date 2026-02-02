@@ -4025,7 +4025,7 @@ static void CreateInternalShaders( void ) {
 	stages[0].rgbGen = CGEN_CONST;
 	// alpha settings so that we only overlay the range with a semitransparent color
 	stages[0].stateBits = GLS_SRCBLEND_SRC_ALPHA | GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA;
-	tr.elevationShader = FinishShader();
+	tr.elevationBoostShader = FinishShader();
 
 	// Addition for Speed-Academy to color-in overbounce
 	memset( &shader, 0, sizeof( shader ) );
