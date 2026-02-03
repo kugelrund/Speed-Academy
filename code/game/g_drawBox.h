@@ -8,4 +8,4 @@
 void drawBoxPlayer(gentity_t* self);
 void drawBoxNPC(gentity_t* self);
 void drawBoxItems(gentity_t* self);
-void drawBoxTriggers(centity_t* self);
+void drawBoxTriggers(gentity_t* self);

@@ -142,139 +142,29 @@ void drawBoxItems(gentity_t* self)
 	cgi_R_AddRefEntityToScene(&ent);
 }
 
-void drawBoxTriggers(centity_t* self)
+void drawBoxTriggers(gentity_t* self)
 {
 	refEntity_t	ent;
 	memset(&ent, 0, sizeof(ent));
 	ent = prepareRefEnt(self, ent);
 
-	switch (self->gent->e_TouchFunc)
+	// Default color: blue
+	ent.shaderRGBA[0] = 0;
+	ent.shaderRGBA[1] = 100;
+	ent.shaderRGBA[2] = 0;
+	ent.shaderRGBA[3] = 25;
+	if (self->e_TouchFunc == touchF_NULL)
 	{
-	case(touchF_NULL): // Small Red
+		// Red for deactivated triggers
 		ent.shaderRGBA[0] = 50;
 		ent.shaderRGBA[1] = 0;
 		ent.shaderRGBA[2] = 0;
 		ent.shaderRGBA[3] = 25;
-		break;
-	case(touchF_Touch_Item): // Small Green -- Reverse
-		ent.shaderRGBA[0] = 0;
-		ent.shaderRGBA[1] = 0;
-		ent.shaderRGBA[2] = 50;
-		ent.shaderRGBA[3] = 25;
-		break;
-	case(touchF_teleporter_touch): // Small Blue -- Reverse
-		ent.shaderRGBA[0] = 0;
-		ent.shaderRGBA[1] = 50;
-		ent.shaderRGBA[2] = 0;
-		ent.shaderRGBA[3] = 25;
-		break;
-	case(touchF_charge_stick): // Small Yellow
-		ent.shaderRGBA[0] = 50;
-		ent.shaderRGBA[1] = 50;
-		ent.shaderRGBA[2] = 0;
-		ent.shaderRGBA[3] = 25;
-		break;
-	case(touchF_Touch_DoorTrigger): // Small Purple
-		ent.shaderRGBA[0] = 50;
-		ent.shaderRGBA[1] = 0;
-		ent.shaderRGBA[2] = 50;
-		ent.shaderRGBA[3] = 25;
-		break;
-	case(touchF_Touch_PlatCenterTrigger): // Small Cyan
-		ent.shaderRGBA[0] = 0;
-		ent.shaderRGBA[1] = 50;
-		ent.shaderRGBA[2] = 50;
-		ent.shaderRGBA[3] = 25;
-		break;
-	case(touchF_Touch_Plat): // Small White
-		ent.shaderRGBA[0] = 50;
-		ent.shaderRGBA[1] = 50;
-		ent.shaderRGBA[2] = 50;
-		ent.shaderRGBA[3] = 25;
-		break;
-	case(touchF_Touch_Button): // Red
-		ent.shaderRGBA[0] = 100;
-		ent.shaderRGBA[1] = 0;
-		ent.shaderRGBA[2] = 0;
-		ent.shaderRGBA[3] = 25;
-		break;
-	case(touchF_Touch_Multi): // Blue
-		ent.shaderRGBA[0] = 0;
-		ent.shaderRGBA[1] = 100;
-		ent.shaderRGBA[2] = 0;
-		ent.shaderRGBA[3] = 25;
-		break;
-	case(touchF_trigger_push_touch): // Green
-		ent.shaderRGBA[0] = 0;
-		ent.shaderRGBA[1] = 0;
-		ent.shaderRGBA[2] = 100;
-		ent.shaderRGBA[3] = 25;
-		break;
-	case(touchF_trigger_teleporter_touch): // Yellow
-		ent.shaderRGBA[0] = 100;
-		ent.shaderRGBA[1] = 100;
-		ent.shaderRGBA[2] = 0;
-		ent.shaderRGBA[3] = 25;
-		break;
-	case(touchF_hurt_touch): // Purple
-		ent.shaderRGBA[0] = 100;
-		ent.shaderRGBA[1] = 0;
-		ent.shaderRGBA[2] = 100;
-		ent.shaderRGBA[3] = 25;
-		break;
-	case(touchF_NPC_Touch): // Cyan
-		ent.shaderRGBA[0] = 0;
-		ent.shaderRGBA[1] = 100;
-		ent.shaderRGBA[2] = 100;
-		ent.shaderRGBA[3] = 25;
-		break;
-	case(touchF_touch_ammo_crystal_tigger): // White
-		ent.shaderRGBA[0] = 100;
-		ent.shaderRGBA[1] = 100;
-		ent.shaderRGBA[2] = 0;
-		ent.shaderRGBA[3] = 25;
-		break;
-	case(touchF_funcBBrushTouch): // Big Red
-		ent.shaderRGBA[0] = 150;
-		ent.shaderRGBA[1] = 0;
-		ent.shaderRGBA[2] = 0;
-		ent.shaderRGBA[3] = 25;
-		break;
-	case(touchF_touchLaserTrap): // Big Blue
-		ent.shaderRGBA[0] = 0;
-		ent.shaderRGBA[1] = 150;
-		ent.shaderRGBA[2] = 0;
-		ent.shaderRGBA[3] = 25;
-		break;
-	case(touchF_prox_mine_stick): // Big Green
-		ent.shaderRGBA[0] = 0;
-		ent.shaderRGBA[1] = 0;
-		ent.shaderRGBA[2] = 150;
-		ent.shaderRGBA[3] = 25;
-		break;
-	case(touchF_func_rotating_touch): // Big Yellow
-		ent.shaderRGBA[0] = 150;
-		ent.shaderRGBA[1] = 150;
-		ent.shaderRGBA[2] = 0;
-		ent.shaderRGBA[3] = 25;
-		break;
-	case(touchF_TouchTieBomb): // Big Purple
-		ent.shaderRGBA[0] = 150;
-		ent.shaderRGBA[1] = 0;
-		ent.shaderRGBA[2] = 150;
-		ent.shaderRGBA[3] = 25;
-		break;
-	default:
-		ent.shaderRGBA[0] = 50;
-		ent.shaderRGBA[1] = 50;
-		ent.shaderRGBA[2] = 0;
-		ent.shaderRGBA[3] = 128;
-		break;
 	}
 	// Override for some trigger in other color (ex : secrets)
 	gentity_t* subTrigger = NULL;
 
-	while ((subTrigger = G_Find(subTrigger, FOFS(targetname), self->gent->target)) != NULL)
+	while ((subTrigger = G_Find(subTrigger, FOFS(targetname), self->target)) != NULL)
 	{
 		switch (subTrigger->e_UseFunc)
 		{

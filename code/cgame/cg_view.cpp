@@ -2198,41 +2198,37 @@ void CG_DrawActiveFrame( int serverTime, stereoFrame_t stereoView ) {
 
 		// Speed Academy addition : draw boxes
 		// This should valid here because this is called once per frame.
-		extern game_export_t globals;
-
 		if (cg_drawBoxNPC.integer || cg_drawBoxItems.integer || cg_drawBoxTriggers.integer ||
 			(cg_drawBoxPlayer.integer && (cg.renderingThirdPerson || (!cg.renderingThirdPerson && cg_drawBoxPlayerFP.integer))))
 			// First check if we want to draw something, to not use too much processing if not
 		{
-			for (int i = 0; i < globals.num_entities; i++)
+			for (int i = 0; i < MAX_GENTITIES; ++i)
 			{
-				centity_t* cent;
-				cent = &cg_entities[i];
-
 				// Player
 				if (cg_drawBoxPlayer.integer && (cg.renderingThirdPerson || (!cg.renderingThirdPerson && cg_drawBoxPlayerFP.integer))
 					&& i == 0) // Player is always the first on this array
 				{
-					drawBoxPlayer(cent->gent);
+					drawBoxPlayer(&g_entities[i]);
 				}
 
 				// NPCs
-				if (cg_drawBoxNPC.integer && cent->gent->e_ThinkFunc == thinkF_NPC_Think)
+				if (cg_drawBoxNPC.integer && g_entities[i].e_ThinkFunc == thinkF_NPC_Think)
 				{
-					drawBoxNPC(cent->gent);
+					drawBoxNPC(&g_entities[i]);
 				}
 
 				// Items
-				if (cg_drawBoxItems.integer && cent->gent->e_TouchFunc == touchF_Touch_Item)
+				if (cg_drawBoxItems.integer && g_entities[i].e_TouchFunc == touchF_Touch_Item)
 				{
-					drawBoxItems(cent->gent);
+					drawBoxItems(&g_entities[i]);
 				}
 
 				// Triggers
-				// 55 is a magic number, TODO : name it, if this method is approved
-				if (cg_drawBoxTriggers.integer && cent->currentState.eFlags == 55)
+				if (cg_drawBoxTriggers.integer && g_entities[i].classname &&
+					( strcmp( g_entities[i].classname, "trigger_multiple" ) == 0  ||
+					  strcmp( g_entities[i].classname, "trigger_once" ) == 0 ))
 				{
-					drawBoxTriggers(cent);
+					drawBoxTriggers(&g_entities[i]);
 				}
 			}
 		}
