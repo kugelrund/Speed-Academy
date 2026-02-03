@@ -173,21 +173,25 @@ void drawBoxTriggers(gentity_t* self)
 			ent.shaderRGBA[1] = 50;
 			ent.shaderRGBA[2] = 0;
 			ent.shaderRGBA[3] = 128;
+			break;
 		case(useF_target_autosave_use):
 			ent.shaderRGBA[0] = 0;
 			ent.shaderRGBA[1] = 100;
 			ent.shaderRGBA[2] = 50;
 			ent.shaderRGBA[3] = 128;
+			break;
 		case(useF_target_secret_use):
 			ent.shaderRGBA[0] = 100;
 			ent.shaderRGBA[1] = 0;
 			ent.shaderRGBA[2] = 50;
 			ent.shaderRGBA[3] = 128;
+			break;
 		case(useF_security_panel_use):
 			ent.shaderRGBA[0] = 25;
 			ent.shaderRGBA[1] = 25;
 			ent.shaderRGBA[2] = 25;
 			ent.shaderRGBA[3] = 128;
+			break;
 		}
 	}
 
