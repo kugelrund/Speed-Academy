@@ -417,6 +417,11 @@ vmCvar_t	cg_yawRancor;
 vmCvar_t	cg_yawSpeeder;
 vmCvar_t	cg_yawTauntaun;
 vmCvar_t	cg_yawVehicle;
+vmCvar_t	cg_drawBoxTriggers;
+vmCvar_t	cg_drawBoxPlayer;
+vmCvar_t	cg_drawBoxPlayerFP;
+vmCvar_t	cg_drawBoxNPC;
+vmCvar_t	cg_drawBoxItems;
 
 typedef struct {
 	vmCvar_t	*vmCvar;
@@ -646,6 +651,11 @@ static cvarTable_t cvarTable[] = {
 	{ &cg_yawSpeeder, "cg_yawSpeeder", "0.0", CVAR_ARCHIVE },
 	{ &cg_yawTauntaun, "cg_yawTauntaun", "0.0", CVAR_ARCHIVE },
 	{ &cg_yawVehicle, "cg_yawVehicle", "0.0", CVAR_ARCHIVE },
+	{ &cg_drawBoxTriggers, "cg_drawBoxTriggers", "0", CVAR_ARCHIVE },
+	{ &cg_drawBoxPlayer, "cg_drawBoxPlayer", "0", CVAR_ARCHIVE },
+	{ &cg_drawBoxPlayerFP, "cg_drawBoxPlayerFP", "0", CVAR_ARCHIVE },
+	{ &cg_drawBoxNPC, "cg_drawBoxNPC", "0", CVAR_ARCHIVE },
+	{ &cg_drawBoxItems, "cg_drawBoxItems", "0", CVAR_ARCHIVE },
 };
 
 static int cvarTableSize = sizeof( cvarTable ) / sizeof( cvarTable[0] );

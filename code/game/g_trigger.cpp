@@ -382,14 +382,17 @@ qboolean G_TriggerActive( gentity_t *self )
 }
 
 void MakeTriggerVisible(gentity_t* ent) {
-	// Remove the noclient flag so it gets sent to clients
+	// Remove the noclient flag so it gets sent to clients.
+	// Necessary so that we can catch it in cg_view
 	ent->svFlags &= ~SVF_NOCLIENT;
 
-	ent->s.eType = ET_MOVER; // Use mover type so we can find it (useless in SP)
+	// I checked and triggers don't seems to use eFlags at all, meaning we could use this instead of the type CG_Mover
+	// TODO : change the magic number to a named variable, if this method is approved
+	ent->s.eFlags = 55;
 
-	// Mark it somehow so we knows it's a trigger
-	ent->s.eFlags |= EF_TELEPORT_BIT; // Reuse an unused flag as a marker (useless in SP)
-
+	// Using ent->contents = CONTENTS_TRIGGER; 'could' work but the bit can be removed, so it might not be the best (multi_trigger_run)
+	
+	// Copy it's coordinates to catch them
 	VectorCopy(ent->mins, ent->s.origin);
 	VectorCopy(ent->maxs, ent->s.origin2);
 	/*

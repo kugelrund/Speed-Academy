@@ -205,11 +205,6 @@ cvar_t	*g_reverseBoosts;
 cvar_t	*g_randomBoosts;
 cvar_t	*g_selfKnockback;
 cvar_t	*g_overbounceWithoutInputs;
-cvar_t	*g_drawBoxTriggers;
-cvar_t	*g_drawBoxPlayer;
-cvar_t	*g_drawBoxPlayerFP;
-cvar_t	*g_drawBoxNPC;
-cvar_t	*g_drawBoxItems;
 
 qboolean	stop_icarus = qfalse;
 
@@ -692,11 +687,6 @@ void G_InitCvars( void ) {
 	g_randomBoosts = gi.cvar( "g_randomBoosts", "1", CVAR_CHEAT );
 	g_selfKnockback = gi.cvar( "g_selfKnockback", "0", CVAR_CHEAT );
 	g_overbounceWithoutInputs = gi.cvar( "g_overbounceWithoutInputs", "0", CVAR_ARCHIVE|CVAR_CHEAT );
-	g_drawBoxTriggers = gi.cvar("g_drawBoxTriggers", "0", CVAR_ARCHIVE);
-	g_drawBoxPlayer = gi.cvar("g_drawBoxPlayer", "0", CVAR_ARCHIVE);
-	g_drawBoxPlayerFP = gi.cvar("g_drawBoxPlayerFP", "0", CVAR_ARCHIVE);
-	g_drawBoxNPC = gi.cvar("g_drawBoxNPC", "0", CVAR_ARCHIVE);
-	g_drawBoxItems = gi.cvar("g_drawBoxItems", "0", CVAR_ARCHIVE);
 
 	gi.cvar( "tier_storyinfo", "0", CVAR_ROM|CVAR_SAVEGAME|CVAR_NORESTART);
 	gi.cvar( "tiers_complete", "", CVAR_ROM|CVAR_SAVEGAME|CVAR_NORESTART);

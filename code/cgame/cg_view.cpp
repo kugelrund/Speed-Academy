@@ -2197,16 +2197,11 @@ void CG_DrawActiveFrame( int serverTime, stereoFrame_t stereoView ) {
 		CG_DrawMiscEnts();
 
 		// Speed Academy addition : draw boxes
-		// This is valid here because this is called one per frame.
-		extern cvar_t* g_drawBoxPlayer;
-		extern cvar_t* g_drawBoxPlayerFP;
-		extern cvar_t* g_drawBoxNPC;
-		extern cvar_t* g_drawBoxItems;
-		extern cvar_t* g_drawBoxTriggers;
+		// This should valid here because this is called once per frame.
 		extern game_export_t globals;
 
-		if (g_drawBoxNPC->integer || g_drawBoxItems->integer || g_drawBoxTriggers->integer ||
-			(g_drawBoxPlayer->integer && (cg.renderingThirdPerson || (!cg.renderingThirdPerson && g_drawBoxPlayerFP->integer))))
+		if (cg_drawBoxNPC.integer || cg_drawBoxItems.integer || cg_drawBoxTriggers.integer ||
+			(cg_drawBoxPlayer.integer && (cg.renderingThirdPerson || (!cg.renderingThirdPerson && cg_drawBoxPlayerFP.integer))))
 			// First check if we want to draw something, to not use too much processing if not
 		{
 			for (int i = 0; i < globals.num_entities; i++)
@@ -2215,26 +2210,27 @@ void CG_DrawActiveFrame( int serverTime, stereoFrame_t stereoView ) {
 				cent = &cg_entities[i];
 
 				// Player
-				if (g_drawBoxPlayer->integer && (cg.renderingThirdPerson || (!cg.renderingThirdPerson && g_drawBoxPlayerFP->integer))
+				if (cg_drawBoxPlayer.integer && (cg.renderingThirdPerson || (!cg.renderingThirdPerson && cg_drawBoxPlayerFP.integer))
 					&& i == 0) // Player is always the first on this array
 				{
 					drawBoxPlayer(cent->gent);
 				}
 
 				// NPCs
-				if (g_drawBoxNPC->integer && cent->gent->e_ThinkFunc == thinkF_NPC_Think)
+				if (cg_drawBoxNPC.integer && cent->gent->e_ThinkFunc == thinkF_NPC_Think)
 				{
 					drawBoxNPC(cent->gent);
 				}
 
 				// Items
-				if (g_drawBoxItems->integer && cent->gent->e_TouchFunc == touchF_Touch_Item)
+				if (cg_drawBoxItems.integer && cent->gent->e_TouchFunc == touchF_Touch_Item)
 				{
 					drawBoxItems(cent->gent);
 				}
 
 				// Triggers
-				if (g_drawBoxTriggers->integer && cent->currentState.eFlags & EF_TELEPORT_BIT)
+				// 55 is a magic number, TODO : name it, if this method is approved
+				if (cg_drawBoxTriggers.integer && cent->currentState.eFlags == 55)
 				{
 					drawBoxTriggers(cent);
 				}

@@ -729,6 +729,11 @@ extern	vmCvar_t		cg_yawRancor;
 extern	vmCvar_t		cg_yawSpeeder;
 extern	vmCvar_t		cg_yawTauntaun;
 extern	vmCvar_t		cg_yawVehicle;
+extern	vmCvar_t		cg_drawBoxTriggers;
+extern	vmCvar_t		cg_drawBoxPlayer;
+extern	vmCvar_t		cg_drawBoxPlayerFP;
+extern	vmCvar_t		cg_drawBoxNPC;
+extern	vmCvar_t		cg_drawBoxItems;
 
 void CG_NewClientinfo( int clientNum );
 //
