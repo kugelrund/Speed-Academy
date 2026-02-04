@@ -2223,13 +2223,23 @@ void CG_DrawActiveFrame( int serverTime, stereoFrame_t stereoView ) {
 					drawBoxItems(&g_entities[i]);
 				}
 
-				// Triggers
+				// Triggers, but related to the world (not associated with an ingame object like a button or a camera)
 				if (cg_drawBoxTriggers.integer && g_entities[i].classname &&
 					( strcmp( g_entities[i].classname, "trigger_multiple" ) == 0  ||
 					  strcmp( g_entities[i].classname, "trigger_once" ) == 0 ))
 				{
-					drawBoxTriggers(&g_entities[i]);
+					drawBoxWorldTriggers(&g_entities[i]);
 				}
+
+				// Triggers, but related to	an object like a button or a camera
+				if (cg_drawBoxTriggers.integer && g_entities[i].classname &&
+					( strncmp(g_entities[i].classname, "func_", strlen("func_")) == 0 ||
+					  strncmp(g_entities[i].classname, "misc_", strlen("misc_")) == 0)
+				   )
+				{
+					drawBoxObjectTriggers(&g_entities[i]);
+				}
+
 			}
 		}
 

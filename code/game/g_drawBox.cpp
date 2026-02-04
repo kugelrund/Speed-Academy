@@ -14,11 +14,11 @@ Entrypoint :
 - CG_DrawActiveFrame : list every cgentity once per frame, and send their pointer here to prepare for rendering when conditions are met
 
 Related variables :
-- g_drawBoxTriggers : 0 or 1 (any int not 0) : draw in different colors (ex : pink or orange for secrets) triggers around the map
-- g_drawBoxPlayer : 0 or 1 (any int not 0) : draw in RED, the box around the player
-- g_drawBoxPlayerFP : 0 or 1 (any int not 0) : allows rendering if the box even in first person if set to 1 or more
-- g_drawBoxNPC : 0 or 1 (any int not 0) : draw in GREEN, the boxes around NPCs (include spawned NPCs)
-- g_drawBoxItems : 0 or 1 (any int not 0) : draw in BLUE, the boxes around items (include dropped weapons)
+- cg_drawBoxTriggers : 0 or 1 (any int not 0) : draw in different colors (ex : pink or orange for secrets) triggers around the map
+- cg_drawBoxPlayer : 0 or 1 (any int not 0) : draw in RED, the box around the player
+- cg_drawBoxPlayerFP : 0 or 1 (any int not 0) : allows rendering if the box even in first person if set to 1 or more
+- cg_drawBoxNPC : 0 or 1 (any int not 0) : draw in GREEN, the boxes around NPCs (include spawned NPCs)
+- cg_drawBoxItems : 0 or 1 (any int not 0) : draw in BLUE, the boxes around items (include dropped weapons)
 
 Posto
 */
@@ -29,12 +29,6 @@ extern qhandle_t cgi_R_RegisterModel(const char* name);
 extern void ScaleModelAxis(refEntity_t* ent);
 extern qhandle_t cgi_R_RegisterShader(const char* name);
 extern void cgi_R_AddRefEntityToScene(const refEntity_t* re);
-
-/*
-	Memo
-	thinkF_NPC_Think = 28
-	touchF_Touch_Item = 1
-*/
 
 refEntity_t prepareRefEnt(gentity_t* self, refEntity_t ent)
 {
@@ -97,6 +91,68 @@ refEntity_t prepareRefEnt(centity_t* self, refEntity_t ent)
 	return ent;
 }
 
+void setColorForTrigger(gentity_t* self, refEntity_t& ent)
+{
+	gentity_t* subTrigger = NULL;
+
+	while ((subTrigger = G_Find(subTrigger, FOFS(targetname), self->target)) != NULL)
+	{
+		switch (subTrigger->e_UseFunc)
+		{
+			// CASE : spawns, in orange. Can be seen everywhere.
+		case(useF_NPC_Spawn):
+		case(useF_item_spawn_use):
+		case(useF_NPC_VehicleSpawnUse):
+			ent.shaderRGBA[0] = 100;
+			ent.shaderRGBA[1] = 50;
+			ent.shaderRGBA[2] = 0;
+			break;
+			// CASE : world/save related, in greenish cyan. Both can be seen in taspir1 for exemple.
+		case(useF_target_autosave_use):
+		case(useF_target_level_change_use):
+			ent.shaderRGBA[0] = 0;
+			ent.shaderRGBA[1] = 100;
+			ent.shaderRGBA[2] = 50;
+			break;
+		case(useF_target_secret_use):
+			ent.shaderRGBA[0] = 100;
+			ent.shaderRGBA[1] = 0;
+			ent.shaderRGBA[2] = 50;
+			break;
+			// CASE : interactible elements, in green. Strangely, more rare.
+		case(useF_security_panel_use):
+		case(useF_misc_model_use):
+		case(useF_Use_Item):
+		case(useF_Use_Shooter):
+		case(useF_funcBBrushUse):
+		case(useF_target_activate_use):
+		case(useF_target_deactivate_use):
+		case(useF_health_use):
+		case(useF_ammo_use):
+		case(useF_mega_ammo_use):
+		case(useF_turret_base_use):
+		case(useF_laser_arm_use):
+		case(useF_emplaced_gun_use):
+		case(useF_shield_power_converter_use):
+		case(useF_ammo_power_converter_use):
+		case(useF_camera_use):
+		case(useF_sentry_use):
+		case(useF_misc_atst_use):
+		case(useF_panel_turret_use):
+			ent.shaderRGBA[0] = 0;
+			ent.shaderRGBA[1] = 100;
+			ent.shaderRGBA[2] = 0;
+			break;
+		default: // TODO : add case for all useful useF, in the meantime, default to white.
+			ent.shaderRGBA[0] = 25;
+			ent.shaderRGBA[1] = 25;
+			ent.shaderRGBA[2] = 25;
+			break;
+		}
+		ent.shaderRGBA[3] = 128;
+	}
+}
+
 void drawBoxPlayer(gentity_t* self)
 {
 	refEntity_t	ent;
@@ -142,7 +198,7 @@ void drawBoxItems(gentity_t* self)
 	cgi_R_AddRefEntityToScene(&ent);
 }
 
-void drawBoxTriggers(gentity_t* self)
+void drawBoxWorldTriggers(gentity_t* self)
 {
 	refEntity_t	ent;
 	memset(&ent, 0, sizeof(ent));
@@ -153,6 +209,12 @@ void drawBoxTriggers(gentity_t* self)
 	ent.shaderRGBA[1] = 0;
 	ent.shaderRGBA[2] = 100;
 	ent.shaderRGBA[3] = 25;
+
+	// Override for some trigger in other color (ex : secrets)
+	// Do not use blue nor red to know we correctly override the previous color.
+	setColorForTrigger(self, ent);
+
+	// At the end, if the trigger has been used, display it in red
 	if (self->e_TouchFunc == touchF_NULL)
 	{
 		// Red for deactivated triggers
@@ -161,45 +223,82 @@ void drawBoxTriggers(gentity_t* self)
 		ent.shaderRGBA[2] = 0;
 		ent.shaderRGBA[3] = 25;
 	}
-	// Override for some trigger in other color (ex : secrets)
-	gentity_t* subTrigger = NULL;
-
-	while ((subTrigger = G_Find(subTrigger, FOFS(targetname), self->target)) != NULL)
-	{
-		switch (subTrigger->e_UseFunc)
-		{
-		case(useF_NPC_Spawn):
-			ent.shaderRGBA[0] = 100;
-			ent.shaderRGBA[1] = 50;
-			ent.shaderRGBA[2] = 0;
-			ent.shaderRGBA[3] = 128;
-			break;
-		case(useF_target_autosave_use):
-			ent.shaderRGBA[0] = 0;
-			ent.shaderRGBA[1] = 100;
-			ent.shaderRGBA[2] = 50;
-			ent.shaderRGBA[3] = 128;
-			break;
-		case(useF_target_secret_use):
-			ent.shaderRGBA[0] = 100;
-			ent.shaderRGBA[1] = 0;
-			ent.shaderRGBA[2] = 50;
-			ent.shaderRGBA[3] = 128;
-			break;
-		case(useF_security_panel_use):
-			ent.shaderRGBA[0] = 25;
-			ent.shaderRGBA[1] = 25;
-			ent.shaderRGBA[2] = 25;
-			ent.shaderRGBA[3] = 128;
-			break;
-		default: // TODO : add case for all useful useF, in the meantime, default to white.
-			ent.shaderRGBA[0] = 25;
-			ent.shaderRGBA[1] = 25;
-			ent.shaderRGBA[2] = 25;
-			ent.shaderRGBA[3] = 128;
-			break;
-		}
-	}
 
 	cgi_R_AddRefEntityToScene(&ent);
 }
+
+void drawBoxObjectTriggers(gentity_t* self)
+{
+	refEntity_t	ent;
+	memset(&ent, 0, sizeof(ent));
+	ent = prepareRefEnt(self, ent);
+
+	// Default color: blue
+	ent.shaderRGBA[0] = 0;
+	ent.shaderRGBA[1] = 0;
+	ent.shaderRGBA[2] = 100;
+	ent.shaderRGBA[3] = 25;
+
+	// Change in other color (ex : secrets). The first secret in t1_fatal is obtained by destroying a 3D object, it will be colored in pink.
+	// Do not use blue nor red to know we correctly override the previous color.
+	setColorForTrigger(self, ent);
+
+	cgi_R_AddRefEntityToScene(&ent);
+}
+
+// List of not implemented useF Cases, I don't know what most of them are.
+/*
+	useF_GoExplodeDeath,
+	useF_Use_BinaryMover,
+	useF_use_wall,
+	useF_Use_Target_Give,
+	useF_Use_Target_Delay,
+	useF_Use_Target_Score,
+	useF_Use_Target_Print,
+	useF_Use_Target_Speaker,
+	useF_target_laser_use,
+	useF_target_relay_use,
+	useF_target_kill_use,
+	useF_target_counter_use,
+	useF_target_random_use,
+	useF_target_scriptrunner_use,
+	useF_target_gravity_change_use,
+	useF_target_friction_change_use,
+	useF_target_teleporter_use,
+	useF_Use_Multi,
+	useF_Use_target_push,
+	useF_hurt_use,
+	useF_func_timer_use,
+	useF_trigger_entdist_use,
+	useF_func_usable_use,
+	useF_NPC_Use,
+	useF_misc_dlight_use,
+	useF_target_change_parm_use,
+	useF_crew_beam_in_use,
+	useF_func_static_use,
+	useF_target_play_music_use,
+	useF_misc_model_useup,
+	useF_misc_portal_use,
+	useF_switch_models,
+	useF_misc_replicator_item_spawn,
+	useF_misc_replicator_item_remove,
+	useF_func_bobbing_use,
+	useF_func_rotating_use,
+	useF_fx_runner_use,
+	useF_funcGlassUse,
+	useF_TrainUse,
+	useF_misc_trip_mine_activate,
+	useF_bomb_planted_use,
+	useF_beacon_use,
+	useF_ion_cannon_use,
+	useF_fx_explosion_trail_use,
+	useF_fx_target_beam_use,
+	useF_spotlight_use,
+	useF_welder_use,
+	useF_jabba_cam_use,
+	useF_misc_use,
+	useF_pas_use,
+	useF_misc_weapon_shooter_use,
+	useF_eweb_use,
+	useF_TieFighterUse,
+*/
