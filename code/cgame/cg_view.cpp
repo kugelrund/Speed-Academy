@@ -2235,6 +2235,7 @@ void CG_DrawActiveFrame( int serverTime, stereoFrame_t stereoView ) {
 				if (cg_drawBoxTriggers.integer && g_entities[i].classname &&
 					( strncmp(g_entities[i].classname, "func_", strlen("func_")) == 0 ||
 					  strncmp(g_entities[i].classname, "misc_", strlen("misc_")) == 0)
+					// bigbomb | t2_wedge
 				   )
 				{
 					drawBoxObjectTriggers(&g_entities[i]);

@@ -95,11 +95,12 @@ void setColorForTrigger(gentity_t* self, refEntity_t& ent)
 {
 	gentity_t* subTrigger = NULL;
 
-	while ((subTrigger = G_Find(subTrigger, FOFS(targetname), self->target)) != NULL)
+	//while ((subTrigger = G_Find(subTrigger, FOFS(targetname), self->target)) != NULL)
+	if ((subTrigger = G_Find(subTrigger, FOFS(targetname), self->target)) != NULL)
 	{
 		switch (subTrigger->e_UseFunc)
 		{
-			// CASE : spawns, in orange. Can be seen everywhere.
+		// CASE : spawns, in orange. Can be seen everywhere.
 		case(useF_NPC_Spawn):
 		case(useF_item_spawn_use):
 		case(useF_NPC_VehicleSpawnUse):
@@ -107,19 +108,15 @@ void setColorForTrigger(gentity_t* self, refEntity_t& ent)
 			ent.shaderRGBA[1] = 50;
 			ent.shaderRGBA[2] = 0;
 			break;
-			// CASE : world/save related, in greenish cyan. Both can be seen in taspir1 for exemple.
+		// CASE : world/save/map related, in pink.
 		case(useF_target_autosave_use):
 		case(useF_target_level_change_use):
-			ent.shaderRGBA[0] = 0;
-			ent.shaderRGBA[1] = 100;
-			ent.shaderRGBA[2] = 50;
-			break;
 		case(useF_target_secret_use):
 			ent.shaderRGBA[0] = 100;
 			ent.shaderRGBA[1] = 0;
 			ent.shaderRGBA[2] = 50;
 			break;
-			// CASE : interactible elements, in green. Strangely, more rare.
+		// CASE : interactible elements, in green.
 		case(useF_security_panel_use):
 		case(useF_misc_model_use):
 		case(useF_Use_Item):
@@ -139,14 +136,83 @@ void setColorForTrigger(gentity_t* self, refEntity_t& ent)
 		case(useF_sentry_use):
 		case(useF_misc_atst_use):
 		case(useF_panel_turret_use):
+		case(useF_misc_dlight_use):
+		case(useF_TieFighterUse):
+		case(useF_TrainUse):
+		case(useF_bomb_planted_use):
+		case(useF_beacon_use):
+		case(useF_ion_cannon_use):
+		case(useF_spotlight_use):
+		case(useF_welder_use):
+		case(useF_jabba_cam_use):
+		case(useF_misc_use):
+		case(useF_pas_use):
+		case(useF_misc_weapon_shooter_use):
+		case(useF_eweb_use):
 			ent.shaderRGBA[0] = 0;
 			ent.shaderRGBA[1] = 100;
 			ent.shaderRGBA[2] = 0;
 			break;
-		default: // TODO : add case for all useful useF, in the meantime, default to white.
-			ent.shaderRGBA[0] = 25;
-			ent.shaderRGBA[1] = 25;
-			ent.shaderRGBA[2] = 25;
+		// CASE : 'scripts' / 'func', in greenish cyan.
+		case(useF_Use_Multi):
+		case(useF_func_usable_use):
+		case(useF_trigger_entdist_use):
+		case(useF_target_change_parm_use):
+		case(useF_func_static_use):
+		case(useF_func_bobbing_use):
+		case(useF_func_rotating_use):
+		case(useF_funcGlassUse):
+		case(useF_func_timer_use):
+			ent.shaderRGBA[0] = 0;
+			ent.shaderRGBA[1] = 100;
+			ent.shaderRGBA[2] = 50;
+			break;
+		// CASE : 'target' ??????, in purple. Note : not found anything is purple during tests
+		case(useF_Use_Target_Give):
+		case(useF_Use_Target_Delay):
+		case(useF_Use_Target_Score):
+		case(useF_Use_Target_Print):
+		case(useF_Use_Target_Speaker):
+		case(useF_target_laser_use):
+		case(useF_target_relay_use):
+		case(useF_target_kill_use):
+		case(useF_target_counter_use):
+		case(useF_target_random_use):
+		case(useF_target_scriptrunner_use):
+		case(useF_target_gravity_change_use):
+		case(useF_target_friction_change_use):
+		case(useF_target_teleporter_use):
+		case(useF_Use_target_push):
+			ent.shaderRGBA[0] = 100;
+			ent.shaderRGBA[1] = 0;
+			ent.shaderRGBA[2] = 100;
+			break;
+		// CASE : effects fx & sound, in yellow
+		case(useF_fx_runner_use):
+		case(useF_fx_explosion_trail_use):
+		case(useF_fx_target_beam_use):
+		case(useF_target_play_music_use):
+			ent.shaderRGBA[0] = 100;
+			ent.shaderRGBA[1] = 66;
+			ent.shaderRGBA[2] = 0;
+			break;
+		// CASE : unknown cases, let it be white
+		case(useF_GoExplodeDeath):
+		case(useF_Use_BinaryMover):
+		case(useF_use_wall):
+		case(useF_hurt_use):
+		case(useF_NPC_Use):
+		case(useF_crew_beam_in_use):
+		case(useF_misc_model_useup):
+		case(useF_misc_portal_use):
+		case(useF_switch_models):
+		case(useF_misc_replicator_item_spawn):
+		case(useF_misc_replicator_item_remove):
+		case(useF_misc_trip_mine_activate):
+		default:
+			ent.shaderRGBA[0] = 20;
+			ent.shaderRGBA[1] = 20;
+			ent.shaderRGBA[2] = 20;
 			break;
 		}
 		ent.shaderRGBA[3] = 128;
@@ -245,60 +311,3 @@ void drawBoxObjectTriggers(gentity_t* self)
 
 	cgi_R_AddRefEntityToScene(&ent);
 }
-
-// List of not implemented useF Cases, I don't know what most of them are.
-/*
-	useF_GoExplodeDeath,
-	useF_Use_BinaryMover,
-	useF_use_wall,
-	useF_Use_Target_Give,
-	useF_Use_Target_Delay,
-	useF_Use_Target_Score,
-	useF_Use_Target_Print,
-	useF_Use_Target_Speaker,
-	useF_target_laser_use,
-	useF_target_relay_use,
-	useF_target_kill_use,
-	useF_target_counter_use,
-	useF_target_random_use,
-	useF_target_scriptrunner_use,
-	useF_target_gravity_change_use,
-	useF_target_friction_change_use,
-	useF_target_teleporter_use,
-	useF_Use_Multi,
-	useF_Use_target_push,
-	useF_hurt_use,
-	useF_func_timer_use,
-	useF_trigger_entdist_use,
-	useF_func_usable_use,
-	useF_NPC_Use,
-	useF_misc_dlight_use,
-	useF_target_change_parm_use,
-	useF_crew_beam_in_use,
-	useF_func_static_use,
-	useF_target_play_music_use,
-	useF_misc_model_useup,
-	useF_misc_portal_use,
-	useF_switch_models,
-	useF_misc_replicator_item_spawn,
-	useF_misc_replicator_item_remove,
-	useF_func_bobbing_use,
-	useF_func_rotating_use,
-	useF_fx_runner_use,
-	useF_funcGlassUse,
-	useF_TrainUse,
-	useF_misc_trip_mine_activate,
-	useF_bomb_planted_use,
-	useF_beacon_use,
-	useF_ion_cannon_use,
-	useF_fx_explosion_trail_use,
-	useF_fx_target_beam_use,
-	useF_spotlight_use,
-	useF_welder_use,
-	useF_jabba_cam_use,
-	useF_misc_use,
-	useF_pas_use,
-	useF_misc_weapon_shooter_use,
-	useF_eweb_use,
-	useF_TieFighterUse,
-*/
