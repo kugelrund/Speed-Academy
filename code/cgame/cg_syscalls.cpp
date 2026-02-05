@@ -683,6 +683,12 @@ int cgi_SpeedrunGetLevelTimeMilliseconds(void) {
 	return syscall(CG_SPEEDRUN_GET_LEVEL_TIME_MILLISECONDS);
 }
 
+// Speed Academy
 void cgi_R_SetPlayerJumpStartWorldZ( float value ) {
 	syscall(CG_R_SET_PLAYER_JUMP_START_Z_WORLD, PASSFLOAT(value));
+}
+
+// Speed Academy
+void cgi_R_SetPlayerJumpHeight(float value) {
+	syscall(CG_R_SET_PLAYER_JUMP_HEIGHT, PASSFLOAT(value));
 }

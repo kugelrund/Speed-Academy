@@ -119,6 +119,32 @@ Commands:
 
   Sets the color for the speed display to the given red, green, blue and alpha values.
 
+## Player Information Display
+
+Variables:
+
+- `cg_drawPlayerInfo` (0 to 7)
+
+  Draw information about the player in the current 3D environment.
+  The types of information are the player's position, velocity, and jumping state.
+  Depending on the value of this variable, different information is shown:
+
+  - `0` : Nothing
+  - `1` : Position
+  - `2` : Velocity
+  - `3` : Position + Velocity
+  - `4` : Jumping
+  - `5` : Position + Jumping
+  - `6` : Velocity + Jumping
+  - `7` : Position + Velocity + Jumping
+
+  Default: `0`.
+
+- `cg_drawPlayerInfoPrecision` (0 to 5)
+
+  Changes the quantity of numbers drawn after the point for each variables.
+  Default: `2`.
+
 ## Strafe Helper
 
 Variables:
@@ -294,6 +320,28 @@ Variables:
 - `cg_drawBoxItems` : 0 or 1
 
   Draw in BLUE, the boxes around items (include dropped weapons)
+
+## Maximum Jump Height Visualization
+
+Variables:
+
+- `r_showMaxJumpHeight` (0 or 1)
+
+  Enable or disable coloring heights that can be jumped unto, without crouching,
+  from the current jumping position in the vertical axis.
+
+- `r_showMaxJumpHeight[R,G or B]` (0 - 255)
+
+  Color components (red, green, blue) used to mark how high the player can jump.
+  Color can be set more conveniently with the command `showMaxJumpHeightColor`.
+  Applies after reloading the map.
+
+Commands:
+
+- `showMaxJumpHeightColor <r> <g> <b>` (components in range 0 to 255)
+
+  Sets the color for showing maximum jump height.
+  Applies after reloading the map.
 
 ## Speedrun Modes
 

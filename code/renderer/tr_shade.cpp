@@ -2116,11 +2116,14 @@ static void ComputeTexCoords( shaderStage_t *pStage ) {
 		case TCGEN_FOG:
 			RB_CalcFogTexCoords( ( float * ) tess.svars.texcoords[b] );
 			break;
-		case TCGEN_ELEVATION:
-			RB_CalcElevationTexCoords( ( float * ) tess.svars.texcoords[b] );
+		case TCGEN_ELEVATION: // Speed-Academy
+			RB_CalcElevationTexCoords( ( float * ) tess.svars.texcoords[b], TCGEN_ELEVATION);
 			break;
-		case TCGEN_OVERBOUNCE:
+		case TCGEN_OVERBOUNCE: // Speed-Academy
 			RB_CalcOverbounceTexCoords( ( float * ) tess.svars.texcoords[b] );
+			break;
+		case TCGEN_MAXHEIGHT: // Speed-Academy
+			RB_CalcElevationTexCoords( ( float * ) tess.svars.texcoords[b], TCGEN_MAXHEIGHT);
 			break;
 		case TCGEN_ENVIRONMENT_MAPPED:
 #ifdef _XBOX
