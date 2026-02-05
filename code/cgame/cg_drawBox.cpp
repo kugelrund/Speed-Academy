@@ -264,6 +264,10 @@ static void drawBoxObjectTriggers(gentity_t* self)
 	color[2] = 100;
 	color[3] = 25;
 
+	// Change in other color (ex : secrets). The first secret in t1_fatal is obtained by destroying a 3D object, it will be colored in pink.
+	// Do not use blue nor red to know we correctly override the previous color.
+	setColorForTrigger(self, color);
+
 	drawBoundingBox(self, color);
 }
 
