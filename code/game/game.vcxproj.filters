@@ -528,6 +528,9 @@
     <ClCompile Include="..\speedrun\speedrun_timer_q3\timer_helper.cpp">
       <Filter>speedrun\speedrun_timer_q3</Filter>
     </ClCompile>
+    <ClCompile Include="..\cgame\cg_drawBox.cpp">
+      <Filter>Cgame</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\win32\game.rc">
@@ -834,6 +837,9 @@
     </ClInclude>
     <ClInclude Include="..\speedrun\speedrun_timer_q3\timer_helper.h">
       <Filter>speedrun\speedrun_timer_q3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cgame\cg_drawBox.h">
+      <Filter>Cgame\CGame Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

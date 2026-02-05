@@ -23,6 +23,9 @@ extern Vehicle_t *G_IsRidingVehicle( gentity_t *ent );
 extern int g_crosshairSameEntTime;
 extern int g_crosshairEntNum;
 
+// Speed Academy addition
+#include "cg_drawBox.h"
+
 /*
 =============================================================================
 
@@ -2192,6 +2195,8 @@ void CG_DrawActiveFrame( int serverTime, stereoFrame_t stereoView ) {
 		CG_AddMarks();
 		CG_AddLocalEntities();
 		CG_DrawMiscEnts();
+		// Speed Academy addition : draw boxes around triggers and other interesting entities
+		CG_DrawBoxes();
 	}
 
 	//check for opaque water

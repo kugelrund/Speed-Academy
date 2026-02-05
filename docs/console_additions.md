@@ -295,6 +295,54 @@ Commands:
   Sets the color for showing elevation boosts.
   Applies after reloading the map.
 
+## Ingame Trigger Rendering
+
+Variables:
+
+- `cg_drawBoxTriggers` : 0 or 1
+
+  Draw in different colors (ex : pink or orange for secrets) triggers around the map.
+  By default, triggers will be drawn white when there is no color defined.
+
+- `cg_drawBoxPlayer` : 0 or 1
+
+  Draw in RED, the box around the player
+
+- `cg_drawBoxPlayerFP` : 0 or 1
+
+  Allows rendering if the box even in first person if set to 1 or more.
+  Needs `cg_drawBoxPlayer` to also be set to 1
+
+- `cg_drawBoxNPC` : 0 or 1
+
+  Draw in GREEN, the boxes around NPCs (include spawned NPCs)
+
+- `cg_drawBoxItems` : 0 or 1
+
+  Draw in BLUE, the boxes around items (include dropped weapons)
+
+## Maximum Jump Height Visualization
+
+Variables:
+
+- `r_showMaxJumpHeight` (0 or 1)
+
+  Enable or disable coloring heights that can be jumped unto, without crouching,
+  from the current jumping position in the vertical axis.
+
+- `r_showMaxJumpHeight[R,G or B]` (0 - 255)
+
+  Color components (red, green, blue) used to mark how high the player can jump.
+  Color can be set more conveniently with the command `showMaxJumpHeightColor`.
+  Applies after reloading the map.
+
+Commands:
+
+- `showMaxJumpHeightColor <r> <g> <b>` (components in range 0 to 255)
+
+  Sets the color for showing maximum jump height.
+  Applies after reloading the map.
+
 ## Speedrun Modes
 
 Variables:

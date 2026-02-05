@@ -276,6 +276,12 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">cg_headers.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='SHDebug|Win32'">cg_headers.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="..\cgame\cg_drawBox.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">cg_headers.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='FinalBuild|Win32'">cg_headers.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">cg_headers.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='SHDebug|Win32'">cg_headers.h</PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="..\cgame\cg_drawtools.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">cg_headers.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='FinalBuild|Win32'">cg_headers.h</PrecompiledHeaderFile>
@@ -975,6 +981,7 @@
   <ItemGroup>
     <ClInclude Include="..\cgame\animtable.h" />
     <ClInclude Include="..\cgame\cg_camera.h" />
+    <ClInclude Include="..\cgame\cg_drawBox.h" />
     <ClInclude Include="..\cgame\cg_headers.h" />
     <ClInclude Include="..\cgame\cg_lights.h" />
     <ClInclude Include="..\cgame\cg_local.h" />

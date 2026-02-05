@@ -1041,6 +1041,9 @@ Ghoul2 Insert End
 	case CG_R_SET_PLAYER_JUMP_START_Z_WORLD:
 		re.SetPlayerJumpStartWorldZ(VMF(1));
 		return 0;
+	case CG_R_SET_PLAYER_JUMP_HEIGHT:
+		re.SetPlayerJumpHeight(VMF(1));
+		return 0;
 	default:
 		Com_Error( ERR_DROP, "Bad cgame system trap: %i", args[0] );
 	}
