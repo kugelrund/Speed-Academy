@@ -23,7 +23,7 @@ Related variables :
 Posto
 */
 
-refEntity_t prepareRefEnt(gentity_t* self, refEntity_t ent)
+static refEntity_t prepareRefEnt(gentity_t* self, refEntity_t ent)
 {
 	vec3_t mins, maxs, center, size;
 
@@ -53,7 +53,7 @@ refEntity_t prepareRefEnt(gentity_t* self, refEntity_t ent)
 	return ent;
 }
 
-refEntity_t prepareRefEnt(centity_t* self, refEntity_t ent)
+static refEntity_t prepareRefEnt(centity_t* self, refEntity_t ent)
 {
 	vec3_t mins, maxs, center, size;
 	// Get the bounds from the entity state, set in MakeTriggerVisible
@@ -84,7 +84,7 @@ refEntity_t prepareRefEnt(centity_t* self, refEntity_t ent)
 	return ent;
 }
 
-void setColorForTrigger(gentity_t* self, refEntity_t& ent)
+static void setColorForTrigger(gentity_t* self, refEntity_t& ent)
 {
 	gentity_t* subTrigger = NULL;
 
@@ -212,7 +212,7 @@ void setColorForTrigger(gentity_t* self, refEntity_t& ent)
 	}
 }
 
-void drawBoxPlayer(gentity_t* self)
+static void drawBoxPlayer(gentity_t* self)
 {
 	refEntity_t	ent;
 	memset(&ent, 0, sizeof(ent));
@@ -227,7 +227,7 @@ void drawBoxPlayer(gentity_t* self)
 	cgi_R_AddRefEntityToScene(&ent);
 }
 
-void drawBoxNPC(gentity_t* self)
+static void drawBoxNPC(gentity_t* self)
 {
 	refEntity_t	ent;
 	memset(&ent, 0, sizeof(ent));
@@ -242,7 +242,7 @@ void drawBoxNPC(gentity_t* self)
 	cgi_R_AddRefEntityToScene(&ent);
 }
 
-void drawBoxItems(gentity_t* self)
+static void drawBoxItems(gentity_t* self)
 {
 	refEntity_t	ent;
 	memset(&ent, 0, sizeof(ent));
@@ -257,7 +257,7 @@ void drawBoxItems(gentity_t* self)
 	cgi_R_AddRefEntityToScene(&ent);
 }
 
-void drawBoxWorldTriggers(gentity_t* self)
+static void drawBoxWorldTriggers(gentity_t* self)
 {
 	refEntity_t	ent;
 	memset(&ent, 0, sizeof(ent));
@@ -286,7 +286,7 @@ void drawBoxWorldTriggers(gentity_t* self)
 	cgi_R_AddRefEntityToScene(&ent);
 }
 
-void drawBoxObjectTriggers(gentity_t* self)
+static void drawBoxObjectTriggers(gentity_t* self)
 {
 	refEntity_t	ent;
 	memset(&ent, 0, sizeof(ent));
@@ -303,4 +303,52 @@ void drawBoxObjectTriggers(gentity_t* self)
 	setColorForTrigger(self, ent);
 
 	cgi_R_AddRefEntityToScene(&ent);
+}
+
+void CG_DrawBoxes()
+{
+	// Player
+	if (cg_drawBoxPlayer.integer && (cg.renderingThirdPerson || (!cg.renderingThirdPerson && cg_drawBoxPlayerFP.integer)))
+	{
+		// Player is always the first on this array
+		drawBoxPlayer(&g_entities[0]);
+	}
+
+	if (!cg_drawBoxNPC.integer && !cg_drawBoxItems.integer && !cg_drawBoxTriggers.integer) {
+		// no need to do the loop if nonce of these is enabled
+		return;
+	}
+
+	for (int i = 0; i < MAX_GENTITIES; ++i)
+	{
+		// NPCs
+		if (cg_drawBoxNPC.integer && g_entities[i].e_ThinkFunc == thinkF_NPC_Think)
+		{
+			drawBoxNPC(&g_entities[i]);
+		}
+
+		// Items
+		if (cg_drawBoxItems.integer && g_entities[i].e_TouchFunc == touchF_Touch_Item)
+		{
+			drawBoxItems(&g_entities[i]);
+		}
+
+		// Triggers, but related to the world (not associated with an ingame object like a button or a camera)
+		if (cg_drawBoxTriggers.integer && g_entities[i].classname &&
+		    ( strcmp( g_entities[i].classname, "trigger_multiple" ) == 0  ||
+		      strcmp( g_entities[i].classname, "trigger_once" ) == 0 ))
+		{
+			drawBoxWorldTriggers(&g_entities[i]);
+		}
+
+		// Triggers, but related to	an object like a button or a camera
+		if (cg_drawBoxTriggers.integer && g_entities[i].classname &&
+		    ( strncmp(g_entities[i].classname, "func_", strlen("func_")) == 0 ||
+		      strncmp(g_entities[i].classname, "misc_", strlen("misc_")) == 0)
+			// bigbomb | t2_wedge
+			)
+		{
+			drawBoxObjectTriggers(&g_entities[i]);
+		}
+	}
 }

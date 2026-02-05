@@ -2195,55 +2195,8 @@ void CG_DrawActiveFrame( int serverTime, stereoFrame_t stereoView ) {
 		CG_AddMarks();
 		CG_AddLocalEntities();
 		CG_DrawMiscEnts();
-
-		// Speed Academy addition : draw boxes
-		// This should valid here because this is called once per frame.
-		if (cg_drawBoxNPC.integer || cg_drawBoxItems.integer || cg_drawBoxTriggers.integer ||
-			(cg_drawBoxPlayer.integer && (cg.renderingThirdPerson || (!cg.renderingThirdPerson && cg_drawBoxPlayerFP.integer))))
-			// First check if we want to draw something, to not use too much processing if not
-		{
-			for (int i = 0; i < MAX_GENTITIES; ++i)
-			{
-				// Player
-				if (cg_drawBoxPlayer.integer && (cg.renderingThirdPerson || (!cg.renderingThirdPerson && cg_drawBoxPlayerFP.integer))
-					&& i == 0) // Player is always the first on this array
-				{
-					drawBoxPlayer(&g_entities[i]);
-				}
-
-				// NPCs
-				if (cg_drawBoxNPC.integer && g_entities[i].e_ThinkFunc == thinkF_NPC_Think)
-				{
-					drawBoxNPC(&g_entities[i]);
-				}
-
-				// Items
-				if (cg_drawBoxItems.integer && g_entities[i].e_TouchFunc == touchF_Touch_Item)
-				{
-					drawBoxItems(&g_entities[i]);
-				}
-
-				// Triggers, but related to the world (not associated with an ingame object like a button or a camera)
-				if (cg_drawBoxTriggers.integer && g_entities[i].classname &&
-					( strcmp( g_entities[i].classname, "trigger_multiple" ) == 0  ||
-					  strcmp( g_entities[i].classname, "trigger_once" ) == 0 ))
-				{
-					drawBoxWorldTriggers(&g_entities[i]);
-				}
-
-				// Triggers, but related to	an object like a button or a camera
-				if (cg_drawBoxTriggers.integer && g_entities[i].classname &&
-					( strncmp(g_entities[i].classname, "func_", strlen("func_")) == 0 ||
-					  strncmp(g_entities[i].classname, "misc_", strlen("misc_")) == 0)
-					// bigbomb | t2_wedge
-				   )
-				{
-					drawBoxObjectTriggers(&g_entities[i]);
-				}
-
-			}
-		}
-
+		// Speed Academy addition : draw boxes around triggers and other interesting entities
+		CG_DrawBoxes();
 	}
 
 	//check for opaque water
