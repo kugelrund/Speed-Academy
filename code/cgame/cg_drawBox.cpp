@@ -2,6 +2,7 @@
 // cg_drawBox.cpp
 #include "cg_drawBox.h"
 #include "cg_headers.h"
+#include "cg_media.h"
 
 /*
 Tool used to be able to draw boxes for triggers, NPCs and items.
@@ -23,68 +24,48 @@ Related variables :
 Posto
 */
 
-static refEntity_t prepareRefEnt(gentity_t* self, refEntity_t ent)
+static void drawBoundingBox(const gentity_t* ent, const byte color[4])
 {
-	vec3_t mins, maxs, center, size;
+	polyVert_t vertices[4];
+	for (int i = 0; i < 4; ++i)
+	{
+		vertices[i].modulate[0] = color[0];
+		vertices[i].modulate[1] = color[1];
+		vertices[i].modulate[2] = color[2];
+		vertices[i].modulate[3] = color[3];
+		vertices[i].st[0] = 0.0f;
+		vertices[i].st[1] = 0.0f;
+	}
 
-	VectorCopy(self->absmin, mins);
-	VectorCopy(self->absmax, maxs);
+	for ( int axis_fixed = 0; axis_fixed < 3; ++axis_fixed )
+	{
+		const int axis_prev = (axis_fixed == 0) ? 2 : (axis_fixed - 1);
+		const int axis_next = (axis_fixed == 2) ? 0 : (axis_fixed + 1);
 
-	VectorAdd(mins, maxs, center);
-	VectorScale(center, 0.5f, center);
-	VectorSubtract(maxs, mins, size);
+		vertices[0].xyz[axis_prev] = ent->absmin[axis_prev];
+		vertices[0].xyz[axis_next] = ent->absmin[axis_next];
+		
+		vertices[1].xyz[axis_prev] = ent->absmax[axis_prev];
+		vertices[1].xyz[axis_next] = ent->absmin[axis_next];
+		
+		vertices[2].xyz[axis_prev] = ent->absmax[axis_prev];
+		vertices[2].xyz[axis_next] = ent->absmax[axis_next];
 
-	ent.hModel = cgi_R_RegisterModel("models/lecube.md3");
-	ent.reType = RT_MODEL;
+		vertices[3].xyz[axis_prev] = ent->absmin[axis_prev];
+		vertices[3].xyz[axis_next] = ent->absmax[axis_next];
 
-	// Position at center, the box is around the center of the player
-	VectorCopy(center, ent.origin);
-	VectorCopy(center, ent.oldorigin);
-	VectorCopy(center, ent.lightingOrigin);
-
-	float divisor = 1.0f;
-	VectorSet(ent.modelScale, size[0] / divisor, size[1] / divisor, size[2] / divisor);
-	AxisClear(ent.axis);
-	ScaleModelAxis(&ent);
-
-	ent.customShader = cgi_R_RegisterShader("gfx/effects/solidWhite");
-	ent.renderfx = RF_RGB_TINT;// | RF_NOSHADOW;
-
-	return ent;
+		for (int i = 0; i < 4; ++i) {
+			vertices[i].xyz[axis_fixed] = ent->absmin[axis_fixed];
+		}
+		cgi_R_AddPolyToScene( cgs.media.solidWhiteShader, 4, vertices );
+		for (int i = 0; i < 4; ++i) {
+			vertices[i].xyz[axis_fixed] = ent->absmax[axis_fixed];
+		}
+		cgi_R_AddPolyToScene( cgs.media.solidWhiteShader, 4, vertices );
+	}
 }
 
-static refEntity_t prepareRefEnt(centity_t* self, refEntity_t ent)
-{
-	vec3_t mins, maxs, center, size;
-	// Get the bounds from the entity state, set in MakeTriggerVisible
-
-	VectorCopy(self->currentState.origin, mins);
-	VectorCopy(self->currentState.origin2, maxs);
-
-	VectorAdd(mins, maxs, center);
-	VectorScale(center, 0.5f, center);
-	VectorSubtract(maxs, mins, size);
-
-	ent.hModel = cgi_R_RegisterModel("models/lecube.md3");
-	ent.reType = RT_MODEL;
-
-	// Position at center
-	VectorCopy(center, ent.origin);
-	VectorCopy(center, ent.oldorigin);
-	VectorCopy(center, ent.lightingOrigin);
-
-	float divisor = 1.0f;
-	VectorSet(ent.modelScale, size[0] / divisor, size[1] / divisor, size[2] / divisor);
-	AxisClear(ent.axis);
-	ScaleModelAxis(&ent);
-
-	ent.customShader = cgi_R_RegisterShader("gfx/effects/solidWhite");
-	ent.renderfx = RF_RGB_TINT;// | RF_NOSHADOW;
-
-	return ent;
-}
-
-static void setColorForTrigger(gentity_t* self, refEntity_t& ent)
+static void setColorForTrigger(gentity_t* self, byte color[4])
 {
 	gentity_t* subTrigger = NULL;
 
@@ -97,17 +78,17 @@ static void setColorForTrigger(gentity_t* self, refEntity_t& ent)
 		case(useF_NPC_Spawn):
 		case(useF_item_spawn_use):
 		case(useF_NPC_VehicleSpawnUse):
-			ent.shaderRGBA[0] = 100;
-			ent.shaderRGBA[1] = 50;
-			ent.shaderRGBA[2] = 0;
+			color[0] = 100;
+			color[1] = 50;
+			color[2] = 0;
 			break;
 		// CASE : world/save/map related, in pink.
 		case(useF_target_autosave_use):
 		case(useF_target_level_change_use):
 		case(useF_target_secret_use):
-			ent.shaderRGBA[0] = 100;
-			ent.shaderRGBA[1] = 0;
-			ent.shaderRGBA[2] = 50;
+			color[0] = 100;
+			color[1] = 0;
+			color[2] = 50;
 			break;
 		// CASE : interactible elements, in green.
 		case(useF_security_panel_use):
@@ -142,9 +123,9 @@ static void setColorForTrigger(gentity_t* self, refEntity_t& ent)
 		case(useF_pas_use):
 		case(useF_misc_weapon_shooter_use):
 		case(useF_eweb_use):
-			ent.shaderRGBA[0] = 0;
-			ent.shaderRGBA[1] = 100;
-			ent.shaderRGBA[2] = 0;
+			color[0] = 0;
+			color[1] = 100;
+			color[2] = 0;
 			break;
 		// CASE : 'scripts' / 'func', in greenish cyan.
 		case(useF_Use_Multi):
@@ -156,9 +137,9 @@ static void setColorForTrigger(gentity_t* self, refEntity_t& ent)
 		case(useF_func_rotating_use):
 		case(useF_funcGlassUse):
 		case(useF_func_timer_use):
-			ent.shaderRGBA[0] = 0;
-			ent.shaderRGBA[1] = 100;
-			ent.shaderRGBA[2] = 50;
+			color[0] = 0;
+			color[1] = 100;
+			color[2] = 50;
 			break;
 		// CASE : 'target' ??????, in purple. Note : not found anything is purple during tests
 		case(useF_Use_Target_Give):
@@ -176,18 +157,18 @@ static void setColorForTrigger(gentity_t* self, refEntity_t& ent)
 		case(useF_target_friction_change_use):
 		case(useF_target_teleporter_use):
 		case(useF_Use_target_push):
-			ent.shaderRGBA[0] = 100;
-			ent.shaderRGBA[1] = 0;
-			ent.shaderRGBA[2] = 100;
+			color[0] = 100;
+			color[1] = 0;
+			color[2] = 100;
 			break;
 		// CASE : effects fx & sound, in yellow
 		case(useF_fx_runner_use):
 		case(useF_fx_explosion_trail_use):
 		case(useF_fx_target_beam_use):
 		case(useF_target_play_music_use):
-			ent.shaderRGBA[0] = 100;
-			ent.shaderRGBA[1] = 66;
-			ent.shaderRGBA[2] = 0;
+			color[0] = 100;
+			color[1] = 66;
+			color[2] = 0;
 			break;
 		// CASE : unknown cases, let it be white
 		case(useF_GoExplodeDeath):
@@ -203,106 +184,87 @@ static void setColorForTrigger(gentity_t* self, refEntity_t& ent)
 		case(useF_misc_replicator_item_remove):
 		case(useF_misc_trip_mine_activate):
 		default:
-			ent.shaderRGBA[0] = 20;
-			ent.shaderRGBA[1] = 20;
-			ent.shaderRGBA[2] = 20;
+			color[0] = 20;
+			color[1] = 20;
+			color[2] = 20;
 			break;
 		}
-		ent.shaderRGBA[3] = 128;
+		color[3] = 128;
 	}
 }
 
 static void drawBoxPlayer(gentity_t* self)
 {
-	refEntity_t	ent;
-	memset(&ent, 0, sizeof(ent));
-	ent = prepareRefEnt(self, ent);
-
 	// Make it red and semi-transparent
-	ent.shaderRGBA[0] = 50;
-	ent.shaderRGBA[1] = 0;
-	ent.shaderRGBA[2] = 0;
-	ent.shaderRGBA[3] = 25;
+	byte color[4];
+	color[0] = 50;
+	color[1] = 0;
+	color[2] = 0;
+	color[3] = 25;
 
-	cgi_R_AddRefEntityToScene(&ent);
+	drawBoundingBox(self, color);
 }
 
 static void drawBoxNPC(gentity_t* self)
 {
-	refEntity_t	ent;
-	memset(&ent, 0, sizeof(ent));
-	ent = prepareRefEnt(self, ent);
-
 	// Make it green and semi-transparent
-	ent.shaderRGBA[0] = 0;
-	ent.shaderRGBA[1] = 50;
-	ent.shaderRGBA[2] = 0;
-	ent.shaderRGBA[3] = 25;
+	byte color[4];
+	color[0] = 0;
+	color[1] = 50;
+	color[2] = 0;
+	color[3] = 25;
 
-	cgi_R_AddRefEntityToScene(&ent);
+	drawBoundingBox(self, color);
 }
 
 static void drawBoxItems(gentity_t* self)
 {
-	refEntity_t	ent;
-	memset(&ent, 0, sizeof(ent));
-	ent = prepareRefEnt(self, ent);
-
 	// Make it blue and semi-transparent
-	ent.shaderRGBA[0] = 0;
-	ent.shaderRGBA[1] = 0;
-	ent.shaderRGBA[2] = 50;
-	ent.shaderRGBA[3] = 25;
+	byte color[4];
+	color[0] = 0;
+	color[1] = 0;
+	color[2] = 50;
+	color[3] = 25;
 
-	cgi_R_AddRefEntityToScene(&ent);
+	drawBoundingBox(self, color);
 }
 
 static void drawBoxWorldTriggers(gentity_t* self)
 {
-	refEntity_t	ent;
-	memset(&ent, 0, sizeof(ent));
-	ent = prepareRefEnt(self, ent);
-
 	// Default color: blue
-	ent.shaderRGBA[0] = 0;
-	ent.shaderRGBA[1] = 0;
-	ent.shaderRGBA[2] = 100;
-	ent.shaderRGBA[3] = 25;
+	byte color[4];
+	color[0] = 0;
+	color[1] = 0;
+	color[2] = 100;
+	color[3] = 25;
 
 	// Override for some trigger in other color (ex : secrets)
 	// Do not use blue nor red to know we correctly override the previous color.
-	setColorForTrigger(self, ent);
+	setColorForTrigger(self, color);
 
 	// At the end, if the trigger has been used, display it in red
 	if (self->e_TouchFunc == touchF_NULL)
 	{
 		// Red for deactivated triggers
-		ent.shaderRGBA[0] = 50;
-		ent.shaderRGBA[1] = 0;
-		ent.shaderRGBA[2] = 0;
-		ent.shaderRGBA[3] = 25;
+		color[0] = 50;
+		color[1] = 0;
+		color[2] = 0;
+		color[3] = 25;
 	}
 
-	cgi_R_AddRefEntityToScene(&ent);
+	drawBoundingBox(self, color);
 }
 
 static void drawBoxObjectTriggers(gentity_t* self)
 {
-	refEntity_t	ent;
-	memset(&ent, 0, sizeof(ent));
-	ent = prepareRefEnt(self, ent);
-
 	// Default color: blue
-	ent.shaderRGBA[0] = 0;
-	ent.shaderRGBA[1] = 0;
-	ent.shaderRGBA[2] = 100;
-	ent.shaderRGBA[3] = 25;
+	byte color[4];
+	color[0] = 0;
+	color[1] = 0;
+	color[2] = 100;
+	color[3] = 25;
 
-	// Change in other color (ex : secrets). The first secret in t1_fatal is obtained by destroying a 3D object, it will be colored in pink.
-	// Do not use blue nor red to know we correctly override the previous color.
-	setColorForTrigger(self, ent);
-
-	cgi_R_AddRefEntityToScene(&ent);
+	drawBoundingBox(self, color);
 }
 
 void CG_DrawBoxes()
