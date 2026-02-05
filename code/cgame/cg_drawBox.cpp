@@ -1,7 +1,7 @@
 #pragma once
-// g_drawBox.cpp
-#include "g_drawBox.h"
-#include "g_headers.h" // Why do I need to include it in the cpp and not the header ?!
+// cg_drawBox.cpp
+#include "cg_drawBox.h"
+#include "cg_headers.h"
 
 /*
 Tool used to be able to draw boxes for triggers, NPCs and items.
@@ -22,13 +22,6 @@ Related variables :
 
 Posto
 */
-
-// Could be more beautifully implemented instead of using the 'extern' keyword
-// But since they are functions, and if I remember correctly, it should only be different during linking and shouldn't impact performances.
-extern qhandle_t cgi_R_RegisterModel(const char* name);
-extern void ScaleModelAxis(refEntity_t* ent);
-extern qhandle_t cgi_R_RegisterShader(const char* name);
-extern void cgi_R_AddRefEntityToScene(const refEntity_t* re);
 
 refEntity_t prepareRefEnt(gentity_t* self, refEntity_t ent)
 {

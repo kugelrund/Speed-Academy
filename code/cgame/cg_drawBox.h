@@ -1,9 +1,5 @@
 #pragma once
-#include "g_headers.h"
-#include "g_local.h"
-#include "b_local.h"
-#include "g_functions.h"
-#include "../cgame/cg_local.h" // centity_t declaration
+#include "cg_headers.h"
 
 void drawBoxPlayer(gentity_t* self);
 void drawBoxNPC(gentity_t* self);
