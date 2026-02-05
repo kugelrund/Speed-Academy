@@ -1,4 +1,3 @@
-#pragma once
 // cg_drawBox.cpp
 #include "cg_drawBox.h"
 #include "cg_headers.h"
