@@ -849,5 +849,4 @@ struct Lump
 };
 #endif _XBOX
 
-
 #endif //__QCOMMON_H__
