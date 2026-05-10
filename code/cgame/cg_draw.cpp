@@ -4091,26 +4091,21 @@ static void CG_DrawJumpHelper( void )
 	}
 }
 
-/*
-===============
-CG_DrawLandingInfo
-===============
-*/
-static void CG_DrawLandingInfo( void ) {
-	const auto lastLandingInfo = speedrun::GetLastLandingInfo();
-	if (lastLandingInfo.type == speedrun::LandingType::None) {
+static void CG_DrawLandingInfoImpl( const speedrun::LandingInfo info, const float offset_y )
+{
+	if (info.type == speedrun::LandingType::None) {
 		return;
 	}
 
-	const auto timeSinceLanding = level.time - lastLandingInfo.time;
+	const auto timeSinceLanding = level.time - info.time;
 	if (timeSinceLanding > cg_landingInfoDuration.value) {
 		return;
 	}
 
-	const auto type_id = toInt(lastLandingInfo.type);
+	const auto type_id = toInt(info.type);
 
 	const auto x = SCREEN_WIDTH / 2.0f + cg_landingInfoX.value;
-	const auto y = SCREEN_HEIGHT / 2.0f + cg_landingInfoY.value;
+	const auto y = SCREEN_HEIGHT / 2.0f + cg_landingInfoY.value + offset_y;
 	const float w = cgi_R_Font_StrLenPixels( cg_landingInfoText[type_id].string,
 		cgs.media.qhFontMedium, cg_landingInfoScale.value );
 	const auto val = timeSinceLanding / cg_landingInfoDuration.value;
@@ -4120,6 +4115,18 @@ static void CG_DrawLandingInfo( void ) {
 	                      1.0 - val * val};
 	cgi_R_Font_DrawString( x - w/2, y, cg_landingInfoText[type_id].string, color,
 		cgs.media.qhFontMedium, -1, cg_landingInfoScale.value );
+}
+
+/*
+===============
+CG_DrawLandingInfo
+===============
+*/
+static void CG_DrawLandingInfo( void ) {
+	const auto lastLandingInfo = speedrun::GetLastLandingInfo();
+	CG_DrawLandingInfoImpl( lastLandingInfo, 0.0f );
+	// Draw overbounce separately below to not override the actual landing info
+	CG_DrawLandingInfoImpl( {speedrun::LandingType::Overbounce, speedrun::GetLastLandingInfoOverbounceTime()}, 15.0f );
 }
 
 /*
