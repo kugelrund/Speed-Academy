@@ -1280,6 +1280,29 @@ int Com_ModifyMsec( int msec, float &fraction )
 	return msec;
 }
 
+struct SpeedrunDataForLivesplit
+{
+	const unsigned char magic_identifier[40] = {
+		0x6D, 0x61, 0x67, 0x69, 0x63, 0x20,                    // magic
+		0x69, 0x64, 0x20,                                      // id
+		0x66, 0x6F, 0x72, 0x20,                                // for
+		0x73, 0x70, 0x65, 0x65, 0x64, 0x72, 0x75, 0x6E, 0x20,  // speedrun
+		0x64, 0x61, 0x74, 0x61, 0x20,                          // data
+		0x66, 0x6F, 0x72, 0x20,                                // for
+		0x6C, 0x69, 0x76, 0x65, 0x73, 0x70, 0x6C, 0x69, 0x74,  // livesplit
+	};
+	int map;  // This is actually just cmg.numSubModels, was used historically as some kind of "map number"
+	int ingameTime;
+	bool finalSplit;
+};
+
+volatile SpeedrunDataForLivesplit speedrun_data_for_livesplit;
+
+void SpeedrunReportNewMapNumber( int numSubModels )
+{
+	speedrun_data_for_livesplit.map = numSubModels;
+}
+
 /*
 =================
 Com_Frame
@@ -1308,6 +1331,8 @@ try
 	static int	lastTime;
 
 	SpeedrunUpdateTimer();
+	speedrun_data_for_livesplit.ingameTime = SpeedrunGetTotalTimeMilliseconds();
+	speedrun_data_for_livesplit.finalSplit = SpeedrunIsRunFinished();
 
 	// write config file if anything changed
 #ifndef _XBOX

@@ -823,6 +823,7 @@ void CM_LoadMap( const char *name, qboolean clientload, int *checksum, qboolean 
 		gbUsingCachedMapDataRightNow = qtrue;	// !!!!!!!!!!!!!!!!!!
 
 			CM_LoadMap_Actual( name, clientload, checksum, cmg );
+			SpeedrunReportNewMapNumber( cmg.numSubModels );
 
 		gbUsingCachedMapDataRightNow = qfalse;	// !!!!!!!!!!!!!!!!!!
 	}
@@ -889,6 +890,7 @@ void CM_ClearMap( void )
 	}
 
 	memset( &cmg, 0, sizeof( cmg ) );
+	SpeedrunReportNewMapNumber( cmg.numSubModels );
 	CM_ClearLevelPatches();
 
 	for(i = 0; i < NumSubBSP; i++)
