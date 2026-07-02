@@ -377,6 +377,11 @@ Variables:
   Create an automatic save when a checkpoint is reached in checkpoint mode.
   Default: `0`.
 
+- `cg_drawSpeedrunCheckpoint` (0 or 1)
+
+  Draw a green/red box indicating the checkpoint position in checkpoint mode.
+  Default: `0`.
+
 Commands:
 
 - `settimedcheckpoint <x1> <y1> <z1> <x2> <y2> <z2>`
@@ -384,6 +389,7 @@ Commands:
   Sets a box-shaped checkpoint for `sv_speedrunModeCheckpoint`.
   When the player enters the box spanned by the two points `(x1 y1 z1)` and `(x2 y2 z2)` the run is finished.
   If `x2`, `y2` and `z2` are omitted, a checkpoint of reasonable size will be created at `(x1 y1 z1)`.
+  If all arguments are omitted, a checkpoint of reasonable size will be created at the current player position.
 
 ## Mouse Input
 

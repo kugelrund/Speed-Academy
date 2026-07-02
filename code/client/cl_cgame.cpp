@@ -1038,6 +1038,9 @@ Ghoul2 Insert End
 		return SpeedrunGetTotalTimeMilliseconds();
 	case CG_SPEEDRUN_GET_LEVEL_TIME_MILLISECONDS:
 		return SpeedrunGetLevelTimeMilliseconds();
+	case CG_SPEEDRUN_IS_RUN_FINISHED:
+		return SpeedrunIsRunFinished();
+		break;
 	case CG_R_SET_PLAYER_JUMP_START_Z_WORLD:
 		re.SetPlayerJumpStartWorldZ(VMF(1));
 		return 0;

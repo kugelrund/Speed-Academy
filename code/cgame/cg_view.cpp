@@ -24,7 +24,7 @@ extern int g_crosshairSameEntTime;
 extern int g_crosshairEntNum;
 
 // Speed Academy addition
-#include "cg_drawBox.h"
+#include "cg_draw_speedrun_extras.h"
 
 /*
 =============================================================================
