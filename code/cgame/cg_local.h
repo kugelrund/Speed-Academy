@@ -734,6 +734,7 @@ extern	vmCvar_t		cg_drawBoxPlayer;
 extern	vmCvar_t		cg_drawBoxPlayerFP;
 extern	vmCvar_t		cg_drawBoxNPC;
 extern	vmCvar_t		cg_drawBoxItems;
+extern	vmCvar_t		cg_drawNPCInfo;
 extern	vmCvar_t		cg_drawPlayerInfo;
 extern	vmCvar_t		cg_drawPlayerInfoPrecision;
 
