@@ -2196,7 +2196,7 @@ void CG_DrawActiveFrame( int serverTime, stereoFrame_t stereoView ) {
 		CG_AddLocalEntities();
 		CG_DrawMiscEnts();
 		// Speed Academy addition : draw boxes around triggers and other interesting entities
-		CG_DrawBoxes();
+		CG_DrawSpeedrunExtras();
 	}
 
 	//check for opaque water

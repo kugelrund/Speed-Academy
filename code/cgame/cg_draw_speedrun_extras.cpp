@@ -263,7 +263,7 @@ static void drawBoxObjectTriggers(gentity_t* self)
 	drawBoundingBox(self, color);
 }
 
-void CG_DrawBoxes()
+void CG_DrawSpeedrunExtras()
 {
 	///// Any new / other display than trigger related /////
 
