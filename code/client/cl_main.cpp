@@ -1170,6 +1170,17 @@ void CL_StartHunkUsers( void ) {
 		CL_InitUI();
 	}
 #endif
+	
+	if ( !cls.cgameStarted && cls.state > CA_CONNECTED && cls.state != CA_CINEMATIC ) {
+		if (CL_IsRunningInGameCinematic()) {
+			// This is a special somewhat bugged case:
+			// We are basically all ready and would usually start all client stuff now so that the player can start playing,
+			// but somehow a cinematic is playing despite cls.state not being CA_CINEMATIC so we are not starting cgame.
+			// But that means that we would never enter CL_FirstSnapshot to unpause the timer. But we need to have the timer
+			// running during cutscenes, because they are skippable. So let's unpause it now.
+			SpeedrunUnpauseTimer();
+		}
+	}
 
 //	if ( !cls.cgameStarted && cls.state > CA_CONNECTED && cls.state != CA_CINEMATIC ) {
 	if ( !cls.cgameStarted && cls.state > CA_CONNECTED && (cls.state != CA_CINEMATIC && !CL_IsRunningInGameCinematic()) ) 
