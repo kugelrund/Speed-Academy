@@ -418,14 +418,18 @@ vmCvar_t	cg_yawSpeeder;
 vmCvar_t	cg_yawTauntaun;
 vmCvar_t	cg_yawVehicle;
 vmCvar_t	cg_drawBoxTriggers;
+vmCvar_t	cg_drawBoxTriggersFilter;
+vmCvar_t	cg_drawBoxTriggersFilterDisabled;
 vmCvar_t	cg_drawBoxPlayer;
-vmCvar_t	cg_drawBoxPlayerFP;
 vmCvar_t	cg_drawBoxNPC;
 vmCvar_t	cg_drawBoxItems;
 vmCvar_t	cg_drawNPCInfo;
 vmCvar_t	cg_drawPlayerInfo;
 vmCvar_t	cg_drawPlayerInfoPrecision;
+vmCvar_t	cg_drawLineOfSight;
+vmCvar_t	cg_drawNPCPath;
 vmCvar_t	cg_drawSpeedrunCheckpoint;
+vmCvar_t	cg_drawVelocityVector;
 
 typedef struct {
 	vmCvar_t	*vmCvar;
@@ -656,14 +660,18 @@ static cvarTable_t cvarTable[] = {
 	{ &cg_yawTauntaun, "cg_yawTauntaun", "0.0", CVAR_ARCHIVE },
 	{ &cg_yawVehicle, "cg_yawVehicle", "0.0", CVAR_ARCHIVE },
 	{ &cg_drawBoxTriggers, "cg_drawBoxTriggers", "0", CVAR_ARCHIVE },
+	{ &cg_drawBoxTriggersFilter, "cg_drawBoxTriggersFilter", "0", CVAR_ARCHIVE },
+	{ &cg_drawBoxTriggersFilterDisabled, "cg_drawBoxTriggersFilterDisabled", "1", CVAR_ARCHIVE },
 	{ &cg_drawBoxPlayer, "cg_drawBoxPlayer", "0", CVAR_ARCHIVE },
-	{ &cg_drawBoxPlayerFP, "cg_drawBoxPlayerFP", "0", CVAR_ARCHIVE },
 	{ &cg_drawBoxNPC, "cg_drawBoxNPC", "0", CVAR_ARCHIVE },
 	{ &cg_drawBoxItems, "cg_drawBoxItems", "0", CVAR_ARCHIVE },
 	{ &cg_drawNPCInfo, "cg_drawNPCInfo", "0", CVAR_ARCHIVE },
 	{ &cg_drawPlayerInfo, "cg_drawPlayerInfo", "0", CVAR_ARCHIVE },
 	{ &cg_drawPlayerInfoPrecision, "cg_drawPlayerInfoPrecision", "2", CVAR_ARCHIVE },
+	{ &cg_drawLineOfSight, "cg_drawLineOfSight", "0", CVAR_ARCHIVE },
+	{ &cg_drawNPCPath, "cg_drawNPCPath", "0", CVAR_ARCHIVE },
 	{ &cg_drawSpeedrunCheckpoint, "cg_drawSpeedrunCheckpoint", "0", CVAR_ARCHIVE },
+	{ &cg_drawVelocityVector, "cg_drawVelocityVector", "0", CVAR_ARCHIVE },
 };
 
 static int cvarTableSize = sizeof( cvarTable ) / sizeof( cvarTable[0] );
