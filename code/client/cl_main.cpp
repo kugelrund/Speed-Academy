@@ -1185,6 +1185,14 @@ void CL_StartHunkUsers( void ) {
 //	if ( !cls.cgameStarted && cls.state > CA_CONNECTED && cls.state != CA_CINEMATIC ) {
 	if ( !cls.cgameStarted && cls.state > CA_CONNECTED && (cls.state != CA_CINEMATIC && !CL_IsRunningInGameCinematic()) ) 
 	{
+		// Usually the timer should already have been paused by a vid_restart, quickload, map change, ...
+		// But if just now we had the bugged cinematic case mentioned above, that will not be the case,
+		// so to make sure let's pause now.
+		// The timer should always be paused for this init anyways cause it completely blocks Com_Frame,
+		// meaning neither player nor server can ever do anything during it. So we don't have to worry
+		// about special cases where we don't want to pause here.
+		SpeedrunPauseTimer();
+
 		cls.cgameStarted = qtrue;
 		CL_InitCGame();
 	}
