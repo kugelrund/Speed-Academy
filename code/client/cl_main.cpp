@@ -424,6 +424,21 @@ Restart the video subsystem
 */
 void CL_Vid_Restart_f( void ) {
 	SpeedrunPauseTimer();
+	if (cls.cgameStarted || cls.rendererStarted || cls.uiStarted || cls.soundRegistered
+#ifdef __IMMERSION
+		|| cls.forceStarted
+#endif
+	) {
+		// vid_restart will cause the next CL_Frame to run CL_StartHunkUsers which
+		// takes quite some time, blocking the current Com_Frame. So when eventually
+		// we move on to the next Com_Frame, the time delta to the previous frame
+		// will be huge. This delta will be capped to 200msec and passed to
+		// SV_Frame, meaning that we advance level time by 200msec while we had the
+		// timer paused for the vid_restart. So to avoid saving speedrun time in
+		// sections where waiting for gametime to pass by spamming vid_restart, we
+		// have to add these 200 msec.
+		SpeedrunTimerAddMilliseconds(200);
+	}
 
 	S_StopAllSounds();		// don't let them loop during the restart
 	S_BeginRegistration();	// all sound handles are now invalid
