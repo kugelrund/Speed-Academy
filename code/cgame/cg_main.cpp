@@ -425,6 +425,7 @@ vmCvar_t	cg_drawBoxItems;
 vmCvar_t	cg_drawNPCInfo;
 vmCvar_t	cg_drawPlayerInfo;
 vmCvar_t	cg_drawPlayerInfoPrecision;
+vmCvar_t	cg_drawSpeedrunCheckpoint;
 
 typedef struct {
 	vmCvar_t	*vmCvar;
@@ -662,6 +663,7 @@ static cvarTable_t cvarTable[] = {
 	{ &cg_drawNPCInfo, "cg_drawNPCInfo", "0", CVAR_ARCHIVE },
 	{ &cg_drawPlayerInfo, "cg_drawPlayerInfo", "0", CVAR_ARCHIVE },
 	{ &cg_drawPlayerInfoPrecision, "cg_drawPlayerInfoPrecision", "2", CVAR_ARCHIVE },
+	{ &cg_drawSpeedrunCheckpoint, "cg_drawSpeedrunCheckpoint", "0", CVAR_ARCHIVE },
 };
 
 static int cvarTableSize = sizeof( cvarTable ) / sizeof( cvarTable[0] );

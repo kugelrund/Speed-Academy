@@ -440,7 +440,18 @@ SV_SetTimedCheckpoint_f
 =================
 */
 static void SV_SetTimedCheckpoint_f( void ) {
-	if ( Cmd_Argc() == 4 ) {
+	if (Cmd_Argc() == 1) {
+		sv_timedCheckpointMinX->value = ge->gentities[0].currentOrigin[0] - 50;
+		sv_timedCheckpointMinY->value = ge->gentities[0].currentOrigin[1] - 50;
+		sv_timedCheckpointMinZ->value = ge->gentities[0].currentOrigin[2] - 100;
+		sv_timedCheckpointMaxX->value = ge->gentities[0].currentOrigin[0] + 50;
+		sv_timedCheckpointMaxY->value = ge->gentities[0].currentOrigin[1] + 50;
+		sv_timedCheckpointMaxZ->value = ge->gentities[0].currentOrigin[2] + 100;
+		Com_Printf("Auto assigned values for the bounding box : %f, %f, %f, %f, %f; %f \n",
+			sv_timedCheckpointMinX->value, sv_timedCheckpointMinY->value, sv_timedCheckpointMinZ->value,
+			sv_timedCheckpointMaxX->value, sv_timedCheckpointMaxY->value, sv_timedCheckpointMaxZ->value);
+	}
+	else if ( Cmd_Argc() == 4 ) {
 		const float x = atof( Cmd_Argv(1) );
 		const float y = atof( Cmd_Argv(2) );
 		const float z = atof( Cmd_Argv(3) );

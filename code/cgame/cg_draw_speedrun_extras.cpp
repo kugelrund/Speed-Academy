@@ -1,27 +1,20 @@
 // cg_drawBox.cpp
-#include "cg_drawBox.h"
+#include "cg_draw_speedrun_extras.h"
 #include "cg_headers.h"
 #include "cg_media.h"
 
-/*
-Tool used to be able to draw boxes for triggers, NPCs and items.
-Application : routing all secrets in Academy and inspecting trigger range ingame instead of using an external mapping tool.
-
-Still need improvement on colors / differentiation, white being the default as of now.
-Shouldn't make the game heavily drop in fps if enabled, so even less when disabled (except some bool and int checks)
-
-Entrypoint :
-- CG_DrawActiveFrame : list every cgentity once per frame, and send their pointer here to prepare for rendering when conditions are met
-
-Related variables :
-- cg_drawBoxTriggers : 0 or 1 (any int not 0) : draw in different colors (ex : pink or orange for secrets) triggers around the map
-- cg_drawBoxPlayer : 0 or 1 (any int not 0) : draw in RED, the box around the player
-- cg_drawBoxPlayerFP : 0 or 1 (any int not 0) : allows rendering if the box even in first person if set to 1 or more
-- cg_drawBoxNPC : 0 or 1 (any int not 0) : draw in GREEN, the boxes around NPCs (include spawned NPCs)
-- cg_drawBoxItems : 0 or 1 (any int not 0) : draw in BLUE, the boxes around items (include dropped weapons)
-
-Posto
-*/
+// Filter consts
+static const int trig_filter_spawner = 1 << 0;
+static const int trig_filter_world = 1 << 1;
+static const int trig_filter_usable = 1 << 2;
+static const int trig_filter_func = 1 << 3;
+static const int trig_filter_target = 1 << 4;
+static const int trig_filter_soundsfx = 1 << 5;
+static const int trig_filter_uncategorized = 1 << 6;
+static const int trig_filter_doors = 1 << 7;
+static const int trig_filter_hurt = 1 << 8;
+static const int trig_filter_UNUSED = 1 << 9;
+// 1<<10 to 1<<15 not used
 
 static void drawBoundingBox(const gentity_t* ent, const byte color[4])
 {
@@ -270,8 +263,41 @@ static void drawBoxObjectTriggers(gentity_t* self)
 	drawBoundingBox(self, color);
 }
 
-void CG_DrawBoxes()
+void CG_DrawSpeedrunExtras()
 {
+	///// Any new / other display than trigger related /////
+
+	// Checkpoint visualizer
+	if (gi.Cvar_VariableIntegerValue("sv_speedrunModeCheckpoint") && cg_drawSpeedrunCheckpoint.integer)
+	{
+		gentity_t fakeEntity{};
+		byte color[4];
+		if (!cgi_SpeedrunIsRunFinished())
+		{
+			color[0] = 0;
+			color[1] = 50;
+			color[2] = 0;
+			color[3] = 25;
+		}
+		else
+		{
+			color[0] = 50;
+			color[1] = 0;
+			color[2] = 0;
+			color[3] = 25;
+		}
+		fakeEntity.absmin[0] = gi.cvar("sv_timedCheckpointMinX", "", CVAR_ARCHIVE)->value;
+		fakeEntity.absmin[1] = gi.cvar("sv_timedCheckpointMinY", "", CVAR_ARCHIVE)->value;
+		fakeEntity.absmin[2] = gi.cvar("sv_timedCheckpointMinZ", "", CVAR_ARCHIVE)->value;
+		fakeEntity.absmax[0] = gi.cvar("sv_timedCheckpointMaxX", "", CVAR_ARCHIVE)->value;
+		fakeEntity.absmax[1] = gi.cvar("sv_timedCheckpointMaxY", "", CVAR_ARCHIVE)->value;
+		fakeEntity.absmax[2] = gi.cvar("sv_timedCheckpointMaxZ", "", CVAR_ARCHIVE)->value;
+		drawBoundingBox(&fakeEntity, color);
+	}
+
+	///// Trigger related boxes /////
+
+
 	// Player
 	if (cg_drawBoxPlayer.integer && (cg.renderingThirdPerson || (!cg.renderingThirdPerson && cg_drawBoxPlayerFP.integer)))
 	{
