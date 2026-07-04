@@ -422,6 +422,7 @@ vmCvar_t	cg_drawBoxPlayer;
 vmCvar_t	cg_drawBoxPlayerFP;
 vmCvar_t	cg_drawBoxNPC;
 vmCvar_t	cg_drawBoxItems;
+vmCvar_t	cg_drawNPCInfo;
 vmCvar_t	cg_drawPlayerInfo;
 vmCvar_t	cg_drawPlayerInfoPrecision;
 
@@ -658,6 +659,7 @@ static cvarTable_t cvarTable[] = {
 	{ &cg_drawBoxPlayerFP, "cg_drawBoxPlayerFP", "0", CVAR_ARCHIVE },
 	{ &cg_drawBoxNPC, "cg_drawBoxNPC", "0", CVAR_ARCHIVE },
 	{ &cg_drawBoxItems, "cg_drawBoxItems", "0", CVAR_ARCHIVE },
+	{ &cg_drawNPCInfo, "cg_drawNPCInfo", "0", CVAR_ARCHIVE },
 	{ &cg_drawPlayerInfo, "cg_drawPlayerInfo", "0", CVAR_ARCHIVE },
 	{ &cg_drawPlayerInfoPrecision, "cg_drawPlayerInfoPrecision", "2", CVAR_ARCHIVE },
 };

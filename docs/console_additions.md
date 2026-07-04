@@ -48,6 +48,12 @@ Variables:
   Show a tracker for found versus total number of secrets on the current level.
   Default `0`.
 
+- `cg_drawNPCInfo` : 0 or 1
+
+  Display information about some flags about NPCs such as their default and current behavior.
+  This is triggered when looking at an NPC entity.
+  The last NPC entity will be remembered as long as the player's crosshair doesn't look at any other NPC entity.
+
 ## Landing Info
 
 Variables:
@@ -123,20 +129,24 @@ Commands:
 
 Variables:
 
-- `cg_drawPlayerInfo` (0 to 7)
+- `cg_drawPlayerInfo` (0 to 15)
 
-  Draw information about the player in the current 3D environment.
-  The types of information are the player's position, velocity, and jumping state.
-  Depending on the value of this variable, different information is shown:
+  The displayed result will always be in the following order from top to bottom : Position - Velocity - Angles - Jumping state.
+  
+  #------------------------------------#
+  Binary :      (1    1    1    1) = 15
+  Power of 2^n : 3    2    1    0
+  Decimal :      8    4    2    1
+                 |    |    |    |
+                 |    |    |    Position
+                 |    |    Velocity
+                 |    Angles
+                 Jumping state
+  #------------------------------------#
 
-  - `0` : Nothing
-  - `1` : Position
-  - `2` : Velocity
-  - `3` : Position + Velocity
-  - `4` : Jumping
-  - `5` : Position + Jumping
-  - `6` : Velocity + Jumping
-  - `7` : Position + Velocity + Jumping
+  Examples : 
+  . To enable everything, you must then set the variable to 15 (8 + 4 + 2 + 1)
+  . To only enable velocity and angles, you would set the variable to 6 (4 + 2)
 
   Default: `0`.
 
