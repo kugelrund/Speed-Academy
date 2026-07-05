@@ -360,12 +360,11 @@ static void setColorForTrigger(gentity_t* self, byte color[4])
 	}
 	else
 	{
-		// Example : Fuel codes in ns_starpad don't return anything via G_Find.
-		// Don't need to implement any other case afaik, but the structure is ready in case another special case is found.
+		// Example : some triggers aren't found by G_Find but are instead linked directly to the 'self' entity.
 		switch (self->e_UseFunc)
 		{
 		case(useF_Use_Multi):
-		case(useF_func_usable_use):
+		case(useF_func_usable_use): // Useless but there are some entities hitting this check, leave it present ?
 			if (!cg_drawBoxTriggersFilter.integer || (cg_drawBoxTriggersFilter.integer & trig_filter_func))
 			{
 				if (self->e_TouchFunc == touchF_NULL && cg_drawBoxTriggersFilterDisabled.integer)
@@ -382,6 +381,42 @@ static void setColorForTrigger(gentity_t* self, byte color[4])
 				}
 			}
 			break;
+		case(useF_funcBBrushUse): // Push to destroy wall brush (yavin2)
+			if (!cg_drawBoxTriggersFilter.integer || (cg_drawBoxTriggersFilter.integer & trig_filter_usable))
+			{
+				if (self->e_TouchFunc == touchF_NULL && cg_drawBoxTriggersFilterDisabled.integer)
+				{
+					color[0] = red[0];
+					color[1] = red[1];
+					color[2] = red[2];
+				}
+				else if (self->e_TouchFunc != touchF_NULL)
+				{
+					color[0] = 0;
+					color[1] = 100;
+					color[2] = 0;
+				}
+			}
+			break;
+		case(useF_Use_BinaryMover): // Push/Pull walls (yavin2)
+			if (self->spawnflags & 1 || self->spawnflags & 2) // Same check as in cg_draw CG_ScanForCrosshairEntity
+			{
+				if (!cg_drawBoxTriggersFilter.integer || (cg_drawBoxTriggersFilter.integer & trig_filter_uncategorized))
+				{
+					if (self->e_TouchFunc != touchF_NULL)
+					{
+						color[0] = 20;
+						color[1] = 20;
+						color[2] = 20;
+					}
+					else if (self->e_TouchFunc == touchF_NULL && cg_drawBoxTriggersFilterDisabled.integer)
+					{
+						color[0] = red[0];
+						color[1] = red[1];
+						color[2] = red[2];
+					}
+				}
+			}
 		default:
 			if (self->e_TouchFunc == touchF_NULL && cg_drawBoxTriggersFilterDisabled.integer)
 			{
