@@ -85,7 +85,7 @@ void CG_RegisterWeapon( int weaponNum ) {
 		{
 			*spot = 0;
 			spot = strstr(weaponModel, "_w");//i'm using the in view weapon array instead of scanning the item list, so put the _w back on
-			if (!spot) 
+			if (!spot&&!strstr(weaponModel, "noweap"))
 			{
 				strcat (weaponModel, "_w");
 			}
@@ -563,6 +563,7 @@ void CG_RegisterWeapon( int weaponNum ) {
 		//not used (eventually)?
 		cgi_R_RegisterShader( "gfx/effects/blueLine" );
 		cgi_R_RegisterShader( "gfx/misc/whiteline2" );
+		cgi_R_RegisterShader( "gfx/effects/smokeTrail" );
 		break;
 
 	case WP_THERMAL:
@@ -666,6 +667,11 @@ void CG_RegisterWeapon( int weaponNum ) {
 		//explosion
 		theFxScheduler.RegisterEffect( "noghri_stick/gas_cloud" );
 		//cgi_S_RegisterSound("sound/weapons/noghri/smoke.wav");
+
+		for (i = 1; i < 5; i ++ )
+		{
+			cgi_S_RegisterSound( va( "sound/weapons/tusken_staff/stickhit%d.wav", i ) );
+		}
 		break;
 
 	case WP_TIE_FIGHTER:

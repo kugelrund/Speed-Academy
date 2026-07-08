@@ -1938,7 +1938,17 @@ void G_SetSabersFromCVars( gentity_t *ent )
 void G_InitPlayerFromCvars( gentity_t *ent )
 {
 	//set model based on cvars
-	G_ChangePlayerModel( ent, va("%s|%s|%s|%s", g_char_model->string, g_char_skin_head->string, g_char_skin_torso->string, g_char_skin_legs->string) );
+	if (Q_stricmp( "hoth2", level.mapname ) == 0	//hack, is this the only map?
+		||
+		Q_stricmp( "hoth3", level.mapname ) == 0	// no! ;-)
+		)
+	{
+		G_ChangePlayerModel(ent, va("%s|%s|%s|%s", g_char_model->string, g_char_skin_head->string, "torso_g1", "lower_e1"));
+	}
+	else
+	{
+		G_ChangePlayerModel( ent, va("%s|%s|%s|%s", g_char_model->string, g_char_skin_head->string, g_char_skin_torso->string, g_char_skin_legs->string) );
+	}
 
 	//FIXME: parse these 2 from some cvar or require playermodel to be in a *.npc?
 	if( ent->NPC_type && gi.bIsFromZone(ent->NPC_type, TAG_G_ALLOC) ) {

@@ -957,6 +957,12 @@ static inline void CG_AS_Register(void)
 		cgi_AS_AddPrecacheEntry( ((*pi).first).c_str() );
 	}
 
+	if (_strnicmp(cgs.mapname, "academy", 7) != 0
+		|| strcmp(cgs.mapname, "t1_inter") != 0)
+	{
+		cgi_AS_AddPrecacheEntry("yavin_interior");
+	}
+
 	cgi_AS_ParseSets();
 }
 
