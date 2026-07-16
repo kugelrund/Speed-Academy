@@ -528,7 +528,7 @@
     <ClCompile Include="..\speedrun\speedrun_timer_q3\timer_helper.cpp">
       <Filter>speedrun\speedrun_timer_q3</Filter>
     </ClCompile>
-    <ClCompile Include="..\cgame\cg_drawBox.cpp">
+    <ClCompile Include="..\cgame\cg_draw_speedrun_extras.cpp">
       <Filter>Cgame</Filter>
     </ClCompile>
   </ItemGroup>
@@ -838,7 +838,7 @@
     <ClInclude Include="..\speedrun\speedrun_timer_q3\timer_helper.h">
       <Filter>speedrun\speedrun_timer_q3</Filter>
     </ClInclude>
-    <ClInclude Include="..\cgame\cg_drawBox.h">
+    <ClInclude Include="..\cgame\cg_draw_speedrun_extras.h">
       <Filter>Cgame\CGame Headers</Filter>
     </ClInclude>
   </ItemGroup>

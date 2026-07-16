@@ -30,5 +30,6 @@ struct LandingInfo {
 
 void SetLastLandingInfo(const LandingInfo info);
 LandingInfo GetLastLandingInfo();
+int GetLastLandingInfoOverbounceTime();
 
 }  // namespace speedrun

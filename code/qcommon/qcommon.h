@@ -849,4 +849,8 @@ struct Lump
 };
 #endif _XBOX
 
+// Addition for Speed-Academy: Historically the LiveSplit autosplitter used cmg.numSubModels for distinguishing
+// the current map. To set and expose this value in the SpeedrunDataForLivesplit struct we use this setter.
+void	SpeedrunReportNewMapNumber( int numSubModels );
+
 #endif //__QCOMMON_H__

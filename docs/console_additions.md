@@ -48,6 +48,12 @@ Variables:
   Show a tracker for found versus total number of secrets on the current level.
   Default `0`.
 
+- `cg_drawNPCInfo` : 0 or 1
+
+  Display information about some flags about NPCs such as their default and current behavior.
+  This is triggered when looking at an NPC entity.
+  The last NPC entity will be remembered as long as the player's crosshair doesn't look at any other NPC entity.
+
 ## Landing Info
 
 Variables:
@@ -123,20 +129,24 @@ Commands:
 
 Variables:
 
-- `cg_drawPlayerInfo` (0 to 7)
+- `cg_drawPlayerInfo` (0 to 15)
 
-  Draw information about the player in the current 3D environment.
-  The types of information are the player's position, velocity, and jumping state.
-  Depending on the value of this variable, different information is shown:
+  The displayed result will always be in the following order from top to bottom : Position - Velocity - Angles - Jumping state.
+  
+  #------------------------------------#
+  Binary :      (1    1    1    1) = 15
+  Power of 2^n : 3    2    1    0
+  Decimal :      8    4    2    1
+                 |    |    |    |
+                 |    |    |    Position
+                 |    |    Velocity
+                 |    Angles
+                 Jumping state
+  #------------------------------------#
 
-  - `0` : Nothing
-  - `1` : Position
-  - `2` : Velocity
-  - `3` : Position + Velocity
-  - `4` : Jumping
-  - `5` : Position + Jumping
-  - `6` : Velocity + Jumping
-  - `7` : Position + Velocity + Jumping
+  Examples : 
+  . To enable everything, you must then set the variable to 15 (8 + 4 + 2 + 1)
+  . To only enable velocity and angles, you would set the variable to 6 (4 + 2)
 
   Default: `0`.
 
@@ -203,6 +213,12 @@ Variables:
   Color components (red, green, blue, alpha) for different strafe helper elements.
   These are `Accelerating`, `Optimal`, `CenterMarker` and `Speed`.
   Colors can be set more conveniently with the corresponding commands.
+
+- `cg_drawVelocityVector` (0 or 1)
+
+  Draw a 3D rectangle representing the current velocity vector of the player when moving in the world.
+  It's 3D length is 1/10 of the units values stored internally.
+  Example : a forward volocity of 250 (walking) will result in a rectangle of length 25 ingame units in the direction the player is walking to.
 
 Commands:
 
@@ -301,25 +317,82 @@ Variables:
 
 - `cg_drawBoxTriggers` : 0 or 1
 
-  Draw in different colors (ex : pink or orange for secrets) triggers around the map.
-  By default, triggers will be drawn white when there is no color defined.
+  Render game triggers in the world with different colors depending on their type.
+  Color code : 
+  - Green : interactibles. Example : cairn_assembly cameras or buttons in kejim_post.
+  - Orange : spawners (NPCs or items). Example : kejim_post, after the window jump.
+  - Yellow : doors triggers. Example : everywhere.
+  - Purple : secrets zone, checkpoints saves, mission update and level change.
+  - Pink and blue : any kind of scripts. Example : doors in ns_streets when interacted with, will make a sound.
+  - Red : disabled trigger. Example : after triggering the NPC spawn on kejim_post.
+  - White : uncategorized. Example : the one runner are trying to access in artus_detention, making the door near the end level openable.
+
+  Default: `0`.
+
+- `cg_drawBoxTriggersFilter` : 0 to 511
+  
+  #------------------------------------------------------------------------------------------------#
+  Binary :      (1    1    1    1    1    1    1    1    1    1) = 1023
+  Power of 2^n : 9    8    7    6    5    4    3    2    1    0
+  Decimal :      512  256  128  64   32   16   8    4    2    1
+                 |    |    |    |    |    |    |    |    |    |
+                 |    |    |    |    |    |    |    |    |    Orange : Spawners
+                 |    |    |    |    |    |    |    |    Purple : World+Save
+                 |    |    |    |    |    |    |    Green : Interactibles
+                 |    |    |    |    |    |    Cyan : 'func' Scripts
+                 |    |    |    |    |    Pink : 'target' scripts
+                 |    |    |    |    Pink light : fx & sounds
+                 |    |    |    White : Unknowns
+                 |    |    Yellow : Doors
+                 |    Red opaque : Death & Hurt
+                 Unused (yet?)
+
+
+  #------------------------------------------------------------------------------------------------#
+  
+  Examples : 
+  . To enable everything, set the variable to 511.
+  . To only enable doors (yellow), spawners (orange) and level changes (purple), set the variable to 131 (128 + 2 + 1)
+  . Setting the variable to 0 will disable the filter (and so the bahavior is like 511 where you enable everything).
+
+  Default: `0`.
+
+- `cg_drawBoxTriggersFilterDisabled` : 0 or 1
+
+  Enable or not, the rendering of used/disabled triggers, in light red.
+  Example : after using a spawner (in orange), the trigger is considered 'disbaled' and would still render in red if this variable is set to 1.
+  On the contrary, if this is set to 0, after using the same trigger, the rendering would stop and visually the rectangle would disappear.
+
+  Default: `1`.
 
 - `cg_drawBoxPlayer` : 0 or 1
 
   Draw in RED, the box around the player
-
-- `cg_drawBoxPlayerFP` : 0 or 1
-
-  Allows rendering if the box even in first person if set to 1 or more.
-  Needs `cg_drawBoxPlayer` to also be set to 1
+  Default: `0`.
 
 - `cg_drawBoxNPC` : 0 or 1
 
   Draw in GREEN, the boxes around NPCs (include spawned NPCs)
+  Default: `0`.
 
 - `cg_drawBoxItems` : 0 or 1
 
   Draw in BLUE, the boxes around items (include dropped weapons)
+  Default: `0`.
+
+## Ingame NPC behavior, line of sight and pathing rendering
+
+Variables: 
+
+- `cg_drawLineOfSight` : 0 or 1
+
+  Draw a blue line showing what every NPC is looking at.
+  Will stop at the first collision encountered (includes player)
+
+- `cg_drawNPCPath` : 0 or 1
+
+  Draw in orange, a line showing where an NPC is trying to go to, a 'goal' destination.
+  This does not include the whole path that an NPC will take to get to said goal.
 
 ## Maximum Jump Height Visualization
 
@@ -377,6 +450,11 @@ Variables:
   Create an automatic save when a checkpoint is reached in checkpoint mode.
   Default: `0`.
 
+- `cg_drawSpeedrunCheckpoint` (0 or 1)
+
+  Draw a green/red box indicating the checkpoint position in checkpoint mode.
+  Default: `0`.
+
 Commands:
 
 - `settimedcheckpoint <x1> <y1> <z1> <x2> <y2> <z2>`
@@ -384,6 +462,7 @@ Commands:
   Sets a box-shaped checkpoint for `sv_speedrunModeCheckpoint`.
   When the player enters the box spanned by the two points `(x1 y1 z1)` and `(x2 y2 z2)` the run is finished.
   If `x2`, `y2` and `z2` are omitted, a checkpoint of reasonable size will be created at `(x1 y1 z1)`.
+  If all arguments are omitted, a checkpoint of reasonable size will be created at the current player position.
 
 ## Mouse Input
 
