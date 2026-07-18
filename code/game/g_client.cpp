@@ -1942,7 +1942,7 @@ void G_InitPlayerFromCvars( gentity_t *ent )
 		||
 		Q_stricmp( "hoth3", level.mapname ) == 0	// no! ;-)
 		)
-	{
+	{ // copied hack from G_SetSkin for Speed-Academy to avoid non-precached loads
 		G_ChangePlayerModel(ent, va("%s|%s|%s|%s", g_char_model->string, g_char_skin_head->string, "torso_g1", "lower_e1"));
 	}
 	else
