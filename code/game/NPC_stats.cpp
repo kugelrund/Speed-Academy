@@ -1369,7 +1369,8 @@ void NPC_PrecacheWeapons( team_t playerTeam, int spawnflags, char *NPCtype )
 			if (char *spot = strstr(weaponModel, ".md3") ) {
 				*spot = 0;
 				spot = strstr(weaponModel, "_w");//i'm using the in view weapon array instead of scanning the item list, so put the _w back on
-				if (!spot) {
+				if (!spot&&!strstr(weaponModel, "noweap"))
+				{
 					strcat (weaponModel, "_w");
 				}
 				strcat (weaponModel, ".glm");	//and change to ghoul2

@@ -1032,42 +1032,6 @@ qboolean RE_InitDissolve(qboolean bForceCircularExtroWipe)
 			// ... and load appropriate graphics...
 			//
 
-			// special tweak, although this code is normally called just before client spawns into world (and
-			//	is therefore pretty much immune to precache issues) I also need to make sure that the inverse
-			//	iris graphic is loaded so for the special case of doing a circular wipe at the end of the last
-			//	level doesn't stall on loading the image. So I'll load it here anyway - to prime the image - 
-			//	then allow the random wiper to overwrite the ptr if needed. This way the end of level call
-			//	will be instant.  Downside: every level has one extra 256x256 texture.
-#ifndef _XBOX	// Trying to decipher these comments - looks like no problem taking this out. I want the RAM.
-			{
-					Dissolve.pDissolve = R_FindImageFile(	"gfx/2d/iris_mono_rev",		// const char *name
-															qfalse,						// qboolean mipmap
-															qfalse,						// qboolean allowPicmip
-															qfalse,						// qboolean allowTC
-															GL_CLAMP					// int glWrapClampMode 
-														);
-			}
-#endif
-
-			extern cvar_t *com_buildScript;
-			if (com_buildScript->integer)
-			{
-				// register any/all of the possible CASE statements below...
-				//
-				Dissolve.pDissolve = R_FindImageFile(	"gfx/2d/iris_mono",			// const char *name
-														qfalse,						// qboolean mipmap
-														qfalse,						// qboolean allowPicmip
-														qfalse,						// qboolean allowTC
-														GL_CLAMP					// int glWrapClampMode 
-													);
-				Dissolve.pDissolve = R_FindImageFile(	"textures/common/dissolve",	// const char *name
-														qfalse,						// qboolean mipmap
-														qfalse,						// qboolean allowPicmip
-														qfalse,						// qboolean allowTC
-														GL_REPEAT					// int glWrapClampMode 
-													);
-			}
-
 			switch (Dissolve.eDissolveType)
 			{
 				case eDISSOLVE_CIRCULAR_IN:

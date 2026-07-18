@@ -396,6 +396,29 @@ int RE_RegisterMedia_GetLevel(void)
 	return giRegisterMedia_CurrentLevel;
 }
 
+static void RE_PrecacheDissolveImages()
+{
+	R_FindImageFile(	"gfx/2d/iris_mono_rev",		// const char *name
+											qfalse,						// qboolean mipmap
+											qfalse,						// qboolean allowPicmip
+											qfalse,						// qboolean allowTC
+											GL_CLAMP					// int glWrapClampMode
+										);
+
+	R_FindImageFile(	"gfx/2d/iris_mono",			// const char *name
+											qfalse,						// qboolean mipmap
+											qfalse,						// qboolean allowPicmip
+											qfalse,						// qboolean allowTC
+											GL_CLAMP					// int glWrapClampMode
+										);
+	R_FindImageFile(	"textures/common/dissolve",	// const char *name
+											qfalse,						// qboolean mipmap
+											qfalse,						// qboolean allowPicmip
+											qfalse,						// qboolean allowTC
+											GL_REPEAT					// int glWrapClampMode
+										);
+}
+
 extern qboolean SND_RegisterAudio_LevelLoadEnd(qboolean bDeleteEverythingNotUsedThisLevel);
 
 void RE_RegisterMedia_LevelLoadEnd(void)
@@ -403,6 +426,12 @@ void RE_RegisterMedia_LevelLoadEnd(void)
 	RE_RegisterModels_LevelLoadEnd(qfalse);
 	RE_RegisterImages_LevelLoadEnd();
 	SND_RegisterAudio_LevelLoadEnd(qfalse);
+
+	// Without this, RE_InitDissolve call from SCR_StopCinematic causes unprecached issue in the following scenarios:
+	// 1. First snapshot RE_InitDissolve loaded different dissolve image (eDissolveType is random);
+	// 2. vid_restart cleared allocated images, if gbAllowScreenDissolve is 0, no dissolved images are precached;
+	// 3. Loaded saved game from other level
+	RE_PrecacheDissolveImages();
 
 	if (gbAllowScreenDissolve)
 	{
