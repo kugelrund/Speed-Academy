@@ -2035,10 +2035,8 @@ void SP_NPC_spawner( gentity_t *self)
 		}
 	}
 
-	// if (!(self->svFlags&SVF_NPC_PRECACHE))
-	// {
-		CG_NPC_Precache(self);
-	// }
+	// Changed from running only NPC_PrecacheByClassName to fix non-precached loads for Speed-Academy
+	CG_NPC_Precache(self);
 
 	//FIXME: store cameraGroup somewhere else and apply to spawned NPCs' cameraGroup
 	//Or just don't include NPC_spawners in cameraGroupings
