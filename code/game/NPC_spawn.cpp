@@ -1956,6 +1956,7 @@ extern void	NPC_PrecacheByClassName(const char*);
 void SP_NPC_spawner( gentity_t *self)
 {
 	extern void NPC_PrecacheAnimationCFG( const char *NPC_type );
+	extern void	CG_NPC_Precache(gentity_t*);
 	float	fDelay;
 
 	//register/precache the models needed for this NPC, not anymore
@@ -2034,10 +2035,8 @@ void SP_NPC_spawner( gentity_t *self)
 		}
 	}
 
-	if (!(self->svFlags&SVF_NPC_PRECACHE))
-	{
-		NPC_PrecacheByClassName(self->NPC_type);
-	}
+	// Changed from running only NPC_PrecacheByClassName to fix non-precached loads for Speed-Academy
+	CG_NPC_Precache(self);
 
 	//FIXME: store cameraGroup somewhere else and apply to spawned NPCs' cameraGroup
 	//Or just don't include NPC_spawners in cameraGroupings
