@@ -2836,6 +2836,8 @@ qboolean Load_Menu(const char **holdBuffer)
 	return qfalse;
 }
 
+extern void UI_Cache_f();
+
 /*
 =================
 UI_LoadMenus
@@ -2845,6 +2847,8 @@ UI_LoadMenus
 void UI_LoadMenus(const char *menuFile, qboolean reset) 
 {
 	SpeedrunPauseTimer(2);
+
+	UI_Cache_f();
 
 //	pc_token_t token;
 //	int handle;

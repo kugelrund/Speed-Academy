@@ -140,44 +140,87 @@ char *UI_Cvar_VariableString( const char *var_name )
 UI_Cache
 =================
 */
-static void UI_Cache_f( void ) 
+void UI_Cache_f( void )
 {
  int index;
 	Menu_Cache();
 
-extern const char *lukeForceStatusSounds[];
-extern const char *kyleForceStatusSounds[];
+	int	tier_storyinfo = Cvar_VariableIntegerValue( "tier_storyinfo" );
 
-	for (index = 0; index < 5; index++)
+	if (tier_storyinfo == 4 || tier_storyinfo == 5
+		|| tier_storyinfo == 10 || tier_storyinfo == 11
+		|| tier_storyinfo == 16 || tier_storyinfo == 17)
 	{
-		DC->registerSound(lukeForceStatusSounds[index], qfalse);
-		DC->registerSound(kyleForceStatusSounds[index], qfalse);
+		extern const char *lukeForceStatusSounds[];
+		extern const char *kyleForceStatusSounds[];
+
+		for (index = 0; index < 5; index++)
+		{
+			DC->registerSound(lukeForceStatusSounds[index], qfalse);
+			DC->registerSound(kyleForceStatusSounds[index], qfalse);
+		}
 	}
-	for (index = 1; index <= 18; index++)
+
+	DC->registerSound(va("sound/chars/storyinfo/%d",tier_storyinfo), qfalse);
+
+	trap_S_RegisterSound("sound/weapons/blaster/select.mp3", qfalse);
+	trap_S_RegisterSound("sound/weapons/bowcaster/select.mp3", qfalse);
+	trap_S_RegisterSound("sound/weapons/disruptor/select.mp3", qfalse);
+	trap_S_RegisterSound("sound/weapons/demp2/select.mp3", qfalse);
+	trap_S_RegisterSound("sound/weapons/thermal/select.mp3", qfalse);
+	trap_S_RegisterSound("sound/weapons/detpack/select.mp3", qfalse);
+	trap_S_RegisterSound("sound/weapons/flechette/select.mp3", qfalse);
+	trap_S_RegisterSound("sound/weapons/repeater/select.mp3", qfalse);
+	trap_S_RegisterSound("sound/weapons/concussion/select.mp3", qfalse);
+	trap_S_RegisterSound("sound/weapons/rocket/select.mp3", qfalse);
+
+	if (tier_storyinfo && tier_storyinfo < 7)
 	{
-		DC->registerSound(va("sound/chars/storyinfo/%d",index), qfalse);
+		trap_S_RegisterSound("sound/chars/kyle/04kyk001.mp3", qfalse);
+		trap_S_RegisterSound("sound/chars/kyle/05kyk001.mp3", qfalse);
+		trap_S_RegisterSound("sound/chars/luke/06luk001.mp3", qfalse);
+		trap_S_RegisterSound("sound/chars/kyle/07kyk001.mp3", qfalse);
+		trap_S_RegisterSound("sound/chars/luke/08luk001.mp3", qfalse);
 	}
-	trap_S_RegisterSound("sound/chars/kyle/04kyk001.mp3", qfalse);
-	trap_S_RegisterSound("sound/chars/kyle/05kyk001.mp3", qfalse);
-	trap_S_RegisterSound("sound/chars/kyle/07kyk001.mp3", qfalse);
-	trap_S_RegisterSound("sound/chars/kyle/14kyk001.mp3", qfalse);
-	trap_S_RegisterSound("sound/chars/kyle/21kyk001.mp3", qfalse);
-	trap_S_RegisterSound("sound/chars/kyle/24kyk001.mp3", qfalse);
-	trap_S_RegisterSound("sound/chars/kyle/25kyk001.mp3", qfalse);
 
-	trap_S_RegisterSound("sound/chars/luke/06luk001.mp3", qfalse);
-	trap_S_RegisterSound("sound/chars/luke/08luk001.mp3", qfalse);
-	trap_S_RegisterSound("sound/chars/luke/22luk001.mp3", qfalse);
-	trap_S_RegisterSound("sound/chars/luke/23luk001.mp3", qfalse);
-	trap_S_RegisterSound("sound/chars/protocol/12pro001.mp3", qfalse);
-	trap_S_RegisterSound("sound/chars/protocol/15pro001.mp3", qfalse);
-	trap_S_RegisterSound("sound/chars/protocol/16pro001.mp3", qfalse);
-	trap_S_RegisterSound("sound/chars/wedge/13wea001.mp3", qfalse);
+	if (tier_storyinfo >= 7 && tier_storyinfo < 13)
+	{
+		trap_S_RegisterSound("sound/chars/protocol/12pro001.mp3", qfalse);
+		trap_S_RegisterSound("sound/chars/wedge/13wea001.mp3", qfalse);
+		trap_S_RegisterSound("sound/chars/kyle/14kyk001.mp3", qfalse);
+		trap_S_RegisterSound("sound/chars/protocol/15pro001.mp3", qfalse);
+		trap_S_RegisterSound("sound/chars/protocol/16pro001.mp3", qfalse);
+	}
+
+	if (tier_storyinfo >= 13 && tier_storyinfo < 17)
+	{
+		trap_S_RegisterSound("sound/chars/kyle/21kyk001.mp3", qfalse);
+		trap_S_RegisterSound("sound/chars/luke/22luk001.mp3", qfalse);
+		trap_S_RegisterSound("sound/chars/luke/23luk001.mp3", qfalse);
+		trap_S_RegisterSound("sound/chars/kyle/24kyk001.mp3", qfalse);
+		trap_S_RegisterSound("sound/chars/kyle/25kyk001.mp3", qfalse);
+	}
+
+	trap_S_RegisterSound("sound/interface/button1.mp3", qfalse);
+
+	// saber menu
+	if (!strcmp(sv_mapname->string, "academy5"))
+	{
+		for (index = 1; index < 10; index++)
+		{
+			RE_RegisterModel(va("models/weapons2/saber_%d/saber_%d.glm", index, index));
+		}
+
+		for (index = 1; index < 6; index++)
+		{
+			RE_RegisterModel(va("models/weapons2/saber_dual_%d/saber_dual_%d.glm", index, index));
+		}
+	}
 
 
-	Menus_ActivateByName("ingameMissionSelect1");
-	Menus_ActivateByName("ingameMissionSelect2");
-	Menus_ActivateByName("ingameMissionSelect3");
+	// Menus_ActivateByName("ingameMissionSelect1");
+	// Menus_ActivateByName("ingameMissionSelect2");
+	// Menus_ActivateByName("ingameMissionSelect3");
 }
 
 
