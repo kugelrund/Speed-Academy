@@ -16,6 +16,8 @@
 #include "ui_shared.h"
 #include "menudef.h"
 
+#include "../speedrun/speedrun_timer_q3/timer.h"
+
 void		UI_LoadMenus(const char *menuFile, qboolean reset);
 
 #ifdef _XBOX
@@ -5305,6 +5307,99 @@ void Menu_SetupKeywordHash(void)
 	}
 }
 
+/*
+===============
+MissionSelectMenu_Cache
+===============
+*/
+void MissionSelectMenu_Cache()
+{
+	int index;
+
+	int	tier_storyinfo = Cvar_VariableIntegerValue( "tier_storyinfo" );
+
+	if (tier_storyinfo == 5 || tier_storyinfo == 6
+		|| tier_storyinfo == 11 || tier_storyinfo == 12
+		|| tier_storyinfo == 17 || tier_storyinfo == 18)
+	{
+		extern const char *lukeForceStatusSounds[];
+		extern const char *kyleForceStatusSounds[];
+
+		for (index = 0; index < 5; index++)
+		{
+			DC->registerSound(lukeForceStatusSounds[index], qfalse);
+			DC->registerSound(kyleForceStatusSounds[index], qfalse);
+		}
+	}
+
+	DC->registerSound(va("sound/chars/storyinfo/%d",tier_storyinfo), qfalse);
+
+
+	if (tier_storyinfo > 0 && tier_storyinfo < 6)
+	{
+		trap_S_RegisterSound("sound/chars/kyle/04kyk001.mp3", qfalse);
+		trap_S_RegisterSound("sound/chars/kyle/05kyk001.mp3", qfalse);
+		trap_S_RegisterSound("sound/chars/luke/06luk001.mp3", qfalse);
+		trap_S_RegisterSound("sound/chars/kyle/07kyk001.mp3", qfalse);
+		trap_S_RegisterSound("sound/chars/luke/08luk001.mp3", qfalse);
+	}
+	else if (tier_storyinfo > 6 && tier_storyinfo < 12)
+	{
+		trap_S_RegisterSound("sound/chars/protocol/12pro001.mp3", qfalse);
+		trap_S_RegisterSound("sound/chars/wedge/13wea001.mp3", qfalse);
+		trap_S_RegisterSound("sound/chars/kyle/14kyk001.mp3", qfalse);
+		trap_S_RegisterSound("sound/chars/protocol/15pro001.mp3", qfalse);
+		trap_S_RegisterSound("sound/chars/protocol/16pro001.mp3", qfalse);
+	}
+	else if (tier_storyinfo > 12 && tier_storyinfo < 18)
+	{
+		trap_S_RegisterSound("sound/chars/kyle/21kyk001.mp3", qfalse);
+		trap_S_RegisterSound("sound/chars/luke/22luk001.mp3", qfalse);
+		trap_S_RegisterSound("sound/chars/luke/23luk001.mp3", qfalse);
+		trap_S_RegisterSound("sound/chars/kyle/24kyk001.mp3", qfalse);
+		trap_S_RegisterSound("sound/chars/kyle/25kyk001.mp3", qfalse);
+	}
+}
+
+/*
+===============
+WeaponMenu_Cache
+===============
+*/
+void WeaponMenu_Cache()
+{
+	trap_S_RegisterSound("sound/weapons/blaster/select.mp3", qfalse);
+	trap_S_RegisterSound("sound/weapons/bowcaster/select.mp3", qfalse);
+	trap_S_RegisterSound("sound/weapons/disruptor/select.mp3", qfalse);
+	trap_S_RegisterSound("sound/weapons/demp2/select.mp3", qfalse);
+	trap_S_RegisterSound("sound/weapons/thermal/select.mp3", qfalse);
+	trap_S_RegisterSound("sound/weapons/detpack/select.mp3", qfalse);
+	trap_S_RegisterSound("sound/weapons/flechette/select.mp3", qfalse);
+	trap_S_RegisterSound("sound/weapons/repeater/select.mp3", qfalse);
+	trap_S_RegisterSound("sound/weapons/concussion/select.mp3", qfalse);
+	trap_S_RegisterSound("sound/weapons/rocket/select.mp3", qfalse);
+}
+
+/*
+===============
+SaberMenu_Cache
+===============
+*/
+void SaberMenu_Cache()
+{
+	int index;
+
+	for (index = 1; index < 10; index++)
+	{
+		RE_RegisterModel(va("models/weapons2/saber_%d/saber_%d.glm", index, index));
+	}
+
+	for (index = 1; index < 6; index++)
+	{
+		RE_RegisterModel(va("models/weapons2/saber_dual_%d/saber_dual_%d.glm", index, index));
+	}
+}
+
 
 /*
 ===============
@@ -5335,6 +5430,24 @@ menuDef_t *Menus_ActivateByName(const char *p)
 			Menus[i].window.flags &= ~WINDOW_HASFOCUS;
 		}
 	}
+
+	SpeedrunPauseTimer(2);
+
+	if (!Q_stricmpn(p, "ingameMissionSelect", 19) || !Q_stricmp(p, "ingameGotoTier"))
+	{
+		MissionSelectMenu_Cache();
+		WeaponMenu_Cache();
+	}
+	else if (!Q_stricmp(p, "ingameWpnSelect"))
+	{
+		WeaponMenu_Cache();
+	}
+	else if (!Q_stricmp(p, "saberMenu"))
+	{
+		SaberMenu_Cache();
+	}
+
+	SpeedrunUnpauseTimer(2);
 
 
 	const int	com_demo = Cvar_VariableIntegerValue( "com_demo" );

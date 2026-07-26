@@ -4163,6 +4163,8 @@ void Menu_Cache( void )
 	// Common menu graphics
 	uis.whiteShader = ui.R_RegisterShader( "white" );
 	uis.menuBackShader = ui.R_RegisterShaderNoMip( "menu/art/unknownmap" );
+
+	trap_S_RegisterSound("sound/interface/button1.mp3", qfalse);
 }
 
 /*
