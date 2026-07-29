@@ -2042,6 +2042,19 @@ Ghoul2 Insert End
 						CG_RegisterNPCCustomSounds( &g_entities[i].client->clientInfo );
 						//CG_RegisterNPCEffects( g_entities[i].client->playerTeam );
 					}
+					else
+					{
+						// precache player weapons. Since they can be missing from CS. Issue scenario: having eFULL of
+						// high-tier map, load eAUTO of low-tier map. Then load eFULL and make a new save. Now the save
+						// contains "broken" items CS.
+						for ( int wnum = 1 ; wnum < 16 ; wnum++ )
+						{
+							if ( g_entities[i].client->ps.stats[STAT_WEAPONS] & ( 1 << wnum ) )
+							{
+								CG_RegisterWeapon(wnum);
+							}
+						}
+					}
 				}
 			}
 			else if ( g_entities[i].svFlags & SVF_NPC_PRECACHE && g_entities[i].NPC_type && g_entities[i].NPC_type[0] )

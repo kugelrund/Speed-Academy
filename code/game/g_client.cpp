@@ -625,6 +625,10 @@ Player_CacheFromPrevLevel
 void Player_CacheFromPrevLevel(void)
 {
 	char	s[MAX_STRING_CHARS];
+
+	extern SavedGameJustLoaded_e g_eSavedGameJustLoaded;
+	// loading eFULL - sCVARNAME_PLAYERSAVE is stale, skip precaching
+	if (g_eSavedGameJustLoaded != eAUTO) return;
 	
 	gi.Cvar_VariableStringBuffer( sCVARNAME_PLAYERSAVE, s, sizeof(s) );
 	
